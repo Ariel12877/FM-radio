@@ -896,18 +896,15 @@ button { cursor: pointer; border: 0; background: none; -webkit-user-select: none
   .app {
     max-width: 480px;
     background:
-      linear-gradient(180deg, rgba(8, 24, 40, 0.92) 0%, rgba(4, 12, 22, 0.97) 100%),
-      var(--wood);
-    background-size: auto, 280px 280px;
-    background-repeat: no-repeat, repeat;
-    border: 3px solid #5a3c20;
-    border-radius: 18px;
+      linear-gradient(180deg, rgba(8, 24, 40, 0.95) 0%, rgba(4, 12, 22, 0.98) 100%);
+    background-image: none;
+    /* Línea fina color madera alrededor de todo el reproductor */
+    border: 1.5px solid #c9a04a;
+    border-radius: 16px;
     box-shadow:
-      0 0 0 1px #8a6a3a,
-      0 0 0 5px #2a1a10,
-      0 0 0 7px #6b4c28,
-      inset 0 1px 0 rgba(255, 220, 150, 0.1),
-      0 12px 40px rgba(0, 0, 0, 0.55);
+      0 0 0 1px rgba(42, 26, 16, 0.9),
+      inset 0 0 0 1px rgba(201, 160, 74, 0.25),
+      0 8px 28px rgba(0, 0, 0, 0.45);
   }
 
   /* Header compacto */
@@ -1191,43 +1188,38 @@ button { cursor: pointer; border: 0; background: none; -webkit-user-select: none
     transform: scale(0.94);
   }
 
-  /* Fecha y hora */
+  /* Fecha y hora — siempre visible en móvil */
   .mobile-now {
-    display: flex;
+    display: flex !important;
     align-items: center;
     gap: 10px;
-    margin: 2px 14px 4px;
+    margin: 4px 14px 6px;
     padding: 10px 14px;
     border-radius: 12px;
-    background:
-      linear-gradient(180deg, rgba(40, 28, 16, 0.75) 0%, rgba(20, 14, 8, 0.85) 100%),
-      var(--wood);
-    background-size: auto, 200px 200px;
-    border: 2px solid #6b4c28;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 220, 150, 0.12),
-      0 2px 8px rgba(0, 0, 0, 0.35);
+    background: rgba(0, 40, 60, 0.5);
+    border: 1px solid rgba(201, 160, 74, 0.35);
   }
   .mn-info {
     flex: 1;
     min-width: 0;
   }
-  .mn-name {
+  .mn-name,
+  #mnDate {
     font-weight: 700;
     font-size: 0.88rem;
     color: #f0d9a8;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-transform: capitalize;
   }
-  .mn-meta {
+  .mn-meta,
+  #mnTime {
     font-family: var(--mono);
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     font-weight: 600;
-    color: var(--amber-hi, #ffc45e);
+    color: #ffc45e;
     margin-top: 2px;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
   }
   .btn-fav-mini {
     flex: none;

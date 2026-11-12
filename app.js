@@ -9,12 +9,6 @@ const STATIONS = [
     freq: "FM 105.9",
     url: "https://live-ar1.cdnrad.com/hls/radio-2075/live.m3u8"
   },
-   {
-    id: "Pobre Johnny",
-    name: "Radio Pobre Johnny",
-    freq: "FM 88.9",
-    url: "https://stream4.suenas.net/pobrejohnny"
-  },
   /* ===== Chaco (agregadas) ===== */
   {
     id: "FM libertad Machagai",
@@ -41,24 +35,6 @@ const STATIONS = [
     freq: "FM 96.9",
     url: "https://streaming5.locucionar.com/proxy/radiofan969?mp=/stream"
   },
-  {
-   id: "WALTER FM",
-    name: "Radio WALTER 80/90",
-    freq: "Online",
-    url: "https://stream.zeno.fm/qoxmfycvaftvv"
-  },
-  {
-    id: "Ñande Reko Radio",
-    name: "Ñande Reko Radio",
-    freq: "Online",
-    url: "https://devnec.com:8001/radio62"
-  },
-  {
-    id: "Fortaleza FM 98.1",
-    name: "Fortaleza FM 98.1",
-    freq: "FM 98.1",
-    url: "https://streaming01.shockmedia.com.ar:10252/stream"
-  }, 
 {
     id: "Radio Mocovl AM 800",
     name: "Radio Mocovl AM 800",
@@ -95,24 +71,6 @@ const STATIONS = [
     name: "Nacional",
     freq: "AM 870",
     url: "https://sa.mp3.icecast.magma.edge-access.net/sc_rad1"
-  },
-   {
-    id: "Lentos de Todos Los Tiempos",
-    name: "Lentos de Todos Los Tiempos",
-    freq: "Online",
-    url: "https://s3.conectarmedia.com:8016/stream"
-  },
-  {
-    id: "FM Milenium ",
-    name: "FM Milenium ",
-    freq: "106.7",
-    url: "https://sonicpanel.hostradios.com/8002/stream"
-  },
-  {
-    id: "Vale 97.5",
-    name: "Vale 97.5",
-    freq: "FM 95.5",
-    url: "https://vale.stweb.tv/vale/live/playlist.m3u8"
   },
   {
     id: "mitre",
@@ -174,7 +132,7 @@ const STATIONS = [
     id: "Pasionfm",
     name: "Pasion Fm",
     freq: "FM 98.7",
-    url: "https://live-ar1.cdnrad.com/hls/radio-2009/live.m3u8"
+    url: "https://live-ar1.cdnrad.com/hls/fmpasion/live.m3u8"
   },
   {
     id: "Las Lomitas",
@@ -229,7 +187,7 @@ const STATIONS = [
   },
   {
     id: "zonica",
-    name: "Radio Zonica",
+    name: "Radio ZÃ³nica",
     freq: "AM 820",
     url: "https://streamlky.alsolnet.com/radiozonica"
   },
@@ -247,7 +205,7 @@ const STATIONS = [
   },
   {
     id: "genesis",
-    name: "Genesis",
+    name: "GÃ©nesis",
     freq: "AM 970",
     url: "https://01.solumedia.com.ar:8216/"
   },
@@ -271,7 +229,7 @@ const STATIONS = [
   },
   {
     id: "guemes",
-    name: "Güemes",
+    name: "GÃ¼emes",
     freq: "AM 1050",
     url: "https://server.radiostreaming.com.ar/8564/stream"
   },
@@ -341,7 +299,7 @@ const STATIONS = [
     id: "disney",
     name: "Radio Disney",
     freq: "FM 94.3",
-    url: "https://27353.live.streamtheworld.com/DISNEY_ARG_BA_ADP/HLS/playlist.m3u8?dist=web-radiodisney" // âš  link viejo, puede estar caÃ­do
+    url: "https://edge-np.cdn.mdstrm.com/5a9ee26311c043ae48e40bcd.mp3" // âš  link viejo, puede estar caÃ­do
   },
   {
     id: "concepto",
@@ -351,7 +309,7 @@ const STATIONS = [
   },
   {
     id: "nacionalclasica",
-    name: "Nacional Clasica",
+    name: "Nacional ClÃ¡sica",
     freq: "FM 96.7",
     url: "https://sa.mp3.icecast.magma.edge-access.net/sc_rad37"
   },
@@ -362,14 +320,14 @@ const STATIONS = [
     url: "https://playerservices.streamtheworld.com/api/livestream-redirect/INFOBAEAAC.aac"
   },
   {
-    id: "La mega",
-    name: "La Mega",
-    freq: "FM 98.3",
-    url: "https://mega.stweb.tv/mega983/live/playlist.m3u8"
+    id: "now",
+    name: "NOW",
+    freq: "FM 97.9",
+    url: "https://cdn.instream.audio:9604/stream"
   },
   {
     id: "nacionalfolklorica",
-    name: "Nacional Folklorica",
+    name: "Nacional FolklÃ³rica",
     freq: "FM 98.7",
     url: "https://sa.mp3.icecast.magma.edge-access.net/sc_rad38"
   },
@@ -400,7 +358,7 @@ const STATIONS = [
   },
   {
     id: "lnmusica",
-    name: "LN+ Musica",
+    name: "LN+ MÃºsica",
     freq: "FM 104.9",
     url: "https://stream.radio.co/s2ed3bec0a/listen"
   },
@@ -412,13 +370,13 @@ const STATIONS = [
   },
   {
     id: "pasion",
-    name: "Radio Pasion",
+    name: "Radio PasiÃ³n",
     freq: "FM 102.7",
-    url: "https://live-ar1.cdnrad.com/hls/radio-1969/live.m3u8"
+    url: "https://cdn.instream.audio/stream/9790"
   },
   {
     id: "berlin",
-    name: "Radio Berlin",
+    name: "Radio BerlÃ­n",
     freq: "FM 107.9",
     url: "https://unlimited5-us.dps.live/berlin/aac/icecast.audio"
   },
@@ -438,25 +396,25 @@ const STATIONS = [
   },
   {
     id: "fmcordoba",
-    name: "FM Cordoba",
+    name: "FM CÃ³rdoba",
     freq: "FM 91.9",
     url: "https://liveradio.mediainbox.net/fmcordoba.mp3"
   },
   {
     id: "suquia",
-    name: "Radio Suqui­a",
+    name: "Radio SuquÃ­a",
     freq: "FM 96.5",
     url: "https://streaming01.shockmedia.com.ar:10945/"
   },
   {
     id: "mia",
-    name: "Radio Mi­a",
+    name: "Radio MÃ­a",
     freq: "FM 104.1",
     url: "https://playerservices.streamtheworld.com/api/livestream-redirect/FM1041_56AAC.aac"
   },
   {
     id: "unicordoba",
-    name: "Radio Universidad Cordoba",
+    name: "Radio Universidad CÃ³rdoba",
     freq: "AM 580",
     url: "https://radios.solumedia.com:10976/stream"
   },
@@ -478,7 +436,7 @@ const STATIONS = [
   /* ===== Mendoza ===== */
   {
     id: "estaciondelsol",
-    name: "Estacion del Sol",
+    name: "EstaciÃ³n del Sol",
     freq: "FM 96.7",
     url: "https://estaciondelsolonline.com.ar:8000/radio.aac"
   },
@@ -492,7 +450,7 @@ const STATIONS = [
   },
   {
     id: "lu2",
-    name: "LU2 Bahia Blanca",
+    name: "LU2 BahÃ­a Blanca",
     freq: "AM 840",
     url: "https://streaming6.locucionar.com:24228/stream?ver=22915"
   },
@@ -506,13 +464,13 @@ const STATIONS = [
   },
   {
     id: "rionegroradio",
-    name: "Ri­o Negro Radio",
+    name: "RÃ­o Negro Radio",
     freq: "FM 90.9",
     url: "https://server6.hostradios.com/8440/stream"
   },
   {
     id: "laredneuquen",
-    name: "La Red Neuquen",
+    name: "La Red NeuquÃ©n",
     freq: "FM 93.7",
     url: "https://server.laradio.online/proxy/julian_liyo?mp=/stream"
   },
@@ -542,13 +500,13 @@ const STATIONS = [
     id: "futurock",
     name: "Futurock",
     freq: "ONLINE",
-    url: "https://mdstrm.com/audio/5d9d019112cbbb45d6a50960/live.m3u8"
+    url: "https://nowplaying.mdstrm.com/5b7dcf666253b80766f27858/576b06096457cff453000015/live/icecast.audio"
   },
   {
-    id: "FOLKLORE RADIO",
-    name: "DEL PUEBLO MIO FOLKLORE RADIO",
+    id: "ledfm",
+    name: "Led FM",
     freq: "ONLINE",
-    url: "https://centova.heplayer.com/proxy/dpmfolklore/stream"
+    url: "https://cdn.instream.audio/:9068/stream"
   },
   {
     id: "Radio 10",
@@ -556,23 +514,21 @@ const STATIONS = [
     freq: "ONLINE",
     url: "https://stream.zeno.fm/4r530f2a9f0uv"
   },
-   {
-    id: "Radio Latina 101.1",
-    name: "Radio Latina 101.1",
-    freq: "ONLINE",
-    url: "https://stream-gtlc.telecentro.net.ar/hls/radiolatinahls/0/playlist.m3u8?uid=c787e307dd6c302dc3e51a7d2b5df6f4"
-  },
   {
     id: "eldesta",
-    name: "El Destape Radio",
+    name: "Latina",
     freq: "ONLINE",
-    url: "https://live-ar1.cdnrad.com/hls/radio-2123/live.m3u8"
+    url: "https://stream-gtlc.telecentro.net.ar/hls/latinatvhls/main.m3u8"
   }
 ];
 
 const player = document.getElementById("player");
 const btnPower = document.getElementById("btnPower");
 const btnPlay = document.getElementById("btnPlay");
+const btnPrev = document.getElementById("btnPrev");
+const btnNext = document.getElementById("btnNext");
+const btnFav = document.getElementById("btnFav");
+const btnFavMini = document.getElementById("btnFavMini");
 const volume = document.getElementById("volume");
 const statusEl = document.getElementById("status");
 const freqEl = document.getElementById("freq");
@@ -585,6 +541,8 @@ const stationCount = document.getElementById("stationCount");
 const emptyMsg = document.getElementById("emptyMsg");
 const dialGlass = document.getElementById("dialGlass");
 const dialOnline = document.getElementById("dialOnline");
+const waveform = document.getElementById("waveform");
+const progressBar = document.getElementById("progressBar");
 
 let currentStation = null;
 let isPowerOn = false;
@@ -592,6 +550,42 @@ let isPlaying = false;
 let vuInterval = null;
 let deferredPrompt = null;
 let metaPollTimer = null;
+let favorites = new Set(JSON.parse(localStorage.getItem("radio-favs") || "[]"));
+let liveTimer = null;
+let liveSeconds = 0;
+
+const WEEKDAYS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+const MONTHS = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+
+function updateClock() {
+  const dateEl = document.getElementById("mnDate");
+  const timeEl = document.getElementById("mnTime");
+  if (!dateEl && !timeEl) return;
+  const now = new Date();
+  if (dateEl) {
+    const d = now.getDate();
+    const w = WEEKDAYS[now.getDay()];
+    const m = MONTHS[now.getMonth()];
+    const y = now.getFullYear();
+    dateEl.textContent = w.charAt(0).toUpperCase() + w.slice(1) + " " + d + " de " + m + " de " + y;
+  }
+  if (timeEl) {
+    const hh = String(now.getHours()).padStart(2, "0");
+    const mm = String(now.getMinutes()).padStart(2, "0");
+    const ss = String(now.getSeconds()).padStart(2, "0");
+    timeEl.textContent = hh + ":" + mm + ":" + ss;
+  }
+}
+// Arrancar el reloj cuando el DOM esté listo
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    updateClock();
+    setInterval(updateClock, 1000);
+  });
+} else {
+  updateClock();
+  setInterval(updateClock, 1000);
+}
 
 /* --- UI helpers --- */
 function setStatus(text, type = "") {
@@ -602,12 +596,62 @@ function setStatus(text, type = "") {
 function setPlayIcon(playing) {
   btnPlay.classList.toggle("is-playing", playing);
   btnPlay.setAttribute("aria-label", playing ? "Pausar" : "Reproducir");
+  if (waveform) waveform.classList.toggle("is-playing", playing);
+}
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+}
+
+function startLiveTimer() {
+  stopLiveTimer();
+  liveSeconds = 0;
+  if (progressBar) {
+    progressBar.style.setProperty("--prog", "0%");
+    progressBar.value = 0;
+  }
+  const startEl = document.getElementById("progStart");
+  if (startEl) startEl.textContent = "00:00";
+  liveTimer = setInterval(() => {
+    liveSeconds += 1;
+    const startEl2 = document.getElementById("progStart");
+    if (startEl2) startEl2.textContent = formatTime(liveSeconds);
+    // Visual progress that slowly fills over ~3 min then resets look
+    if (progressBar) {
+      const pct = Math.min(95, (liveSeconds % 180) / 180 * 100);
+      progressBar.value = pct;
+      progressBar.style.setProperty("--prog", pct + "%");
+    }
+  }, 1000);
+}
+
+function stopLiveTimer() {
+  if (liveTimer) clearInterval(liveTimer);
+  liveTimer = null;
+}
+
+function updateFavButtons() {
+  const on = currentStation && favorites.has(currentStation.id);
+  [btnFav, btnFavMini].forEach((b) => {
+    if (!b) return;
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+}
+
+function toggleFavorite() {
+  if (!currentStation) return;
+  if (favorites.has(currentStation.id)) favorites.delete(currentStation.id);
+  else favorites.add(currentStation.id);
+  localStorage.setItem("radio-favs", JSON.stringify([...favorites]));
+  updateFavButtons();
 }
 
 function updateDisplay() {
   if (!currentStation) {
-    freqEl.textContent = "HOLA ☺️";
-    stationNameEl.textContent = "Prende y elegi­ una emisora"; 
+    freqEl.textContent = "—";
+    stationNameEl.textContent = "Elegí una emisora";
     nowPlayingEl.textContent = "";
     nowPlayingEl.classList.remove("has-meta");
   } else {
@@ -615,6 +659,7 @@ function updateDisplay() {
     stationNameEl.textContent = currentStation.name;
   }
   updateDial();
+  updateFavButtons();
 }
 
 function highlightPreset(id) {
@@ -806,6 +851,7 @@ function play() {
         setPlayIcon(true);
         setStatus("EN VIVO", "on");
         startVu();
+        startLiveTimer();
         setNowPlaying("Reproduciendo");
         updateMediaSession();
         startMetaPoll();
@@ -814,10 +860,11 @@ function play() {
       .catch((err) => {
         console.warn("Play error:", err);
         setStatus("ERROR", "error");
-        setNowPlaying("No anda che 😕 enseguida la arreglamos");
+        setNowPlaying("No se pudo reproducir");
         isPlaying = false;
         setPlayIcon(false);
         stopVu();
+        stopLiveTimer();
         stopMetaPoll();
       });
   }
@@ -829,6 +876,7 @@ function pause() {
   setPlayIcon(false);
   setStatus("PAUSA", "wait");
   stopVu();
+  stopLiveTimer();
   setNowPlaying("Pausado");
   stopMetaPoll();
   updateMediaSession();
@@ -841,6 +889,7 @@ function stop() {
   isPlaying = false;
   setPlayIcon(false);
   stopVu();
+  stopLiveTimer();
   stopMetaPoll();
   setNowPlaying("");
 }
@@ -887,10 +936,24 @@ function stepStation(dir) {
 btnPower.addEventListener("click", powerToggle);
 
 btnPlay.addEventListener("click", () => {
-  if (!isPowerOn || !currentStation) return;
+  // En móvil: si no hay emisora, encender y elegir la primera
+  if (!currentStation) {
+    const first = STATIONS[0];
+    if (first) selectStation(first);
+    return;
+  }
+  if (!isPowerOn) {
+    isPowerOn = true;
+    btnPower.classList.add("active");
+  }
   if (isPlaying) pause();
   else play();
 });
+
+if (btnPrev) btnPrev.addEventListener("click", () => stepStation(-1));
+if (btnNext) btnNext.addEventListener("click", () => stepStation(1));
+if (btnFav) btnFav.addEventListener("click", toggleFavorite);
+if (btnFavMini) btnFavMini.addEventListener("click", toggleFavorite);
 
 function paintVolume() {
   volume.style.setProperty("--vol", volume.value + "%");
@@ -939,7 +1002,16 @@ if ("mediaSession" in navigator) {
     navigator.mediaSession.setActionHandler("stop", () => {
       if (isPowerOn) powerToggle();
     });
+    navigator.mediaSession.setActionHandler("previoustrack", () => stepStation(-1));
+    navigator.mediaSession.setActionHandler("nexttrack", () => stepStation(1));
   } catch (_) {}
+}
+
+/* Progress bar is visual only for live streams */
+if (progressBar) {
+  progressBar.addEventListener("input", (e) => e.preventDefault());
+  progressBar.addEventListener("mousedown", (e) => e.preventDefault());
+  progressBar.addEventListener("touchstart", (e) => e.preventDefault(), { passive: false });
 }
 
 /* --- Build preset buttons --- */
