@@ -542,31 +542,7 @@ button { cursor: pointer; border: 0; background: none; -webkit-user-select: none
   .footer:has(.shortcut-btn[hidden]) { display: none; }
 }
 
-/* Celular landscape */
-@media (orientation: landscape) and (max-height: 520px) and (max-width: 899px) {
-  .app {
-    max-width: none;
-    display: grid;
-    grid-template-columns: minmax(300px, 42%) minmax(0, 1fr);
-    grid-template-rows: auto auto auto 1fr;
-    grid-template-areas:
-      "header   presets"
-      "display  presets"
-      "controls presets"
-      "footer   presets";
-    border-inline: 0;
-  }
-  .dial { display: none; }
-  .radio-header { grid-area: header; padding-top: 8px; padding-bottom: 4px; }
-  .brand-logo { width: 32px; height: 32px; }
-  .display { grid-area: display; min-height: 0; padding: 10px 14px; }
-  .freq { font-size: 2rem; }
-  .station-name { font-size: 1.3rem; }
-  .controls { grid-area: controls; padding: 10px 14px; }
-  .btn-play { width: 58px; height: 58px; }
-  .presets { grid-area: presets; border-left: 1px solid var(--line); padding-top: 8px; }
-  .footer { grid-area: footer; align-self: end; }
-}
+/* Celular landscape — se redefine más abajo en el bloque móvil moderno */
 
 /* ===== PC: radio antigua de madera completa ===== */
 @media (min-width: 900px) {
@@ -885,4 +861,497 @@ button { cursor: pointer; border: 0; background: none; -webkit-user-select: none
   text-align: center;
   font-size: 1rem;
   color: var(--led);
+}
+
+/* ==========================================================
+   MÓVIL moderno (estilo Electronics Radio)
+   Solo aplica por debajo de 900px. PC no cambia.
+   ========================================================== */
+
+/* Elementos solo móvil: ocultos en PC */
+.mobile-art,
+.mobile-progress,
+.mobile-now,
+.btn-prev,
+.btn-next,
+.btn-fav {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  :root {
+    --m-bg: #061018;
+    --m-card: #0c1a28;
+    --m-accent: #00d4ff;
+    --m-accent2: #ff6b2c;
+    --m-text: #e8f4fc;
+    --m-muted: #7a9bb0;
+    --m-line: rgba(0, 180, 220, 0.18);
+  }
+
+  body {
+    background-color: var(--m-bg);
+    background-image:
+      radial-gradient(ellipse 120% 80% at 50% -20%, rgba(0, 140, 180, 0.35) 0%, transparent 55%),
+      radial-gradient(ellipse 80% 50% at 80% 100%, rgba(0, 80, 120, 0.25) 0%, transparent 50%);
+    background-size: auto;
+    background-repeat: no-repeat;
+    color: var(--m-text);
+  }
+
+  .app {
+    max-width: 480px;
+    background:
+      linear-gradient(180deg, rgba(8, 24, 40, 0.92) 0%, rgba(4, 12, 22, 0.97) 100%);
+    background-image: none;
+    box-shadow: none;
+    border: 0;
+  }
+
+  /* Header limpio */
+  .radio-header {
+    padding: 18px 20px 6px;
+  }
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+    box-shadow: 0 0 0 2px rgba(0, 200, 255, 0.35), 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+  .brand-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--m-text);
+    text-shadow: none;
+  }
+  .status {
+    font-size: 0.72rem;
+    color: var(--m-muted);
+  }
+  .status::before {
+    background: #2a4050;
+    box-shadow: none;
+  }
+  .status.on::before {
+    background: #2ee6a0;
+    box-shadow: 0 0 10px #2ee6a0;
+  }
+  .status.wait::before {
+    background: var(--m-accent);
+    box-shadow: 0 0 10px var(--m-accent);
+  }
+  .status.error::before {
+    background: #ff5a5a;
+    box-shadow: 0 0 10px #ff5a5a;
+  }
+
+  /* Dial oculto en móvil */
+  .dial {
+    display: none !important;
+  }
+
+  /* Artwork central */
+  .mobile-art {
+    display: flex;
+    justify-content: center;
+    padding: 12px 24px 8px;
+  }
+  .art-card {
+    width: min(220px, 58vw);
+    aspect-ratio: 1;
+    border-radius: 22px;
+    background:
+      linear-gradient(145deg, #0e2438 0%, #061828 50%, #0a2030 100%);
+    box-shadow:
+      0 0 0 1px rgba(0, 200, 255, 0.15),
+      0 20px 50px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    display: grid;
+    place-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .art-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 40%, rgba(0, 200, 255, 0.12), transparent 65%);
+    pointer-events: none;
+  }
+  .waveform {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+    height: 64px;
+    width: 70%;
+  }
+  .waveform span {
+    display: block;
+    width: 6px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, var(--m-accent), #0088bb);
+    height: 20%;
+    transition: height 0.15s ease;
+  }
+  .waveform.is-playing span {
+    animation: wave 0.9s ease-in-out infinite;
+  }
+  .waveform span:nth-child(1) { animation-delay: 0.05s; }
+  .waveform span:nth-child(2) { animation-delay: 0.15s; }
+  .waveform span:nth-child(3) { animation-delay: 0.25s; }
+  .waveform span:nth-child(4) { animation-delay: 0.1s; }
+  .waveform span:nth-child(5) { animation-delay: 0.3s; }
+  .waveform span:nth-child(6) { animation-delay: 0.2s; }
+  .waveform span:nth-child(7) { animation-delay: 0.35s; }
+  .waveform span:nth-child(8) { animation-delay: 0.12s; }
+  .waveform span:nth-child(9) { animation-delay: 0.28s; }
+
+  @keyframes wave {
+    0%, 100% { height: 18%; }
+    50% { height: 95%; }
+  }
+
+  /* Display centrado, sin caja LCD */
+  .display {
+    margin: 4px 20px 0;
+    padding: 6px 8px 4px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    text-align: center;
+    align-items: center;
+    gap: 2px;
+  }
+  .freq {
+    font-size: 0.85rem;
+    font-family: var(--font);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--m-muted);
+    text-shadow: none;
+    order: 2;
+  }
+  .station-name {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--m-text);
+    order: 1;
+  }
+  .now-playing {
+    font-size: 0.9rem;
+    color: var(--m-muted);
+    order: 3;
+    min-height: 0;
+  }
+  .now-playing.has-meta {
+    color: var(--m-accent);
+  }
+  .vu-meter {
+    display: none;
+  }
+
+  /* Progress bar */
+  .mobile-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 22px 4px;
+  }
+  .prog-time {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--m-muted);
+    min-width: 2.6em;
+  }
+  #progEnd {
+    text-align: right;
+  }
+  #progressBar {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--m-accent) var(--prog, 0%), rgba(0, 180, 220, 0.2) var(--prog, 0%));
+    outline: none;
+  }
+  #progressBar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+    cursor: pointer;
+  }
+  #progressBar::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+  }
+
+  /* Controles: prev / play / next / fav */
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 14px 20px 10px;
+  }
+  .btn-power {
+    display: none; /* en móvil el power se maneja con play */
+  }
+  .volume-wrap {
+    display: none; /* volumen por sistema en móvil */
+  }
+
+  .btn-prev,
+  .btn-next,
+  .btn-fav {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: var(--m-text);
+    background: transparent;
+    transition: color 0.15s ease, transform 0.12s ease;
+  }
+  .btn-prev svg,
+  .btn-next svg {
+    width: 26px;
+    height: 26px;
+  }
+  .btn-fav svg {
+    width: 24px;
+    height: 24px;
+  }
+  .btn-fav[aria-pressed="true"] {
+    color: #ff4d6a;
+  }
+  .btn-prev:active,
+  .btn-next:active,
+  .btn-fav:active {
+    transform: scale(0.9);
+  }
+
+  .btn-play {
+    width: 64px;
+    height: 64px;
+    color: #fff;
+    background: linear-gradient(145deg, #ff8a3d 0%, #ff5a1a 55%, #e84800 100%);
+    box-shadow:
+      0 6px 20px rgba(255, 90, 30, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  .btn-play svg {
+    width: 28px;
+    height: 28px;
+  }
+  .btn-play:active {
+    transform: scale(0.94);
+  }
+
+  /* Fila "now playing" inferior */
+  .mobile-now {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 18px 8px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(0, 40, 60, 0.45);
+    border: 1px solid var(--m-line);
+  }
+  .mn-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .mn-name {
+    font-weight: 700;
+    font-size: 1.05rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mn-meta {
+    font-size: 0.8rem;
+    color: var(--m-muted);
+    margin-top: 2px;
+  }
+  .btn-fav-mini {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    color: var(--m-muted);
+    border-radius: 50%;
+  }
+  .btn-fav-mini svg {
+    width: 20px;
+    height: 20px;
+  }
+  .btn-fav-mini[aria-pressed="true"] {
+    color: #ff4d6a;
+  }
+
+  /* Lista de emisoras → cards horizontales + grid */
+  .presets {
+    padding-top: 4px;
+    border-top: 1px solid var(--m-line);
+  }
+  .presets-header {
+    padding: 8px 16px 10px;
+  }
+  .station-search {
+    height: 42px;
+    border-radius: 12px;
+    border: 1px solid var(--m-line);
+    background: rgba(0, 30, 50, 0.6);
+    color: var(--m-text);
+    box-shadow: none;
+  }
+  .station-search::placeholder {
+    color: var(--m-muted);
+  }
+  .station-search:focus {
+    border-color: var(--m-accent);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15);
+  }
+  .station-count {
+    color: var(--m-muted);
+    font-size: 0.75rem;
+  }
+
+  .preset-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 12px;
+    padding: 4px 16px 18px;
+    border-top: 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .preset-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .preset-btn {
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: 120px;
+    min-height: 100px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--m-line);
+    border-bottom: 1px solid var(--m-line);
+    background:
+      linear-gradient(160deg, rgba(0, 80, 110, 0.55) 0%, rgba(0, 40, 60, 0.85) 100%);
+    scroll-snap-align: start;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .preset-btn .p-name {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--m-text);
+  }
+  .preset-btn .p-freq {
+    font-size: 0.78rem;
+    color: var(--m-accent);
+    margin-top: 4px;
+  }
+  .preset-btn.active {
+    border-color: var(--m-accent);
+    background:
+      linear-gradient(160deg, rgba(0, 160, 200, 0.5) 0%, rgba(0, 70, 100, 0.9) 100%);
+    box-shadow:
+      0 0 20px rgba(0, 200, 255, 0.25),
+      0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+  .preset-btn.active::before {
+    display: none;
+  }
+  .preset-btn.active .p-name {
+    color: #fff;
+  }
+  .preset-btn.active .p-freq {
+    color: var(--m-accent);
+  }
+  .preset-btn:active {
+    transform: scale(0.96);
+  }
+
+  .empty {
+    color: var(--m-muted);
+  }
+
+  /* Footer minimal */
+  .footer {
+    padding: 6px 16px 12px;
+    border-top: 1px solid var(--m-line);
+    background: transparent;
+    justify-content: center;
+  }
+  .footer-note {
+    display: none;
+  }
+  .shortcut-btn {
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 17px;
+    border: 1px solid var(--m-line);
+    color: var(--m-accent);
+    background: rgba(0, 40, 60, 0.5);
+    font-size: 0.9rem;
+  }
+
+  /* Landscape móvil: compactar un poco */
+  @media (orientation: landscape) and (max-height: 520px) {
+    .app {
+      display: flex;
+      flex-direction: column;
+      max-width: none;
+    }
+    .mobile-art {
+      display: none;
+    }
+    .display {
+      text-align: left;
+      align-items: flex-start;
+      margin: 4px 16px;
+    }
+    .controls {
+      padding: 8px 16px;
+    }
+    .preset-grid {
+      flex: 1;
+    }
+  }
+}
+
+/* Desktop: asegurar que los nuevos controles móviles no aparezcan */
+@media (min-width: 900px) {
+  .mobile-art,
+  .mobile-progress,
+  .mobile-now,
+  .btn-prev,
+  .btn-next,
+  .btn-fav,
+  .btn-fav-mini {
+    display: none !important;
+  }
 }

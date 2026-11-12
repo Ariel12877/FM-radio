@@ -525,6 +525,10 @@ const STATIONS = [
 const player = document.getElementById("player");
 const btnPower = document.getElementById("btnPower");
 const btnPlay = document.getElementById("btnPlay");
+const btnPrev = document.getElementById("btnPrev");
+const btnNext = document.getElementById("btnNext");
+const btnFav = document.getElementById("btnFav");
+const btnFavMini = document.getElementById("btnFavMini");
 const volume = document.getElementById("volume");
 const statusEl = document.getElementById("status");
 const freqEl = document.getElementById("freq");
@@ -537,6 +541,11 @@ const stationCount = document.getElementById("stationCount");
 const emptyMsg = document.getElementById("emptyMsg");
 const dialGlass = document.getElementById("dialGlass");
 const dialOnline = document.getElementById("dialOnline");
+const waveform = document.getElementById("waveform");
+const mnName = document.getElementById("mnName");
+const mnFreq = document.getElementById("mnFreq");
+const mnBitrate = document.getElementById("mnBitrate");
+const progressBar = document.getElementById("progressBar");
 
 let currentStation = null;
 let isPowerOn = false;
@@ -544,6 +553,9 @@ let isPlaying = false;
 let vuInterval = null;
 let deferredPrompt = null;
 let metaPollTimer = null;
+let favorites = new Set(JSON.parse(localStorage.getItem("radio-favs") || "[]"));
+let liveTimer = null;
+let liveSeconds = 0;
 
 /* --- UI helpers --- */
 function setStatus(text, type = "") {
@@ -554,19 +566,76 @@ function setStatus(text, type = "") {
 function setPlayIcon(playing) {
   btnPlay.classList.toggle("is-playing", playing);
   btnPlay.setAttribute("aria-label", playing ? "Pausar" : "Reproducir");
+  if (waveform) waveform.classList.toggle("is-playing", playing);
+}
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+}
+
+function startLiveTimer() {
+  stopLiveTimer();
+  liveSeconds = 0;
+  if (progressBar) {
+    progressBar.style.setProperty("--prog", "0%");
+    progressBar.value = 0;
+  }
+  const startEl = document.getElementById("progStart");
+  if (startEl) startEl.textContent = "00:00";
+  liveTimer = setInterval(() => {
+    liveSeconds += 1;
+    const startEl2 = document.getElementById("progStart");
+    if (startEl2) startEl2.textContent = formatTime(liveSeconds);
+    // Visual progress that slowly fills over ~3 min then resets look
+    if (progressBar) {
+      const pct = Math.min(95, (liveSeconds % 180) / 180 * 100);
+      progressBar.value = pct;
+      progressBar.style.setProperty("--prog", pct + "%");
+    }
+  }, 1000);
+}
+
+function stopLiveTimer() {
+  if (liveTimer) clearInterval(liveTimer);
+  liveTimer = null;
+}
+
+function updateFavButtons() {
+  const on = currentStation && favorites.has(currentStation.id);
+  [btnFav, btnFavMini].forEach((b) => {
+    if (!b) return;
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+}
+
+function toggleFavorite() {
+  if (!currentStation) return;
+  if (favorites.has(currentStation.id)) favorites.delete(currentStation.id);
+  else favorites.add(currentStation.id);
+  localStorage.setItem("radio-favs", JSON.stringify([...favorites]));
+  updateFavButtons();
 }
 
 function updateDisplay() {
   if (!currentStation) {
-    freqEl.textContent = "HOLA";
-    stationNameEl.textContent = "Prende y elegi­ una emisora"; 
+    freqEl.textContent = "—";
+    stationNameEl.textContent = "Elegí una emisora";
     nowPlayingEl.textContent = "";
     nowPlayingEl.classList.remove("has-meta");
+    if (mnName) mnName.textContent = "—";
+    if (mnFreq) mnFreq.textContent = "—";
+    if (mnBitrate) mnBitrate.textContent = "—";
   } else {
     freqEl.textContent = currentStation.freq;
     stationNameEl.textContent = currentStation.name;
+    if (mnName) mnName.textContent = currentStation.name;
+    if (mnFreq) mnFreq.textContent = currentStation.freq;
+    if (mnBitrate) mnBitrate.textContent = "128 Kb/s";
   }
   updateDial();
+  updateFavButtons();
 }
 
 function highlightPreset(id) {
@@ -758,6 +827,7 @@ function play() {
         setPlayIcon(true);
         setStatus("EN VIVO", "on");
         startVu();
+        startLiveTimer();
         setNowPlaying("Reproduciendo");
         updateMediaSession();
         startMetaPoll();
@@ -770,6 +840,7 @@ function play() {
         isPlaying = false;
         setPlayIcon(false);
         stopVu();
+        stopLiveTimer();
         stopMetaPoll();
       });
   }
@@ -781,6 +852,7 @@ function pause() {
   setPlayIcon(false);
   setStatus("PAUSA", "wait");
   stopVu();
+  stopLiveTimer();
   setNowPlaying("Pausado");
   stopMetaPoll();
   updateMediaSession();
@@ -793,6 +865,7 @@ function stop() {
   isPlaying = false;
   setPlayIcon(false);
   stopVu();
+  stopLiveTimer();
   stopMetaPoll();
   setNowPlaying("");
 }
@@ -839,10 +912,24 @@ function stepStation(dir) {
 btnPower.addEventListener("click", powerToggle);
 
 btnPlay.addEventListener("click", () => {
-  if (!isPowerOn || !currentStation) return;
+  // En móvil: si no hay emisora, encender y elegir la primera
+  if (!currentStation) {
+    const first = STATIONS[0];
+    if (first) selectStation(first);
+    return;
+  }
+  if (!isPowerOn) {
+    isPowerOn = true;
+    btnPower.classList.add("active");
+  }
   if (isPlaying) pause();
   else play();
 });
+
+if (btnPrev) btnPrev.addEventListener("click", () => stepStation(-1));
+if (btnNext) btnNext.addEventListener("click", () => stepStation(1));
+if (btnFav) btnFav.addEventListener("click", toggleFavorite);
+if (btnFavMini) btnFavMini.addEventListener("click", toggleFavorite);
 
 function paintVolume() {
   volume.style.setProperty("--vol", volume.value + "%");
@@ -891,7 +978,16 @@ if ("mediaSession" in navigator) {
     navigator.mediaSession.setActionHandler("stop", () => {
       if (isPowerOn) powerToggle();
     });
+    navigator.mediaSession.setActionHandler("previoustrack", () => stepStation(-1));
+    navigator.mediaSession.setActionHandler("nexttrack", () => stepStation(1));
   } catch (_) {}
+}
+
+/* Progress bar is visual only for live streams */
+if (progressBar) {
+  progressBar.addEventListener("input", (e) => e.preventDefault());
+  progressBar.addEventListener("mousedown", (e) => e.preventDefault());
+  progressBar.addEventListener("touchstart", (e) => e.preventDefault(), { passive: false });
 }
 
 /* --- Build preset buttons --- */
