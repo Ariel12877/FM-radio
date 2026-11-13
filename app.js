@@ -615,6 +615,33 @@ const STATIONS = [
 ];
 
 
+/* ---- Orden de la lista: primero las de Chaco / Machagai, después por categoría ---- */
+const TOP_IDS = ["radiotop", "Pobre Johnny", "El mañanero", "FM libertad Machagai",
+                 "VIP FM", "Master FM", "laradio1047", "facundoquiroga"];
+const CAT_ORDER = ["chaco", "musica", "noticias", "folklore", "deportes"];
+const CAT_LABEL = { chaco: "Chaco y Machagai", musica: "Música", noticias: "Noticias", folklore: "Folklore", deportes: "Deportes" };
+const CAT_BY_ID = {
+  noticias: ["nacional", "lra26", "Las Lomitas", "mitre", "lared", "continental", "rivadavia", "cnnradio",
+             "Radio 10", "Radio Con Vos", "infobae", "cadena3am", "madre", "eldesta", "lu9", "lu2", "lu19", "lt3",
+             "unicordoba", "cooperativa", "zonica", "delpueblo", "genesis", "la990", "delplata", "guemes",
+             "delaciudad", "federal", "radiosur", "ecomedios", "ondalatina", "Radio Mocovl AM 800"],
+  folklore:  ["Radio Chamame", "Polca Paraguaya", "Ñande Reko Radio", "FOLKLORE RADIO", "nacionalfolklorica"],
+  deportes:  ["dsports", "fmlaredonda"]
+};
+(function sortStations() {
+  const catOf = {};
+  Object.keys(CAT_BY_ID).forEach(cat => CAT_BY_ID[cat].forEach(id => { catOf[id] = cat; }));
+  STATIONS.forEach(st => {
+    const top = TOP_IDS.indexOf(st.id);
+    st.cat = top >= 0 ? "chaco" : (catOf[st.id] || "musica");   // lo que no está en una lista queda en Música
+    st._top = top;
+  });
+  STATIONS.sort((a, b) => {
+    if (a.cat !== b.cat) return CAT_ORDER.indexOf(a.cat) - CAT_ORDER.indexOf(b.cat);
+    return a.cat === "chaco" ? a._top - b._top : 0;             // el resto mantiene su orden original
+  });
+})();
+
 /* ============================================================
    Radio Argentina — Nueva UI móvil + Ecualizador integrado
    ============================================================ */
@@ -1169,7 +1196,16 @@ function renderList() {
     stationList.innerHTML = '<p class="empty-msg">No se encontraron emisoras.</p>';
     return;
   }
+  const grouped = currentFilter === "all" && !(stationSearch.value || "").trim();
+  let lastCat = null;
   list.forEach(st => {
+    if (grouped && st.cat !== lastCat) {
+      lastCat = st.cat;
+      const sep = document.createElement("div");
+      sep.className = "list-sep";
+      sep.textContent = CAT_LABEL[st.cat] || "";
+      stationList.appendChild(sep);
+    }
     const item = document.createElement("div");
     const isActive = currentStation && currentStation.id === st.id;
     item.className = "station-item" + (isActive ? " active" : "") + (isActive && isPlaying ? " is-playing" : "");
