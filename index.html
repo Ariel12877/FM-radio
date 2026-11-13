@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" href="icon-192.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
   <title>Radio Argentina</title>
-  <link rel="stylesheet" href="styles.css?v=19" />
+  <link rel="stylesheet" href="styles.css?v=23" />
 </head>
 <body>
   <div class="app" id="app">
@@ -28,6 +28,7 @@
         </div>
         <span class="brand-text">Radio Argentina</span>
       </div>
+      <button class="install-chip" id="shortcutBtn" type="button" title="Instalar / acceso directo">⬇ Instalar</button>
       <div class="live-badge" id="liveBadge">
         <span class="live-dot"></span>
         <span class="live-text">EN VIVO</span>
@@ -104,7 +105,7 @@
       </div>
 
       <button class="ctrl-btn eq-btn" id="btnEq" title="Ecualizador" aria-label="Abrir ecualizador">
-        <span class="eq-icon">⋮⋮⋮</span>
+        <span class="eq-icon">▐▌▐</span>
         <span class="eq-label">Ecualizador</span>
       </button>
     </section>
@@ -201,6 +202,36 @@
   </div>
 
   <audio id="player" preload="none" crossorigin="anonymous"></audio>
-  <script src="app.js?v=19"></script>
+  <script src="app.js?v=23"></script>
+
+  <dialog class="sheet" id="shortcutDialog" aria-labelledby="shortcutTitle">
+    <div class="sheet-head">
+      <div>
+        <h2 id="shortcutTitle">Acceso directo / Instalar</h2>
+        <p>Abrí Radio Argentina con un toque, sin buscar la página.</p>
+      </div>
+      <button class="sheet-close" id="shortcutClose" type="button" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="sheet-body">
+      <div class="sheet-note" id="shortcutNote" hidden></div>
+      <section class="way" id="wayPc">
+        <h3>En la PC <span class="tag" hidden>Tu equipo</span></h3>
+        <p>Descargá el acceso directo y arrastralo al escritorio. Se guarda en la carpeta Descargas.</p>
+        <button class="btn-main" id="dlShortcut" type="button">Descargar acceso directo</button>
+        <button class="btn-soft" id="installPc" type="button" hidden>Instalar como app, con ícono propio</button>
+        <p class="alt-links">Otro sistema: <button type="button" data-os="windows">Windows</button><button type="button" data-os="mac">Mac</button><button type="button" data-os="linux">Linux</button></p>
+      </section>
+      <section class="way" id="wayPhone">
+        <h3>En el celular <span class="tag" hidden>Tu equipo</span></h3>
+        <button class="btn-main" id="installPhone" type="button" hidden>Instalar en este celular</button>
+        <ul>
+          <li data-for="android"><b>Android (Chrome):</b> tocá el menú ⋮ y elegí «Instalar app» o «Agregar a la pantalla principal».</li>
+          <li data-for="ios"><b>iPhone (Safari):</b> tocá Compartir y elegí «Agregar a inicio».</li>
+        </ul>
+      </section>
+    </div>
+    <p class="sheet-msg" id="shortcutMsg" role="status" aria-live="polite"></p>
+  </dialog>
+
 </body>
 </html>

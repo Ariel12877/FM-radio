@@ -925,6 +925,36 @@ function getVisibleStations() {
   return list;
 }
 
+function getStationLogo(st) {
+  const id = (st.id || "").toLowerCase();
+  const name = (st.name || "").toLowerCase();
+  if (id.includes("radiotop") || name.includes("radio top")) {
+    return { cls: "logo-radiotop", html: "Radio<br><span>Top</span>" };
+  }
+  if (id.includes("pobre") || name.includes("pobre johnny")) {
+    return { cls: "logo-pobre", html: "Pobre<br>Johnny" };
+  }
+  if (id.includes("mañanero") || id.includes("mananero") || name.includes("mañanero")) {
+    return { cls: "logo-mananero", html: "📊" };
+  }
+  if (id.includes("libertad") || name.includes("libertad")) {
+    return { cls: "logo-libertad", html: "FM<br>Libertad" };
+  }
+  if (id.includes("vip") || name.includes("vip radio")) {
+    return { cls: "logo-vip", html: "Vip<br>Radio" };
+  }
+  const initials = st.name.split(" ").slice(0, 2).map(w => (w[0] || "")).join("").toUpperCase().slice(0, 3);
+  return { cls: "logo-default", html: initials };
+}
+
+function getStationLoc(st) {
+  const n = (st.name || "").toLowerCase();
+  if (n.includes("machagai")) return "Machagai";
+  if (n.includes("resistencia")) return "Resistencia";
+  if (n.includes("chaco")) return "Chaco";
+  return "Argentina";
+}
+
 function renderList() {
   const list = getVisibleStations();
   stationList.innerHTML = "";
@@ -937,18 +967,19 @@ function renderList() {
     item.className = "station-item" + (currentStation && currentStation.id === st.id ? " active" : "");
     item.dataset.id = st.id;
 
-    const initials = st.name.split(" ").slice(0, 2).map(w => w[0] || "").join("").toUpperCase().slice(0, 3);
-    const loc = st.name.toLowerCase().includes("machagai") ? "Machagai" :
-                st.name.toLowerCase().includes("resistencia") ? "Resistencia" : "Argentina";
+    const logo = getStationLogo(st);
+    const loc = getStationLoc(st);
+    const isActive = currentStation && currentStation.id === st.id;
+    const playIcon = isActive && isPlaying ? "⏸" : "▶";
 
     item.innerHTML = `
-      <div class="station-logo">${initials}</div>
+      <div class="station-logo ${logo.cls}">${logo.html}</div>
       <div class="station-meta">
         <div class="s-name">${st.name}</div>
         <div class="s-loc">${loc}</div>
       </div>
       <div class="station-freq-right">${st.freq || "Online"}</div>
-      <div class="station-play">${currentStation && currentStation.id === st.id && isPlaying ? "⏸" : "▶"}</div>
+      <div class="station-play">${playIcon}</div>
     `;
     item.addEventListener("click", () => {
       if (currentStation && currentStation.id === st.id) togglePlay();
@@ -980,13 +1011,21 @@ function closeSide() {
 
 function showOpciones() {
   openSide("Opciones", `
+    <h3>Instalar / Acceso directo</h3>
+    <p>Agregá Radio Argentina a la pantalla de inicio del celular o al escritorio de la PC.</p>
+    <button class="timer-btn" id="btnOpenInstall" style="margin-top:8px;width:100%;background:linear-gradient(135deg,#1e90ff,#0a6ad4);border:none;color:#fff">⬇ Instalar / Acceso directo</button>
     <h3>Volumen del sistema</h3>
-    <p>Usa los botones de volumen de tu teléfono para ajustar el volumen general.</p>
+    <p>Usa los botones de volumen de tu teléfono o PC para ajustar el volumen general.</p>
     <h3>Calidad</h3>
     <p>La mayoría de los streams se reproducen en la mejor calidad disponible (128–192 kbps).</p>
     <h3>Datos móviles</h3>
     <p>El streaming consume aproximadamente 60–90 MB por hora.</p>
   `);
+  const btn = document.getElementById("btnOpenInstall");
+  if (btn) btn.addEventListener("click", () => {
+    closeSide();
+    if (window.openShortcutDialog) window.openShortcutDialog();
+  });
 }
 
 function showTemporizador() {
@@ -1108,3 +1147,164 @@ buildEqUI();
 renderList();
 updateDial(null);
 console.log("Radio Argentina ready, stations:", STATIONS.length);
+
+
+/* ============================================================
+   Acceso directo / Instalar (PC + celular)
+   ============================================================ */
+const shortcutBtn = document.getElementById("shortcutBtn");
+const shortcutDialog = document.getElementById("shortcutDialog");
+const shortcutNote = document.getElementById("shortcutNote");
+const shortcutMsg = document.getElementById("shortcutMsg");
+const wayPc = document.getElementById("wayPc");
+const wayPhone = document.getElementById("wayPhone");
+const dlShortcut = document.getElementById("dlShortcut");
+const installPc = document.getElementById("installPc");
+const installPhone = document.getElementById("installPhone");
+
+let deferredPrompt = null;
+
+const ua = navigator.userAgent || "";
+const isIOS = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isAndroid = /android/i.test(ua);
+const isMobileUA = isIOS || isAndroid;
+const isMac = !isIOS && /mac/i.test(navigator.platform || "");
+const isLinux = !isMobileUA && /linux|x11/i.test(ua);
+const pcOS = isMac ? "mac" : isLinux ? "linux" : "windows";
+const isStandalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+
+const SHORTCUTS = {
+  windows: {
+    ext: "url",
+    mime: "application/internet-shortcut",
+    build: (u) => "[InternetShortcut]\r\nURL=" + u + "\r\nIconIndex=0\r\n"
+  },
+  mac: {
+    ext: "webloc",
+    mime: "application/xml",
+    build: (u) => '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n' +
+      '<plist version="1.0"><dict><key>URL</key><string>' + u.replace(/&/g, "&amp;") + "</string></dict></plist>\n"
+  },
+  linux: {
+    ext: "desktop",
+    mime: "application/x-desktop",
+    build: (u) => "[Desktop Entry]\nVersion=1.0\nType=Link\nName=Radio Argentina\nComment=Radios de Argentina en vivo\nURL=" + u + "\n"
+  }
+};
+
+function appUrl() {
+  const u = new URL("./", location.href);
+  u.hash = "";
+  u.search = "";
+  return u.href;
+}
+
+function showShortcutMsg(text) {
+  if (shortcutMsg) shortcutMsg.textContent = text || "";
+}
+
+function downloadShortcut(os) {
+  const def = SHORTCUTS[os];
+  if (!def) return;
+  const name = "Radio Argentina." + def.ext;
+  const blob = new Blob([def.build(appUrl())], { type: def.mime + ";charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  showShortcutMsg("Archivo descargado. Buscalo en Descargas y arrastralo al escritorio.");
+}
+
+function refreshShortcutUi() {
+  if (!shortcutDialog) return;
+  // show/hide install buttons when beforeinstallprompt available
+  const canInstall = !!deferredPrompt;
+  if (installPc) installPc.hidden = !canInstall || isMobileUA;
+  if (installPhone) installPhone.hidden = !canInstall || !isMobileUA;
+
+  // highlight current platform
+  if (wayPc && wayPhone) {
+    wayPc.querySelector(".tag") && (wayPc.querySelector(".tag").hidden = isMobileUA);
+    wayPhone.querySelector(".tag") && (wayPhone.querySelector(".tag").hidden = !isMobileUA);
+  }
+  if (dlShortcut) dlShortcut.dataset.os = pcOS;
+
+  const insecure = location.protocol === "file:" || !window.isSecureContext;
+  if (shortcutNote) {
+    shortcutNote.hidden = !insecure;
+    shortcutNote.textContent = insecure
+      ? "Estás abriendo la app desde un archivo local o sin https. El acceso directo de la PC funciona, pero para instalarla en el celular tiene que estar publicada en una dirección https."
+      : "";
+  }
+}
+
+async function installApp() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  showShortcutMsg(outcome === "accepted" ? "Listo, la app se está instalando." : "");
+  refreshShortcutUi();
+}
+
+function openShortcutDialog() {
+  showShortcutMsg("");
+  refreshShortcutUi();
+  if (shortcutDialog.showModal) shortcutDialog.showModal();
+  else shortcutDialog.setAttribute("open", "");
+}
+
+function closeShortcutDialog() {
+  if (shortcutDialog.close) shortcutDialog.close();
+  else shortcutDialog.removeAttribute("open");
+}
+
+if (shortcutBtn) {
+  shortcutBtn.hidden = isStandalone;
+  shortcutBtn.addEventListener("click", openShortcutDialog);
+}
+if (document.getElementById("shortcutClose")) {
+  document.getElementById("shortcutClose").addEventListener("click", closeShortcutDialog);
+}
+if (shortcutDialog) {
+  shortcutDialog.addEventListener("click", (e) => {
+    if (e.target === shortcutDialog) closeShortcutDialog();
+  });
+}
+if (dlShortcut) {
+  dlShortcut.addEventListener("click", () => downloadShortcut(dlShortcut.dataset.os || pcOS));
+}
+if (shortcutDialog) {
+  shortcutDialog.querySelectorAll(".alt-links [data-os]").forEach((b) => {
+    b.addEventListener("click", () => downloadShortcut(b.dataset.os));
+  });
+}
+if (installPc) installPc.addEventListener("click", installApp);
+if (installPhone) installPhone.addEventListener("click", installApp);
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  refreshShortcutUi();
+  if (shortcutBtn) shortcutBtn.hidden = false;
+});
+
+window.addEventListener("appinstalled", () => {
+  deferredPrompt = null;
+  if (shortcutBtn) shortcutBtn.hidden = true;
+  refreshShortcutUi();
+});
+
+/* Service Worker */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch((err) => {
+    console.warn("SW registration failed:", err);
+  });
+}
+
+/* Also expose openShortcutDialog for Opciones panel */
+window.openShortcutDialog = openShortcutDialog;
