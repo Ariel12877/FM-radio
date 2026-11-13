@@ -1735,6 +1735,24 @@ body {
   .station-logo.logo-libertad::first-line { font-size: .78rem; }
   .station-logo.logo-vip { background: linear-gradient(150deg, #1f55ee, #0b2a9c); color: #fff; font-size: .8rem; line-height: 1.05; }
 
+
+  /* Logos reales de emisoras: solo en la lista móvil */
+  .station-logo .v-mob {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+    overflow: hidden;
+  }
+  .station-logo .v-mob > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: inherit;
+    background: #fff;
+  }
+
   /* Botón de play de cada fila */
   .station-play {
     position: relative;
