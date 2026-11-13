@@ -15,12 +15,12 @@
   <link rel="apple-touch-icon" href="icon-192.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
     <script>
-    // PC (pantalla ancha): se usa la versión de escritorio, que está en la carpeta pc/
+    // PC (pantalla ancha): se usa la versión de escritorio, que es pc.html
     // Para ver la versión celular en una PC: agregar ?vista=movil a la dirección
     (function () {
       var mq = window.matchMedia("(min-width: 900px)");
       function go() {
-        if (mq.matches && !/[?&]vista=movil/.test(location.search)) location.replace("pc/" + location.hash);
+        if (mq.matches && !/[?&]vista=movil/.test(location.search)) location.replace("pc.html" + location.hash);
       }
       go();
       if (mq.addEventListener) mq.addEventListener("change", go);

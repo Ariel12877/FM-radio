@@ -1,9 +1,12 @@
-const CACHE = "radio-ar-v32";
+const CACHE = "radio-ar-v33";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./pc.html",
+  "./pc.css",
+  "./pc.js",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
@@ -15,7 +18,11 @@ const ASSETS = [
   "./fonts/open-sans-latin-400-normal.woff2",
   "./fonts/open-sans-latin-600-normal.woff2",
   "./fonts/open-sans-latin-700-normal.woff2",
-  "./fonts/open-sans-latin-800-normal.woff2"
+  "./fonts/open-sans-latin-800-normal.woff2",
+  "./fonts/barlow-condensed-latin-500-normal.woff2",
+  "./fonts/barlow-condensed-latin-600-normal.woff2",
+  "./fonts/barlow-condensed-latin-700-normal.woff2",
+  "./fonts/share-tech-mono-latin-400-normal.woff2"
 ];
 
 self.addEventListener("install", (event) => {
