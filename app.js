@@ -619,7 +619,10 @@ const STATIONS = [
    Radio Argentina — Nueva UI móvil + Ecualizador integrado
    ============================================================ */
 
-const player = document.getElementById("player");
+const playerEQ = document.getElementById("player");   // con CORS: pasa por el ecualizador
+const playerDirect = new Audio();                      // sin CORS: suena directo (sin ecualizador)
+playerDirect.preload = "none";
+let player = playerEQ;                                 // el que está sonando ahora
 const btnPlay = document.getElementById("btnPlay");
 const btnPrev = document.getElementById("btnPrev");
 const btnNext = document.getElementById("btnNext");
@@ -676,12 +679,29 @@ let sourceNode = null;
 let filters = [];
 let analyser = null;
 let eqGains = [0, 0, 0, 0, 0, 0, 0];
+let eqPreset = "flat";
+let eqAvailable = true;
 let animId = null;
+
+/* El ecualizador recuerda cómo lo dejaste */
+try {
+  const savedEq = JSON.parse(localStorage.getItem("radio-eq") || "null");
+  if (savedEq && Array.isArray(savedEq.gains) && savedEq.gains.length === EQ_BANDS.length) {
+    eqGains = savedEq.gains.map(g => Math.max(-12, Math.min(12, Number(g) || 0)));
+    eqPreset = typeof savedEq.preset === "string" ? savedEq.preset : "";
+  }
+} catch (e) { /* si falla, queda plano */ }
+
+function saveEq() {
+  try { localStorage.setItem("radio-eq", JSON.stringify({ gains: eqGains, preset: eqPreset })); } catch (e) {}
+}
 
 function initAudioGraph() {
   if (audioCtx) return;
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  sourceNode = audioCtx.createMediaElementSource(player);
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if (!Ctx) return;
+  audioCtx = new Ctx();
+  sourceNode = audioCtx.createMediaElementSource(playerEQ);
 
   filters = EQ_BANDS.map((b, i) => {
     const f = audioCtx.createBiquadFilter();
@@ -693,8 +713,8 @@ function initAudioGraph() {
   });
 
   analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 64;
-  analyser.smoothingTimeConstant = 0.75;
+  analyser.fftSize = 256;
+  analyser.smoothingTimeConstant = 0.8;
 
   let prev = sourceNode;
   filters.forEach(f => {
@@ -710,44 +730,97 @@ function applyEqGains() {
   filters.forEach((f, i) => { f.gain.value = eqGains[i]; });
 }
 
+const fmtGain = (g) => (g > 0 ? "+" : "") + g;
+
+function markPreset() {
+  document.querySelectorAll(".eq-preset").forEach(p => {
+    p.classList.toggle("active", p.dataset.preset === eqPreset);
+  });
+}
+
+/* Curva de respuesta: se dibuja con los filtros reales, así se ve lo que está haciendo el ecualizador */
+const CURVE_FREQS = (() => {
+  const n = 64, a = new Float32Array(n);
+  for (let i = 0; i < n; i++) a[i] = 20 * Math.pow(1000, i / (n - 1)); // 20 Hz a 20 kHz
+  return a;
+})();
+
+function updateEqCurve() {
+  const line = document.getElementById("eqCurveLine");
+  const fill = document.getElementById("eqCurveFill");
+  if (!line || !fill) return;
+  const n = CURVE_FREQS.length;
+  const total = new Float32Array(n);
+  if (filters.length) {
+    const mag = new Float32Array(n), ph = new Float32Array(n);
+    filters.forEach(f => {
+      f.getFrequencyResponse(CURVE_FREQS, mag, ph);
+      for (let i = 0; i < n; i++) total[i] += 20 * Math.log10(mag[i] || 1e-6);
+    });
+  }
+  const W = 300, H = 84, mid = H / 2, range = 16;
+  let d = "";
+  for (let i = 0; i < n; i++) {
+    const x = (i / (n - 1)) * W;
+    const y = Math.max(3, Math.min(H - 3, mid - (total[i] / range) * mid));
+    d += (i ? " L" : "M") + x.toFixed(1) + " " + y.toFixed(1);
+  }
+  line.setAttribute("d", d);
+  fill.setAttribute("d", d + " L" + W + " " + mid + " L0 " + mid + " Z");
+}
+
 function buildEqUI() {
   eqSliders.innerHTML = "";
   EQ_BANDS.forEach((b, i) => {
     const div = document.createElement("div");
     div.className = "eq-band";
     div.innerHTML = `
-      <span class="gain-val" id="gainVal${i}">0</span>
-      <input type="range" min="-12" max="12" step="0.5" value="0" data-idx="${i}" aria-label="Banda ${b.label} Hz" />
+      <span class="gain-val" id="gainVal${i}">${fmtGain(eqGains[i])}</span>
+      <input type="range" min="-12" max="12" step="0.5" value="${eqGains[i]}" data-idx="${i}" aria-label="Banda ${b.label} Hz" />
       <label>${b.label}</label>
     `;
     const input = div.querySelector("input");
     input.addEventListener("input", () => {
       eqGains[i] = parseFloat(input.value);
-      document.getElementById("gainVal" + i).textContent = (eqGains[i] > 0 ? "+" : "") + eqGains[i];
+      document.getElementById("gainVal" + i).textContent = fmtGain(eqGains[i]);
       applyEqGains();
-      document.querySelectorAll(".eq-preset").forEach(p => p.classList.remove("active"));
+      eqPreset = "";
+      markPreset();
+      saveEq();
+      updateEqCurve();
     });
     eqSliders.appendChild(div);
   });
+  markPreset();
 }
 
 function setEqPreset(name) {
   const vals = EQ_PRESETS[name] || EQ_PRESETS.flat;
+  eqPreset = EQ_PRESETS[name] ? name : "flat";
   eqGains = vals.slice();
   applyEqGains();
   document.querySelectorAll(".eq-band input").forEach((inp, i) => {
     inp.value = vals[i];
-    document.getElementById("gainVal" + i).textContent = (vals[i] > 0 ? "+" : "") + vals[i];
+    document.getElementById("gainVal" + i).textContent = fmtGain(vals[i]);
   });
-  document.querySelectorAll(".eq-preset").forEach(p => {
-    p.classList.toggle("active", p.dataset.preset === name);
-  });
+  markPreset();
+  saveEq();
+  updateEqCurve();
+}
+
+/* Algunas emisoras no mandan permiso CORS: esas suenan, pero no se pueden ecualizar */
+function setEqAvailable(on) {
+  eqAvailable = on;
+  const note = document.getElementById("eqNote");
+  if (note) note.hidden = on;
+  eqPanel.classList.toggle("eq-off", !on);
 }
 
 function openEq() {
   initAudioGraph();
   if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
   eqPanel.hidden = false;
+  updateEqCurve();
   document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
   const nav = document.getElementById("navEq");
   if (nav) nav.classList.add("active");
@@ -758,59 +831,112 @@ function closeEq() {
 }
 
 /* ---- Visualizer ---- */
+const VIS_BANDS = 12;
 function startVisualizer() {
-  if (!analyser) return;
+  cancelAnimationFrame(animId);
+  visualizer.classList.add("playing");
+  const real = player === playerEQ && !!analyser;
+  visualizer.classList.toggle("real", real);
+  if (!real) return; // sin acceso al audio, queda la animación simulada
+
   const bars = visualizer.querySelectorAll(".bar");
   const data = new Uint8Array(analyser.frequencyBinCount);
+  const binHz = audioCtx.sampleRate / analyser.fftSize;
+  const fMin = 70, fMax = 9000;
+  const ranges = [];
+  for (let k = 0; k < VIS_BANDS; k++) {
+    const a = fMin * Math.pow(fMax / fMin, k / VIS_BANDS);
+    const b = fMin * Math.pow(fMax / fMin, (k + 1) / VIS_BANDS);
+    const lo = Math.max(0, Math.floor(a / binHz));
+    ranges.push([lo, Math.max(lo + 1, Math.ceil(b / binHz))]);
+  }
 
   function frame() {
-    if (!isPlaying) return;
+    if (!isPlaying || player !== playerEQ) return;
     analyser.getByteFrequencyData(data);
+    const H = visualizer.clientHeight || 48;
+    const vals = ranges.map(([lo, hi], k) => {
+      let m = 0;
+      for (let b = lo; b < hi; b++) if (data[b] > m) m = data[b];
+      const v = Math.pow(m / 255, 1.25) * (1 + k * 0.09);
+      return Math.min(1, v);
+    });
+    const half = bars.length / 2;
     bars.forEach((bar, i) => {
-      const v = data[i + 2] || 0;
-      const h = Math.max(4, (v / 255) * 44);
-      bar.style.height = h + "px";
+      // espejo: graves en los bordes, agudos hacia el centro
+      const edge = i < half ? i : bars.length - 1 - i;
+      const k = Math.min(VIS_BANDS - 1, Math.floor((edge / half) * VIS_BANDS));
+      bar.style.height = Math.max(4, vals[k] * H) + "px";
     });
     animId = requestAnimationFrame(frame);
   }
-  visualizer.classList.add("playing");
   frame();
 }
 
 function stopVisualizer() {
   cancelAnimationFrame(animId);
-  visualizer.classList.remove("playing");
+  visualizer.classList.remove("playing", "real");
   visualizer.querySelectorAll(".bar").forEach(b => { b.style.height = "8px"; });
 }
 
 /* ---- Dial needle ---- */
+/* Las marcas del dial no están a la misma distancia, por eso la aguja se ubica entre marcas */
+const DIAL_MAP = {
+  fm: { v: [88, 92, 96, 100, 104, 108],       p: [4, 22, 40, 58, 76, 94] },
+  am: { v: [530, 700, 900, 1100, 1300, 1600], p: [4, 22, 40, 58, 76, 94] }
+};
+
+function dialPct(f, band) {
+  const { v, p } = DIAL_MAP[band];
+  if (f <= v[0]) return p[0];
+  if (f >= v[v.length - 1]) return p[p.length - 1];
+  for (let i = 1; i < v.length; i++) {
+    if (f <= v[i]) return p[i - 1] + ((f - v[i - 1]) / (v[i] - v[i - 1])) * (p[i] - p[i - 1]);
+  }
+  return 50;
+}
+
+function setNeedle(el, leftPct, mobilePct, on) {
+  if (!el) return;
+  el.style.left = leftPct + "%";                       // PC: igual que antes
+  el.style.setProperty("--pm", mobilePct + "%");       // celular: posición entre marcas
+  el.classList.toggle("on", on);
+}
+
 function updateDial(station) {
   if (!station) {
-    if (needleFm) needleFm.style.left = "50%";
-    if (needleAm) needleAm.style.left = "50%";
+    setNeedle(needleFm, 50, 50, true);
+    setNeedle(needleAm, 50, 50, false);
     return;
   }
   const f = station.freq || "";
   const num = parseFloat(String(f).replace(/[^\d.]/g, "")) || 0;
+  const hasNum = num > 0;
   if (String(f).toUpperCase().includes("AM") || (num > 200 && num < 2000)) {
     const pct = Math.min(100, Math.max(0, ((num - 530) / (1600 - 530)) * 100));
-    if (needleAm) needleAm.style.left = pct + "%";
-    if (needleFm) needleFm.style.left = "50%";
+    setNeedle(needleAm, pct, dialPct(num, "am"), hasNum);
+    setNeedle(needleFm, 50, 50, false);
   } else {
     const pct = Math.min(100, Math.max(0, ((num - 88) / (108 - 88)) * 100));
-    if (needleFm) needleFm.style.left = pct + "%";
-    if (needleAm) needleAm.style.left = "50%";
+    setNeedle(needleFm, pct, dialPct(num, "fm"), hasNum);
+    setNeedle(needleAm, 50, 50, false);
   }
 }
 
 /* ---- Player controls ---- */
+const directOnly = new Set((() => {
+  try { return JSON.parse(localStorage.getItem("radio-direct") || "[]"); } catch (e) { return []; }
+})());
+let playToken = 0;
+let starting = false;
+
 function setPlayingUI(playing) {
   isPlaying = playing;
   btnPlay.classList.toggle("playing", playing);
   if (playing) {
     connText.textContent = "Conectado";
     bitrateEl.textContent = "• 128 kbps";
-    startLiveTimer();
+    if (!liveTimerInterval) startLiveTimer();
     startVisualizer();
   } else {
     connText.textContent = currentStation ? "Pausado" : "Desconectado";
@@ -839,27 +965,70 @@ function stopLiveTimer() {
   liveTimerInterval = null;
 }
 
-async function playStation(st) {
-  if (!st) return;
-  currentStation = st;
-  stationNameEl.textContent = st.name;
-  freqEl.textContent = st.freq || "Online";
-  updateDial(st);
-  updateFavUI();
-  highlightActive();
+function releaseEl(el) {
+  try { el.pause(); } catch (e) {}
+  el.removeAttribute("src");
+  el.load();
+}
 
-  try {
+async function startOn(el, st, withEq) {
+  const other = el === playerEQ ? playerDirect : playerEQ;
+  player = el;                 // primero marco cuál es el activo, así los eventos del otro se ignoran
+  releaseEl(other);
+  if (withEq) {
     initAudioGraph();
     if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume();
-    player.src = st.url;
-    player.load();
-    await player.play();
+  }
+  el.src = st.url;
+  el.load();
+  await el.play();
+}
+
+async function playStation(st) {
+  if (!st) return;
+  const token = ++playToken;
+  currentStation = st;
+  stationNameEl.textContent = st.name;
+  freqEl.innerHTML = dual(st.freq || "Online", freqMobileHtml(st.freq));
+  updateDial(st);
+  updateFavUI();
+  stopLiveTimer();
+  highlightActive();
+  connText.textContent = "Conectando…";
+  bitrateEl.textContent = "—";
+  starting = true;
+
+  try {
+    if (!directOnly.has(st.id)) {
+      try {
+        await startOn(playerEQ, st, true);
+        if (token !== playToken) return;
+        setEqAvailable(true);
+        setPlayingUI(true);
+        return;
+      } catch (err) {
+        if (token !== playToken || (err && err.name === "AbortError")) return;
+        console.warn("Sin CORS o error, pruebo directo:", st.name, err);
+      }
+    }
+    // Respaldo: la emisora no deja pasar el audio por el ecualizador, pero igual suena
+    await startOn(playerDirect, st, false);
+    if (token !== playToken) return;
+    if (!directOnly.has(st.id)) {
+      directOnly.add(st.id);
+      try { localStorage.setItem("radio-direct", JSON.stringify(Array.from(directOnly))); } catch (e) {}
+    }
+    setEqAvailable(false);
     setPlayingUI(true);
   } catch (err) {
+    if (token !== playToken || (err && err.name === "AbortError")) return;
     console.warn("Play error:", err);
     connText.textContent = "Error de stream";
     bitrateEl.textContent = "—";
     setPlayingUI(false);
+    connText.textContent = "Error de stream";
+  } finally {
+    if (token === playToken) starting = false;
   }
 }
 
@@ -955,6 +1124,44 @@ function getStationLoc(st) {
   return "Argentina";
 }
 
+/* ---- Versión celular de los textos (en la PC se sigue viendo exactamente lo de antes) ---- */
+function dual(pcHtml, mobHtml) {
+  return '<span class="v-pc">' + pcHtml + '</span><span class="v-mob">' + mobHtml + '</span>';
+}
+
+/* "FM 105.9" -> "105.9 MHz" · "AM 750" -> "750 kHz" · "Online" -> "Online" */
+function freqMobileHtml(f) {
+  const raw = String(f || "").trim();
+  const num = parseFloat(raw.replace(/[^\d.]/g, ""));
+  if (!num) return "Online";
+  const isAm = /am/i.test(raw) || (num >= 500 && num <= 1700);
+  return isAm ? Math.round(num) + " <small>kHz</small>" : num.toFixed(1) + " <small>MHz</small>";
+}
+
+const LOC_BY_ID = { radiotop: "Resistencia", "El mañanero": "Machagai" };
+const LOC_WORDS = [
+  ["machagai", "Machagai"], ["resistencia", "Resistencia"], ["chaco", "Chaco"],
+  ["formosa", "Formosa"], ["trelew", "Trelew"], ["neuquen", "Neuquén"],
+  ["cipolletti", "Cipolletti"], ["mar del plata", "Mar del Plata"],
+  ["bahia blanca", "Bahía Blanca"], ["rosario", "Rosario"], ["cordoba", "Córdoba"]
+];
+
+function getStationLocMobile(st) {
+  if (LOC_BY_ID[st.id]) return LOC_BY_ID[st.id];
+  const n = (st.name || "").toLowerCase();
+  for (const [word, label] of LOC_WORDS) if (n.includes(word)) return label;
+  return "Argentina";
+}
+
+/* Cada emisora sin logo propio tiene su color, siempre el mismo */
+const LOGO_HUES = [212, 196, 262, 336, 14, 152, 176, 232];
+function stationHue(st) {
+  let h = 0;
+  const key = String(st.id || st.name);
+  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+  return LOGO_HUES[h % LOGO_HUES.length];
+}
+
 function renderList() {
   const list = getVisibleStations();
   stationList.innerHTML = "";
@@ -964,21 +1171,21 @@ function renderList() {
   }
   list.forEach(st => {
     const item = document.createElement("div");
-    item.className = "station-item" + (currentStation && currentStation.id === st.id ? " active" : "");
+    const isActive = currentStation && currentStation.id === st.id;
+    item.className = "station-item" + (isActive ? " active" : "") + (isActive && isPlaying ? " is-playing" : "");
     item.dataset.id = st.id;
 
     const logo = getStationLogo(st);
     const loc = getStationLoc(st);
-    const isActive = currentStation && currentStation.id === st.id;
     const playIcon = isActive && isPlaying ? "⏸" : "▶";
 
     item.innerHTML = `
-      <div class="station-logo ${logo.cls}">${logo.html}</div>
+      <div class="station-logo ${logo.cls}" style="--h:${stationHue(st)}">${logo.html}</div>
       <div class="station-meta">
         <div class="s-name">${st.name}</div>
-        <div class="s-loc">${loc}</div>
+        <div class="s-loc">${dual(loc, getStationLocMobile(st))}</div>
       </div>
-      <div class="station-freq-right">${st.freq || "Online"}</div>
+      <div class="station-freq-right">${dual(st.freq || "Online", freqMobileHtml(st.freq))}</div>
       <div class="station-play">${playIcon}</div>
     `;
     item.addEventListener("click", () => {
@@ -993,6 +1200,7 @@ function highlightActive() {
   document.querySelectorAll(".station-item").forEach(el => {
     const active = currentStation && el.dataset.id === currentStation.id;
     el.classList.toggle("active", active);
+    el.classList.toggle("is-playing", !!(active && isPlaying));
     const playBtn = el.querySelector(".station-play");
     if (playBtn) playBtn.textContent = active && isPlaying ? "⏸" : "▶";
   });
@@ -1126,12 +1334,16 @@ document.querySelectorAll(".nav-btn").forEach(btn => {
 
 sideClose.addEventListener("click", closeSide);
 
-player.addEventListener("playing", () => setPlayingUI(true));
-player.addEventListener("pause", () => setPlayingUI(false));
-player.addEventListener("error", () => {
-  connText.textContent = "Error de conexión";
-  bitrateEl.textContent = "—";
-  setPlayingUI(false);
+[playerEQ, playerDirect].forEach(el => {
+  el.addEventListener("playing", () => { if (el === player) setPlayingUI(true); });
+  el.addEventListener("pause", () => { if (el === player && !starting) setPlayingUI(false); });
+  el.addEventListener("error", () => {
+    // mientras se está conectando, playStation decide si prueba el respaldo
+    if (el !== player || starting) return;
+    setPlayingUI(false);
+    connText.textContent = "Error de conexión";
+    bitrateEl.textContent = "—";
+  });
 });
 
 /* Keyboard */
@@ -1143,6 +1355,14 @@ document.addEventListener("keydown", e => {
 });
 
 /* Init */
+if (window.matchMedia("(max-width: 899px)").matches) {
+  // en el celular el visualizador es más ancho: más barritas a los costados del botón de play
+  for (let i = visualizer.children.length; i < 40; i++) {
+    const b = document.createElement("div");
+    b.className = "bar";
+    visualizer.appendChild(b);
+  }
+}
 buildEqUI();
 renderList();
 updateDial(null);
@@ -1265,7 +1485,11 @@ function closeShortcutDialog() {
 
 if (shortcutBtn) {
   shortcutBtn.hidden = isStandalone;
-  shortcutBtn.addEventListener("click", openShortcutDialog);
+  shortcutBtn.addEventListener("click", () => {
+    // Celular con instalación disponible: se abre directo el cuadro nativo. Si no, se muestran los pasos.
+    if (isMobileUA && deferredPrompt) installApp();
+    else openShortcutDialog();
+  });
 }
 if (document.getElementById("shortcutClose")) {
   document.getElementById("shortcutClose").addEventListener("click", closeShortcutDialog);

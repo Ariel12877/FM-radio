@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" href="icon-192.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
   <title>Radio Argentina</title>
-  <link rel="stylesheet" href="styles.css?v=23" />
+  <link rel="stylesheet" href="styles.css?v=24" />
 </head>
 <body>
   <div class="app" id="app">
@@ -28,7 +28,7 @@
         </div>
         <span class="brand-text">Radio Argentina</span>
       </div>
-      <button class="install-chip" id="shortcutBtn" type="button" title="Instalar / acceso directo">⬇ Instalar</button>
+      <button class="install-chip" id="shortcutBtn" type="button" title="Instalar / acceso directo"><span class="dl-ico">⬇</span> Instalar</button>
       <div class="live-badge" id="liveBadge">
         <span class="live-dot"></span>
         <span class="live-text">EN VIVO</span>
@@ -182,6 +182,14 @@
         <button class="eq-preset" data-preset="voice">Voz</button>
         <button class="eq-preset" data-preset="rock">Rock</button>
       </div>
+      <div class="eq-curve-wrap" aria-hidden="true">
+        <svg class="eq-curve" id="eqCurve" viewBox="0 0 300 84" preserveAspectRatio="none">
+          <line class="eq-zero" x1="0" y1="42" x2="300" y2="42"></line>
+          <path class="eq-fill" id="eqCurveFill" d=""></path>
+          <path class="eq-line" id="eqCurveLine" d=""></path>
+        </svg>
+      </div>
+      <p class="eq-note" id="eqNote" hidden>Esta emisora no permite ecualizar el sonido. Probá con otra, el resto sí funciona.</p>
       <div class="eq-sliders" id="eqSliders">
         <!-- filled by JS: 60, 150, 400, 1000, 2400, 6000, 15000 Hz -->
       </div>
@@ -202,7 +210,7 @@
   </div>
 
   <audio id="player" preload="none" crossorigin="anonymous"></audio>
-  <script src="app.js?v=23"></script>
+  <script src="app.js?v=24"></script>
 
   <dialog class="sheet" id="shortcutDialog" aria-labelledby="shortcutTitle">
     <div class="sheet-head">
