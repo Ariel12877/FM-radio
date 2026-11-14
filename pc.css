@@ -1401,3 +1401,42 @@ button { cursor: pointer; border: 0; background: none; -webkit-user-select: none
   border-bottom: 1px solid rgba(201,160,74,0.3);
 }
 .preset-sep:first-child { padding-top: 2px; }
+
+/* ---- Logos reales de las emisoras ---- */
+.preset-btn .p-logo {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+  object-fit: cover;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+.preset-btn .p-logo.ph {
+  display: grid;
+  place-items: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ivory);
+  background: linear-gradient(150deg, #5a4030, #2e1f14);
+  box-shadow: inset 0 0 0 1px rgba(201, 160, 74, 0.35), 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+@media (min-width: 900px) {
+  .preset-grid { grid-template-columns: repeat(auto-fill, minmax(212px, 1fr)); }
+  .preset-btn.has-logo {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    column-gap: 11px;
+    row-gap: 2px;
+    align-items: center;
+    align-content: center;
+    justify-content: start;
+  }
+  .preset-btn.has-logo .p-logo { grid-column: 1; grid-row: 1 / span 2; }
+  .preset-btn.has-logo .p-name { grid-column: 2; align-self: end; overflow-wrap: anywhere; }
+  .preset-btn.has-logo .p-freq { grid-column: 2; align-self: start; }
+}
+@media (max-width: 899px) {
+  .preset-btn.has-logo .p-name { flex: 1; min-width: 0; }
+}

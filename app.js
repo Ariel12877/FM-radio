@@ -615,6 +615,47 @@ const STATIONS = [
 ];
 
 
+/* ---- Logos de las emisoras (carpeta logos/) ----
+   La clave es el id de la emisora. Las que no tienen logo siguen mostrando su etiqueta de siempre.
+   Para sumar uno: copiar la imagen cuadrada en logos/ y agregar una línea acá. */
+const LOGOS = {
+  "mitre": "logos/mitre.webp",
+  "lared": "logos/lared.webp",
+  "la100": "logos/la100.webp",
+  "rivadavia": "logos/rivadavia.webp",
+  "aspen": "logos/aspen.webp",
+  "Radio 10": "logos/radio10.webp",
+  "blue": "logos/blue.webp",
+  "rockpop": "logos/rockpop.webp",
+  "continental": "logos/continental.webp",
+  "facundoquiroga": "logos/facundoquiroga.webp",
+  "delplata": "logos/delplata.webp",
+  "Cadena Heat": "logos/heat.webp",
+  "fmcordoba": "logos/heat.webp",
+  "nacionalfolklorica": "logos/nacionalfolklorica.webp",
+  "nacional": "logos/nacional.webp",
+  "estaciondelsol": "logos/estaciondelsol.webp",
+  "lu19": "logos/lu19.webp",
+  "disney": "logos/disney.webp",
+  "am750": "logos/am750.webp",
+  "Radio Latina 101.1": "logos/latina.webp",
+  "los40": "logos/los40.webp",
+  "mia": "logos/mia.webp",
+  "cadena3am": "logos/cadena3.webp",
+  "cadena3fm": "logos/cadena3.webp",
+  "Vale 97.5": "logos/vale.webp",
+  "La mega": "logos/mega.webp",
+  "urbana": "logos/urbana.webp",
+  "Radio Con Vos": "logos/convos.webp",
+  "la990": "logos/la990.webp",
+  "lt10": "logos/lt10.webp",
+  "eldesta": "logos/eldesta.webp",
+  "delta": "logos/delta.webp",
+  "berlin": "logos/berlin.webp",
+  "suquia": "logos/suquia.webp"
+};
+STATIONS.forEach(st => { if (LOGOS[st.id]) st.logo = LOGOS[st.id]; });
+
 /* ---- Orden de la lista: primero las de Chaco / Machagai, después por categoría ---- */
 const TOP_IDS = ["radiotop", "Pobre Johnny", "El mañanero", "FM libertad Machagai",
                  "VIP FM", "Master FM", "laradio1047", "facundoquiroga"];
@@ -1214,9 +1255,14 @@ function renderList() {
     const logo = getStationLogo(st);
     const loc = getStationLoc(st);
     const playIcon = isActive && isPlaying ? "⏸" : "▶";
+    // Si la emisora tiene logo propio se muestra la imagen; si no, la etiqueta de siempre
+    const logoCls = st.logo ? "has-img" : logo.cls;
+    const logoInner = st.logo
+      ? `<img src="${st.logo}" alt="" width="48" height="48" loading="lazy" decoding="async">`
+      : logo.html;
 
     item.innerHTML = `
-      <div class="station-logo ${logo.cls}" style="--h:${stationHue(st)}">${logo.html}</div>
+      <div class="station-logo ${logoCls}" style="--h:${stationHue(st)}">${logoInner}</div>
       <div class="station-meta">
         <div class="s-name">${st.name}</div>
         <div class="s-loc">${dual(loc, getStationLocMobile(st))}</div>
@@ -1224,6 +1270,12 @@ function renderList() {
       <div class="station-freq-right">${dual(st.freq || "Online", freqMobileHtml(st.freq))}</div>
       <div class="station-play">${playIcon}</div>
     `;
+    const logoImg = item.querySelector(".station-logo img");
+    if (logoImg) logoImg.addEventListener("error", () => {   // si el archivo no carga, vuelve la etiqueta de siempre
+      const box = logoImg.parentNode;
+      box.className = "station-logo " + logo.cls;
+      box.innerHTML = logo.html;
+    });
     item.addEventListener("click", () => {
       if (currentStation && currentStation.id === st.id) togglePlay();
       else playStation(st);
