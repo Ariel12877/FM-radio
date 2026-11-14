@@ -631,8 +631,9 @@ const CAT_BY_ID = {
              "Radio 10", "Radio Con Vos", "infobae", "cadena3am", "madre", "eldesta", "lu9", "lu2", "lu19", "lt3",
              "unicordoba", "cooperativa", "zonica", "delpueblo", "genesis", "la990", "delplata", "guemes",
              "delaciudad", "federal", "radiosur", "ecomedios", "ondalatina", "Radio Mocovl AM 800"],
-  folklore:  ["Radio Chamame", "Polca Paraguaya", "Ñande Reko Radio", "FOLKLORE RADIO", "nacionalfolklorica"],
-  deportes:  ["dsports", "fmlaredonda"]
+  folklore:  ["Radio Chamame", "Polca Paraguaya", "Ñande Reko Radio", "FOLKLORE RADIO", "doradofm","nacionalfolklorica"],
+  deportes:  ["dsports", "fmlaredonda"],
+  religiosas:  ["radiomaria"] 
 };
 (function sortStations() {
   const catOf = {};
