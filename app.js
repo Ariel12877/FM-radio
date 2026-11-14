@@ -90,6 +90,12 @@ const STATIONS = [
     freq: "AM 800",
     url: "https://live-ar1.cdnrad.com/hls/radio-1930/live.m3u8"
   },
+   {
+    id: "radiomaria",
+    name: "Radio Maria",
+    freq: "online",
+    url: "https://dreamsiteradiocp2.com/proxy/rmargentina2?mp=/stream"
+  },
   {
     id: "Futuro",
     name: "Radio Futuro",
@@ -614,47 +620,6 @@ const STATIONS = [
   }
 ];
 
-
-/* ---- Logos de las emisoras (carpeta logos/) ----
-   La clave es el id de la emisora. Las que no tienen logo siguen mostrando su etiqueta de siempre.
-   Para sumar uno: copiar la imagen cuadrada en logos/ y agregar una línea acá. */
-const LOGOS = {
-  "mitre": "logos/mitre.webp",
-  "lared": "logos/lared.webp",
-  "la100": "logos/la100.webp",
-  "rivadavia": "logos/rivadavia.webp",
-  "aspen": "logos/aspen.webp",
-  "Radio 10": "logos/radio10.webp",
-  "blue": "logos/blue.webp",
-  "rockpop": "logos/rockpop.webp",
-  "continental": "logos/continental.webp",
-  "facundoquiroga": "logos/facundoquiroga.webp",
-  "delplata": "logos/delplata.webp",
-  "Cadena Heat": "logos/heat.webp",
-  "fmcordoba": "logos/heat.webp",
-  "nacionalfolklorica": "logos/nacionalfolklorica.webp",
-  "nacional": "logos/nacional.webp",
-  "estaciondelsol": "logos/estaciondelsol.webp",
-  "lu19": "logos/lu19.webp",
-  "disney": "logos/disney.webp",
-  "am750": "logos/am750.webp",
-  "Radio Latina 101.1": "logos/latina.webp",
-  "los40": "logos/los40.webp",
-  "mia": "logos/mia.webp",
-  "cadena3am": "logos/cadena3.webp",
-  "cadena3fm": "logos/cadena3.webp",
-  "Vale 97.5": "logos/vale.webp",
-  "La mega": "logos/mega.webp",
-  "urbana": "logos/urbana.webp",
-  "Radio Con Vos": "logos/convos.webp",
-  "la990": "logos/la990.webp",
-  "lt10": "logos/lt10.webp",
-  "eldesta": "logos/eldesta.webp",
-  "delta": "logos/delta.webp",
-  "berlin": "logos/berlin.webp",
-  "suquia": "logos/suquia.webp"
-};
-STATIONS.forEach(st => { if (LOGOS[st.id]) st.logo = LOGOS[st.id]; });
 
 /* ---- Orden de la lista: primero las de Chaco / Machagai, después por categoría ---- */
 const TOP_IDS = ["radiotop", "Pobre Johnny", "El mañanero", "FM libertad Machagai",
@@ -1255,14 +1220,9 @@ function renderList() {
     const logo = getStationLogo(st);
     const loc = getStationLoc(st);
     const playIcon = isActive && isPlaying ? "⏸" : "▶";
-    // Si la emisora tiene logo propio se muestra la imagen; si no, la etiqueta de siempre
-    const logoCls = st.logo ? "has-img" : logo.cls;
-    const logoInner = st.logo
-      ? `<img src="${st.logo}" alt="" width="48" height="48" loading="lazy" decoding="async">`
-      : logo.html;
 
     item.innerHTML = `
-      <div class="station-logo ${logoCls}" style="--h:${stationHue(st)}">${logoInner}</div>
+      <div class="station-logo ${logo.cls}" style="--h:${stationHue(st)}">${logo.html}</div>
       <div class="station-meta">
         <div class="s-name">${st.name}</div>
         <div class="s-loc">${dual(loc, getStationLocMobile(st))}</div>
@@ -1270,12 +1230,6 @@ function renderList() {
       <div class="station-freq-right">${dual(st.freq || "Online", freqMobileHtml(st.freq))}</div>
       <div class="station-play">${playIcon}</div>
     `;
-    const logoImg = item.querySelector(".station-logo img");
-    if (logoImg) logoImg.addEventListener("error", () => {   // si el archivo no carga, vuelve la etiqueta de siempre
-      const box = logoImg.parentNode;
-      box.className = "station-logo " + logo.cls;
-      box.innerHTML = logo.html;
-    });
     item.addEventListener("click", () => {
       if (currentStation && currentStation.id === st.id) togglePlay();
       else playStation(st);
@@ -1375,8 +1329,15 @@ function showAcerca() {
     <h3>Radio Argentina</h3>
     <p>Reproductor de radios argentinas en vivo. Sin publicidad.</p>
     <p>Diseño inspirado en una interfaz clásica de radio con dial y ecualizador integrado.</p>
+    <h3>Actualizaciones</h3>
+    <button class="upd-check" type="button" data-update-btn data-update-normal="Buscar actualización">
+      <span class="upd-ico" aria-hidden="true">↻</span>
+      <span data-update-text>Buscar actualización</span>
+    </button>
+    <p class="upd-version" data-update-version></p>
     <p style="margin-top:16px;font-size:0.85rem;opacity:0.7">v2.0 · 2026</p>
   `);
+  if (window.RadioUpdate) window.RadioUpdate.render();
 }
 
 /* ---- Event listeners ---- */
@@ -1405,6 +1366,8 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
 
 document.querySelectorAll(".nav-btn").forEach(btn => {
   btn.addEventListener("click", () => {
+    // "Nueva actualización" no abre ningún panel: lo maneja update.js
+    if (btn.dataset.panel === "actualizacion") return;
     document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     const panel = btn.dataset.panel;
@@ -1611,12 +1574,7 @@ window.addEventListener("appinstalled", () => {
   refreshShortcutUi();
 });
 
-/* Service Worker */
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js").catch((err) => {
-    console.warn("SW registration failed:", err);
-  });
-}
+/* Service Worker: el registro y el botón de "Nueva actualización" están en update.js */
 
 /* Also expose openShortcutDialog for Opciones panel */
 window.openShortcutDialog = openShortcutDialog;

@@ -1880,15 +1880,66 @@ body {
   .station-logo { width: 44px; height: 44px; }
 }
 
-/* ---- Logos reales de las emisoras ---- */
-.station-logo.has-img {
-  background: #fff;
-  padding: 0;
-  font-size: 0;
+
+/* ========== ACTUALIZACIÓN (botón rojo en la barra de abajo) ========== */
+.nav-btn[hidden] { display: none !important; }
+
+@keyframes updGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 70, 60, 0); }
+  50%      { box-shadow: 0 0 14px 1px rgba(255, 70, 60, 0.55); }
 }
-.station-logo.has-img img {
-  display: block;
+@keyframes updSpin { to { transform: rotate(360deg); } }
+
+/* Botón "Buscar actualización" dentro de Acerca de */
+.upd-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.upd-check .upd-ico { display: inline-block; font-size: 1.1rem; line-height: 1; }
+.upd-check.is-busy .upd-ico { animation: updSpin 1s linear infinite; }
+.upd-check.has-update {
+  border-color: transparent;
+  background: linear-gradient(135deg, #ff5a4f, #c62419);
+  box-shadow: 0 0 16px rgba(255, 70, 60, 0.5);
+}
+.upd-version { margin-top: 8px; font-size: 0.85rem; opacity: 0.75; }
+.upd-version:empty { display: none; }
+
+.nav-update { color: #ff8a80; }
+.nav-update .nav-icon { color: #ff5a4f; }
+
+@media (max-width: 899px) {
+  :root {
+    --i-update: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20d='M17.65%206.35C16.2%204.9%2014.21%204%2012%204c-4.42%200-7.99%203.58-7.99%208s3.57%208%207.99%208c3.73%200%206.84-2.55%207.73-6h-2.08c-.82%202.33-3.04%204-5.65%204-3.31%200-6-2.69-6-6s2.69-6%206-6c1.66%200%203.14.69%204.22%201.78L13%2011h7V4l-2.35%202.35z'/%3E%3C/svg%3E");
+  }
+  #navUpdate .nav-icon { --ico: var(--i-update); color: #ff5a4f; }
+  .nav-update {
+    min-width: 0;
+    border-radius: 16px;
+    color: #ffb0a8;
+    background: radial-gradient(ellipse at 50% 42%, rgba(255, 70, 60, 0.30), rgba(255, 70, 60, 0) 74%);
+    animation: updGlow 1.8s ease-in-out infinite;
+  }
+  .nav-update .nav-label {
+    font-size: 0.56rem;
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    text-align: center;
+  }
+  .nav-update.is-busy .nav-icon { animation: updSpin 1s linear infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-update, .nav-update.is-busy .nav-icon, .upd-check.is-busy .upd-ico { animation: none; }
+  }
 }

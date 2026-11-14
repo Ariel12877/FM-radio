@@ -614,47 +614,6 @@ const STATIONS = [
   }
 ];
 
-/* ---- Logos de las emisoras (carpeta logos/) ----
-   La clave es el id de la emisora. Las que no tienen logo siguen mostrando su etiqueta de siempre.
-   Para sumar uno: copiar la imagen cuadrada en logos/ y agregar una línea acá. */
-const LOGOS = {
-  "mitre": "logos/mitre.webp",
-  "lared": "logos/lared.webp",
-  "la100": "logos/la100.webp",
-  "rivadavia": "logos/rivadavia.webp",
-  "aspen": "logos/aspen.webp",
-  "Radio 10": "logos/radio10.webp",
-  "blue": "logos/blue.webp",
-  "rockpop": "logos/rockpop.webp",
-  "continental": "logos/continental.webp",
-  "facundoquiroga": "logos/facundoquiroga.webp",
-  "delplata": "logos/delplata.webp",
-  "Cadena Heat": "logos/heat.webp",
-  "fmcordoba": "logos/heat.webp",
-  "nacionalfolklorica": "logos/nacionalfolklorica.webp",
-  "nacional": "logos/nacional.webp",
-  "estaciondelsol": "logos/estaciondelsol.webp",
-  "lu19": "logos/lu19.webp",
-  "disney": "logos/disney.webp",
-  "am750": "logos/am750.webp",
-  "Radio Latina 101.1": "logos/latina.webp",
-  "los40": "logos/los40.webp",
-  "mia": "logos/mia.webp",
-  "cadena3am": "logos/cadena3.webp",
-  "cadena3fm": "logos/cadena3.webp",
-  "Vale 97.5": "logos/vale.webp",
-  "La mega": "logos/mega.webp",
-  "urbana": "logos/urbana.webp",
-  "Radio Con Vos": "logos/convos.webp",
-  "la990": "logos/la990.webp",
-  "lt10": "logos/lt10.webp",
-  "eldesta": "logos/eldesta.webp",
-  "delta": "logos/delta.webp",
-  "berlin": "logos/berlin.webp",
-  "suquia": "logos/suquia.webp"
-};
-STATIONS.forEach(st => { if (LOGOS[st.id]) st.logo = LOGOS[st.id]; });
-
 /* ---- Orden de la lista: primero las de Chaco / Machagai, después por categoría ---- */
 const TOP_IDS = ["radiotop", "Pobre Johnny", "El mañanero", "FM libertad Machagai",
                  "VIP FM", "Master FM", "laradio1047", "facundoquiroga"];
@@ -924,17 +883,6 @@ function updateDial() {
   dialOnline.classList.toggle("on", !!currentStation && !info);
 }
 
-/* Carátula de la notificación: el logo de la emisora si lo tiene, si no el ícono de la app */
-function mediaArtwork() {
-  if (currentStation && currentStation.logo) {
-    return [{ src: new URL(currentStation.logo, location.href).href, sizes: "128x128", type: "image/webp" }];
-  }
-  return [
-    { src: "icon-192.png", sizes: "192x192", type: "image/png" },
-    { src: "icon-512.png", sizes: "512x512", type: "image/png" }
-  ];
-}
-
 /* Media Session + possible metadata */
 function updateMediaSession() {
   if (!("mediaSession" in navigator) || !currentStation) return;
@@ -943,7 +891,10 @@ function updateMediaSession() {
       title: currentStation.name,
       artist: "Radio Argentina",
       album: currentStation.freq,
-      artwork: mediaArtwork()
+      artwork: [
+        { src: "icon-192.png", sizes: "192x192", type: "image/png" },
+        { src: "icon-512.png", sizes: "512x512", type: "image/png" }
+      ]
     });
     navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
   } catch (_) {}
@@ -965,8 +916,7 @@ function tryReadIcyTitle() {
             navigator.mediaSession.metadata = new MediaMetadata({
               title: meta.title || currentStation.name,
               artist: meta.artist || "Radio Argentina",
-              album: currentStation.freq,
-              artwork: mediaArtwork()
+              album: currentStation.freq
             });
           }
           return;
@@ -1183,12 +1133,6 @@ if (progressBar) {
   progressBar.addEventListener("touchstart", (e) => e.preventDefault(), { passive: false });
 }
 
-/* Emisoras sin logo: etiqueta con las iniciales */
-function logoPlaceholder(st) {
-  const ini = String(st.name).split(" ").filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase().slice(0, 3);
-  return `<span class="p-logo ph" aria-hidden="true">${ini}</span>`;
-}
-
 /* --- Build preset buttons --- */
 let lastCat = null;
 STATIONS.forEach((st) => {
@@ -1205,13 +1149,7 @@ STATIONS.forEach((st) => {
   btn.dataset.name = st.name.toLowerCase();
   btn.dataset.freq = (st.freq || "").toLowerCase();
   btn.setAttribute("aria-pressed", "false");
-  btn.classList.add("has-logo");
-  const logoHtml = st.logo
-    ? `<img class="p-logo" src="${st.logo}" alt="" width="40" height="40" loading="lazy" decoding="async">`
-    : logoPlaceholder(st);
-  btn.innerHTML = `${logoHtml}<span class="p-name">${st.name}</span><span class="p-freq">${st.freq}</span>`;
-  const logoImg = btn.querySelector("img.p-logo");
-  if (logoImg) logoImg.addEventListener("error", () => { logoImg.outerHTML = logoPlaceholder(st); });
+  btn.innerHTML = `<span class="p-name">${st.name}</span><span class="p-freq">${st.freq}</span>`;
   btn.addEventListener("click", () => selectStation(st));
   presetGrid.appendChild(btn);
 });
@@ -1415,12 +1353,7 @@ window.addEventListener("appinstalled", () => {
   refreshShortcutUi();
 });
 
-/* Service Worker */
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js").catch((err) => {
-    console.warn("SW registration failed:", err);
-  });
-}
+/* Service Worker: el registro y el botón de "Nueva actualización" están en update.js */
 
 /* Wake Lock opcional (mantener pantalla en mobile mientras suena) */
 let wakeLock = null;

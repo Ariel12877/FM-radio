@@ -175,9 +175,14 @@
         <span class="nav-icon">♥</span>
         <span class="nav-label">Mis Radios</span>
       </button>
-      <button class="nav-btn" data-panel="acerca" id="navAcerca">
+      <button class="nav-btn" data-panel="acerca" id="navAcerca" data-update-hide>
         <span class="nav-icon">ℹ</span>
         <span class="nav-label">Acerca de</span>
+      </button>
+      <!-- Aparece (en rojo) solo cuando hay una versión nueva; ocupa el lugar de "Acerca de" -->
+      <button class="nav-btn nav-update" id="navUpdate" type="button" data-panel="actualizacion" data-update-btn data-update-show hidden>
+        <span class="nav-icon">↻</span>
+        <span class="nav-label" data-update-text>Nueva actualización</span>
       </button>
     </nav>
 
@@ -223,6 +228,7 @@
 
   <audio id="player" preload="none" crossorigin="anonymous"></audio>
   <script src="app.js?v=25"></script>
+  <script src="update.js?v=1"></script>
 
   <dialog class="sheet" id="shortcutDialog" aria-labelledby="shortcutTitle">
     <div class="sheet-head">
