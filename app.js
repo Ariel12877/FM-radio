@@ -629,18 +629,24 @@ const STATIONS = [
 
 /* ---- Orden de la lista: primero las de Chaco / Machagai, después por categoría ---- */
 const TOP_IDS = ["radiotop", "Pobre Johnny", "El mañanero", "FM libertad Machagai",
-                 "VIP FM", "Master FM","Cristalfm", "laradio1047", "facundoquiroga"];
-const CAT_ORDER = ["chaco", "musica", "noticias", "folklore", "deportes"];
-const CAT_LABEL = { chaco: "Chaco y Machagai", musica: "Música", noticias: "Noticias", folklore: "Folklore", deportes: "Deportes" };
+                 "VIP FM", "Master FM", "Cristalfm", "laradio1047", "facundoquiroga"];
+const CAT_ORDER = ["chaco", "musica", "noticias", "folklore", "deportes", "religiosas"];
+const CAT_LABEL = {
+  chaco: "Chaco y Machagai",
+  musica: "Música",
+  noticias: "Noticias",
+  folklore: "Folklore",
+  deportes: "Deportes",
+  religiosas: "Religiosas"
+};
 const CAT_BY_ID = {
-   religiosas:["radiomaria"],
-  noticias: ["nacional", "lra26",#Cristalfm", "Las Lomitas", "mitre", "lared", "continental", "rivadavia", "cnnradio",
+  religiosas: ["radiomaria"],
+  noticias: ["nacional", "lra26", "Las Lomitas", "mitre", "lared", "continental", "rivadavia", "cnnradio",
              "Radio 10", "Radio Con Vos", "infobae", "cadena3am", "madre", "eldesta", "lu9", "lu2", "lu19", "lt3",
              "unicordoba", "cooperativa", "zonica", "delpueblo", "genesis", "la990", "delplata", "guemes",
              "delaciudad", "federal", "radiosur", "ecomedios", "ondalatina", "Radio Mocovl AM 800"],
-  folklore:  ["Radio Chamame", "Polca Paraguaya", "Ñande Reko Radio", "FOLKLORE RADIO", "doradofm","nacionalfolklorica"],
-  deportes:  ["dsports", "fmlaredonda"],
- 
+  folklore:  ["Radio Chamame", "Polca Paraguaya", "Ñande Reko Radio", "FOLKLORE RADIO", "doradofm", "nacionalfolklorica"],
+  deportes:  ["dsports", "fmlaredonda"]
 };
 (function sortStations() {
   const catOf = {};
