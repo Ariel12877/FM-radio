@@ -671,46 +671,56 @@ const CAT_BY_ID = {
 })();
 
 
-/* ---- Logos de las emisoras (carpeta logos/) ----
-   La clave es el id de la emisora. Las que no tienen logo muestran sus iniciales.
-   Para sumar uno: copiar la imagen cuadrada en logos/ y agregar una línea acá. */
+/* ---- Logos de las emisoras ----
+   Preferimos logos/*.webp (más livianos). Si no hay, usamos radio_logos/*_list_100.
+   La clave es el id de la emisora. Las que no tienen logo muestran iniciales. */
 const LOGOS = {
-  "mitre": "logos/mitre.webp",
-  "lared": "logos/lared.webp",
-  "la100": "logos/la100.webp",
-  "rivadavia": "logos/rivadavia.webp",
-  "aspen": "logos/aspen.webp",
-  "Radio 10": "logos/radio10.webp",
-  "blue": "logos/blue.webp",
-  "rockpop": "logos/rockpop.webp",
-  "continental": "logos/continental.webp",
-  "facundoquiroga": "logos/facundoquiroga.webp",
-  "delplata": "logos/delplata.webp",
-  "Cadena Heat": "logos/heat.webp",
-  "fmcordoba": "logos/heat.webp",
-  "nacionalfolklorica": "logos/nacionalfolklorica.webp",
-  "nacional": "logos/nacional.webp",
-  "estaciondelsol": "logos/estaciondelsol.webp",
-  "lu19": "logos/lu19.webp",
-  "disney": "logos/disney.webp",
-  "am750": "logos/am750.webp",
-  "Radio Latina 101.1": "logos/latina.webp",
-  "los40": "logos/los40.webp",
-  "mia": "logos/mia.webp",
-  "cadena3am": "logos/cadena3.webp",
-  "cadena3fm": "logos/cadena3.webp",
-  "Vale 97.5": "logos/vale.webp",
-  "La mega": "logos/mega.webp",
-  "urbana": "logos/urbana.webp",
-  "Radio Con Vos": "logos/convos.webp",
-  "la990": "logos/la990.webp",
-  "lt10": "logos/lt10.webp",
-  "eldesta": "logos/eldesta.webp",
-  "delta": "logos/delta.webp",
-  "berlin": "logos/berlin.webp",
-  "suquia": "logos/suquia.webp"
+  "mitre": "./logos/mitre.webp",
+  "lared": "./logos/lared.webp",
+  "la100": "./logos/la100.webp",
+  "rivadavia": "./logos/rivadavia.webp",
+  "aspen": "./logos/aspen.webp",
+  "Radio 10": "./logos/radio10.webp",
+  "blue": "./logos/blue.webp",
+  "rockpop": "./logos/rockpop.webp",
+  "continental": "./logos/continental.webp",
+  "facundoquiroga": "./logos/facundoquiroga.webp",
+  "delplata": "./logos/delplata.webp",
+  "Cadena Heat": "./logos/heat.webp",
+  "fmcordoba": "./logos/heat.webp",
+  "nacionalfolklorica": "./logos/nacionalfolklorica.webp",
+  "nacional": "./logos/nacional.webp",
+  "nacionalrock": "./logos/nacional.webp",
+  "nacionalclasica": "./logos/nacional.webp",
+  "estaciondelsol": "./logos/estaciondelsol.webp",
+  "lu19": "./logos/lu19.webp",
+  "disney": "./logos/disney.webp",
+  "am750": "./logos/am750.webp",
+  "Radio Latina 101.1": "./logos/latina.webp",
+  "los40": "./logos/los40.webp",
+  "mia": "./logos/mia.webp",
+  "cadena3am": "./logos/cadena3.webp",
+  "cadena3fm": "./logos/cadena3.webp",
+  "Vale 97.5": "./logos/vale.webp",
+  "La mega": "./logos/mega.webp",
+  "urbana": "./logos/urbana.webp",
+  "Radio Con Vos": "./logos/convos.webp",
+  "la990": "./logos/la990.webp",
+  "lt10": "./logos/lt10.webp",
+  "eldesta": "./logos/eldesta.webp",
+  "delta": "./logos/delta.webp",
+  "berlin": "./logos/berlin.webp",
+  "suquia": "./logos/suquia.webp",
+  // Fallbacks desde radio_logos (mobile pack)
+  "guemes": "./radio_logos/radio-guemes_list_100.jpg",
+  "radiosur": "./radio_logos/radio-del-sur_list_100.jpg",
+  "dsports": "./radio_logos/d-sports-radio_list_100.jpg",
+  "fmdelmar": "./radio_logos/radio-del-mar_list_100.jpg",
+  "lt3": "./radio_logos/lt3-am680_list_100.jpg",
+  "belgrano": "./radio_logos/belgrano-radio_list_100.jpg",
+  "metro": "./radio_logos/la-100_list_100.jpg"
 };
-// Asocia logos: primero por id exacto, luego por id en minúsculas / sin espacios
+// Normalización por id en minúsculas / sin espacios
 const LOGOS_NORM = {};
 Object.keys(LOGOS).forEach((k) => {
   LOGOS_NORM[k] = LOGOS[k];
@@ -719,7 +729,11 @@ Object.keys(LOGOS).forEach((k) => {
 });
 STATIONS.forEach((st) => {
   const id = st.id;
-  st.logo = LOGOS[id] || LOGOS_NORM[id] || LOGOS_NORM[String(id).toLowerCase().trim()] || LOGOS_NORM[String(id).toLowerCase().replace(/\s+/g, "")] || null;
+  st.logo = LOGOS[id]
+    || LOGOS_NORM[id]
+    || LOGOS_NORM[String(id).toLowerCase().trim()]
+    || LOGOS_NORM[String(id).toLowerCase().replace(/\s+/g, "")]
+    || null;
 });
 
 /* ============================================================
@@ -1009,7 +1023,13 @@ function initials(name) {
 }
 function logoHtml(st) {
   const ini = initials(st.name);
-  if (st.logo) return `<span class="r-logo"><img src="${st.logo}" alt="" width="44" height="44" loading="lazy" decoding="async"></span>`;
+  if (st.logo) {
+    // src con ./ para que funcione aunque la página esté en subcarpeta o con hash
+    const src = st.logo.startsWith("./") || st.logo.startsWith("/") || st.logo.startsWith("http")
+      ? st.logo
+      : "./" + st.logo;
+    return `<span class="r-logo"><img src="${src}" alt="" width="44" height="44" loading="lazy" decoding="async" data-fallback="1"></span>`;
+  }
   return `<span class="r-logo ph" aria-hidden="true">${ini}</span>`;
 }
 const STAR_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.9-4.7 4.5 1.2 6.4L12 17.4l-5.7 3.1 1.2-6.4-4.7-4.5 6.4-.9z"/></svg>';
@@ -1026,7 +1046,19 @@ function buildRows() {
     row.querySelector(".r-name").textContent = st.name.trim();
     row.querySelector(".r-freq").textContent = freqRow(st);
     const img = row.querySelector("img");
-    if (img) img.addEventListener("error", () => { img.parentNode.outerHTML = `<span class="r-logo ph" aria-hidden="true">${initials(st.name)}</span>`; });
+    if (img) {
+      img.addEventListener("error", function onLogoErr() {
+        // Si falla el webp, intentar una sola vez con radio_logos si existiera mapeo alternativo
+        if (img.dataset.fallback === "1" && st.logo && st.logo.indexOf("logos/") !== -1) {
+          img.dataset.fallback = "0";
+          const base = st.id.toLowerCase().replace(/\s+/g, "-");
+          // no inventamos archivos; pasamos a iniciales
+        }
+        // Reemplazar por iniciales (evita ícono roto)
+        const wrap = img.parentNode;
+        if (wrap) wrap.outerHTML = `<span class="r-logo ph" aria-hidden="true">${initials(st.name)}</span>`;
+      });
+    }
     row.addEventListener("click", (e) => {
       if (e.target.closest(".r-star")) { e.stopPropagation(); toggleFavorite(st); return; }
       selectStation(st);
