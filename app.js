@@ -1442,26 +1442,79 @@ function getVisibleStations() {
   return list;
 }
 
+const STATION_LOGOS = {
+  "nacional": "radio_logos/radio-nacional_list_100.jpg",
+  "nacionalrock": "radio_logos/radio-nacional_list_100.jpg",
+  "nacionalclasica": "radio_logos/radio-nacional_list_100.jpg",
+  "nacionalfolklorica": "radio_logos/radio-nacional-folklorica-98-7_list_100.jpg",
+  "mitre": "radio_logos/radio-mitre_list_100.jpg",
+  "rockpop": "radio_logos/fm-rock-pop-95-9_list_100.jpg",
+  "aspen": "radio_logos/aspen-102-3_list_100.jpg",
+  "lared": "radio_logos/radio-la-red_list_100.jpg",
+  "urbana": "radio_logos/urbana-play-104-3_list_100.jpg",
+  "am750": "radio_logos/am-750_list_100.jpg",
+  "continental": "radio_logos/radio-continental_list_100.jpg",
+  "rivadavia": "radio_logos/radio-rivadavia_list_100.jpg",
+  "guemes": "radio_logos/radio-guemes_list_100.jpg",
+  "radiosur": "radio_logos/radio-del-sur_list_100.jpg",
+  "delta": "radio_logos/delta-90-3_list_100.jpg",
+  "disney": "radio_logos/radio-disney_list_100.jpg",
+  "la100": "radio_logos/la-100_list_100.jpg",
+  "blue": "radio_logos/blue-fm-100-7_list_100.jpg",
+  "dsports": "radio_logos/d-sports-radio_list_100.jpg",
+  "cadena3am": "radio_logos/cadena-3_list_100.jpg",
+  "cadena3fm": "radio_logos/cadena-3_list_100.jpg",
+  "suquia": "radio_logos/radio-suquia-96-5_list_100.jpg",
+  "estaciondelsol": "radio_logos/100-9-estacion-del-sol_list_100.jpg",
+  "fmdelmar": "radio_logos/radio-del-mar_list_100.jpg",
+  "Radio 10": "radio_logos/radio-10_list_100.jpg",
+  "Radio Latina 101.1": "radio_logos/radio-latina-101-1_list_100.jpg",
+  "eldesta": "radio_logos/el-destape-radio_list_100.jpg",
+  "delsur": "radio_logos/radio-del-sur_list_100.jpg",
+  "fmvida": "radio_logos/fm-vida_list_100.jpg",
+  "miafm": "radio_logos/mia-fm_list_100.jpg",
+  "mucha": "radio_logos/mucha-radio_list_100.jpg",
+  "am530": "radio_logos/am-530-somos-radio_list_100.jpg",
+  "colonia": "radio_logos/radio-colonia_list_100.jpg",
+  "laplata965": "radio_logos/fm-96-5-la-plata_list_100.jpg",
+  "valleviejo": "radio_logos/radio-valle-viejo_list_100.jpg",
+  "nihuil": "radio_logos/radio-nihuil_list_100.jpg",
+  "lt9": "radio_logos/lt9_list_100.jpg",
+  "mujerfm": "radio_logos/mujer-fm_list_100.jpg",
+  "laestacion": "radio_logos/la-estacion-fm_list_100.jpg",
+  "radioboing": "radio_logos/radio-boing_list_100.jpg",
+  "belgrano": "radio_logos/belgrano-radio_list_100.jpg",
+  "elobservador": "radio_logos/el-observador_list_100.png",
+  "futurock": "radio_logos/futurock-fm_list_100.jpg",
+  "la2x4": "radio_logos/la-2x4_list_100.jpg",
+  "impacto947": "radio_logos/impacto-94-7-fm_list_100.jpg",
+  "classique": "radio_logos/classique_list_100.jpg",
+  "fmtrance": "radio_logos/fm-trance-103-3_list_100.jpg",
+  "fisherton": "radio_logos/fisherton-classic_list_100.jpg",
+  "lu5": "radio_logos/lu5_list_100.jpg",
+  "orfeofm": "radio_logos/orfeo-fm_list_100.jpg",
+  "moodradio": "radio_logos/mood-radio_list_100.jpg",
+  "estacion1009": "radio_logos/100-9-estacion-del-sol_list_100.jpg",
+  "lanacion1049": "radio_logos/la-nacion-104-9_list_100.jpg",
+  "radioone": "radio_logos/radio-one-103-7_list_100.jpg",
+  "popular": "radio_logos/radio-popular_list_100.jpg",
+  "Radio Con Vos": "radio_logos/radio-con-vos_list_100.jpg",
+  "Vale 97.5": "radio_logos/radio-vale_list_100.jpg",
+  "lt10": "radio_logos/lt10_list_100.jpg",
+  "lt3": "radio_logos/lt3-am680_list_100.jpg",
+  "lu19": "radio_logos/lu19_list_100.jpg",
+  "berlin": "radio_logos/107-9-radio-berlin_list_100.jpg"
+};
+
 function getStationLogo(st) {
-  const id = (st.id || "").toLowerCase();
-  const name = (st.name || "").toLowerCase();
-  if (id.includes("radiotop") || name.includes("radio top")) {
-    return { cls: "logo-radiotop", html: "Radio<br><span>Top</span>" };
-  }
-  if (id.includes("pobre") || name.includes("pobre johnny")) {
-    return { cls: "logo-pobre", html: "Pobre<br>Johnny" };
-  }
-  if (id.includes("mañanero") || id.includes("mananero") || name.includes("mañanero")) {
-    return { cls: "logo-mananero", html: "📊" };
-  }
-  if (id.includes("libertad") || name.includes("libertad")) {
-    return { cls: "logo-libertad", html: "FM<br>Libertad" };
-  }
-  if (id.includes("vip") || name.includes("vip radio")) {
-    return { cls: "logo-vip", html: "Vip<br>Radio" };
-  }
-  const initials = st.name.split(" ").slice(0, 2).map(w => (w[0] || "")).join("").toUpperCase().slice(0, 3);
-  return { cls: "logo-default", html: initials };
+  const id = String(st.id || "");
+  const name = String(st.name || "");
+  const initials = name.split(" ").slice(0, 2).map(w => (w[0] || "")).join("").toUpperCase().slice(0, 3);
+  return {
+    cls: "logo-default",
+    html: initials || "FM",
+    src: STATION_LOGOS[id] || ""
+  };
 }
 
 function getStationLoc(st) {
@@ -1537,7 +1590,10 @@ function renderList() {
     const playIcon = isActive && isPlaying ? "⏸" : "▶";
 
     item.innerHTML = `
-      <div class="station-logo ${logo.cls}" style="--h:${stationHue(st)}">${logo.html}</div>
+      <div class="station-logo ${logo.cls}${logo.src ? " has-station-image" : ""}" style="--h:${stationHue(st)};position:relative;overflow:hidden">
+        <span class="station-logo-fallback">${logo.html}</span>
+        ${logo.src ? `<img src="${logo.src}" alt="Logo de ${st.name}" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;border-radius:inherit;background:#fff;padding:2px" onerror="this.remove()">` : ""}
+      </div>
       <div class="station-meta">
         <div class="s-name">${st.name}</div>
         <div class="s-loc">${dual(loc, getStationLocMobile(st))}</div>
