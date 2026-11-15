@@ -710,7 +710,17 @@ const LOGOS = {
   "berlin": "logos/berlin.webp",
   "suquia": "logos/suquia.webp"
 };
-STATIONS.forEach((st) => { if (LOGOS[st.id]) st.logo = LOGOS[st.id]; });
+// Asocia logos: primero por id exacto, luego por id en minúsculas / sin espacios
+const LOGOS_NORM = {};
+Object.keys(LOGOS).forEach((k) => {
+  LOGOS_NORM[k] = LOGOS[k];
+  LOGOS_NORM[k.toLowerCase().trim()] = LOGOS[k];
+  LOGOS_NORM[k.toLowerCase().replace(/\s+/g, "")] = LOGOS[k];
+});
+STATIONS.forEach((st) => {
+  const id = st.id;
+  st.logo = LOGOS[id] || LOGOS_NORM[id] || LOGOS_NORM[String(id).toLowerCase().trim()] || LOGOS_NORM[String(id).toLowerCase().replace(/\s+/g, "")] || null;
+});
 
 /* ============================================================
    Idiomas (botón "Idioma"): español, inglés y portugués
@@ -1516,7 +1526,14 @@ function downloadShortcut(os) {
 }
 
 function refreshShortcutUi() {
-  installPc.hidden = !deferredPrompt;
+  // Mostrar siempre el botón de instalar si el navegador puede; se habilita cuando llega beforeinstallprompt
+  const canPrompt = !!deferredPrompt;
+  installPc.hidden = false;
+  installPc.disabled = !canPrompt;
+  installPc.style.opacity = canPrompt ? "1" : "0.55";
+  installPc.title = canPrompt ? "" : (location.protocol === "file:" || !window.isSecureContext
+    ? "Para instalar como app hace falta publicar la radio en una dirección https"
+    : "El navegador aún no ofreció la instalación (probá recargar o usar Chrome/Edge)");
   dlShortcut.textContent = t("dlFor", { os: OS_LABEL[pcOS] });
   dlShortcut.dataset.os = pcOS;
   configDialog.querySelectorAll(".alt-links [data-os]").forEach((b) => { b.hidden = b.dataset.os === pcOS; });
@@ -1549,7 +1566,16 @@ configDialog.addEventListener("click", (e) => { if (e.target === configDialog) c
 dlShortcut.addEventListener("click", () => downloadShortcut(dlShortcut.dataset.os || pcOS));
 configDialog.querySelectorAll(".alt-links [data-os]").forEach((b) => b.addEventListener("click", () => downloadShortcut(b.dataset.os)));
 installPc.addEventListener("click", installApp);
-window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferredPrompt = e; refreshShortcutUi(); });
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  refreshShortcutUi();
+  // Primera vez que el navegador ofrece instalar: avisar al usuario
+  if (!safeGet("radio-saw-install", "")) {
+    safeSet("radio-saw-install", "1");
+    setTimeout(() => toast(t("installApp") + " → Config", 4500), 1200);
+  }
+});
 window.addEventListener("appinstalled", () => { deferredPrompt = null; refreshShortcutUi(); });
 
 /* ============================================================
@@ -1614,3 +1640,13 @@ updateScrollbar();
 if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(() => { fitName(); updateScrollbar(); });
 }
+
+// Primera visita: avisar dónde está el acceso directo (solo una vez)
+(function firstVisitTip() {
+  if (isStandalone) return;
+  if (safeGet("radio-first-pc", "")) return;
+  safeSet("radio-first-pc", "1");
+  setTimeout(() => {
+    toast("Acceso directo → botón Config", 5000);
+  }, 1800);
+})();
