@@ -4,658 +4,19 @@
    de referencia: ver pc.html / pc.css (escenario de 1536 x 1024).
    ============================================================ */
 'use strict';
-const STATIONS = [
-  {
-    id: "radiotop",
-    name: "Radio Top",
-    freq: "FM 105.9",
-    url: "https://live-ar1.cdnrad.com/hls/radio-2075/live.m3u8"
-  },
-   {
-    id: "Pobre Johnny",
-    name: "Radio Pobre Johnny",
-    freq: "FM 88.9",
-    url: "https://stream4.suenas.net/pobrejohnny"
-  },
-  /* ===== Chaco (agregadas) ===== */
-  {
-    id: "El mañanero",
-    name: "El mañanero V.Beta",
-    freq: "FM 97.5",
-    // Stream detectado en la captura. Es HTTP; requiere proxy HTTPS para GitHub Pages.
-    url: "https://streaming.radiosenlinea.com.ar/9464/stream"
-  },
-   {
-    id: "FM libertad Machagai",
-    name: "FM Libertad Machagai",
-    freq: "FM 99.5",
-    // Stream detectado en la captura. Es HTTP; requiere proxy HTTPS para GitHub Pages.
-    url: "http://streaming01.shockmedia.com.ar/8428/stream"
-  },
-   {
-    id: "VIP FM",
-    name: "Vip Radio Machagai",
-    freq: "FM 104.9",
-    url: "https://s2.netradiofm.com:5416/stream/?type=http&nocache=1"
-  },
-  {
-    id: "Master FM",
-    name: "Master FM Machagai",
-    freq: "102.5",
-    url: "https://ssl2.veemesoft.com.ar/a5ded807684d25c964b2"
-  },
-   {
-    id: "Cristalfm",
-    name: "FM Cristal Machagai",
-    freq: "FM 91.5",
-    url: "https://srv3.deradios.stream:7039/;"
-  },
-  {
-    id: "laradio1047",
-    name: "La Radio 104.7",
-    freq: "FM 104.7",
-    url: "https://server.laradio.online/proxy/laradio1047?mp=/stream"
-  },
-  {
-    id: "facundoquiroga",
-    name: "Facundo Quiroga",
-    freq: "FM 95.9",
-    url: "https://01.solumedia.com.ar:9038/stream"
-  },
-  {
-    id: "radiofan",
-    name: "Radio Fan",
-    freq: "FM 96.9",
-    url: "https://streaming5.locucionar.com/proxy/radiofan969?mp=/stream"
-  },
-  {
-   id: "WALTER FM",
-    name: "Radio WALTER 80/90",
-    freq: "Online",
-    url: "https://stream.zeno.fm/qoxmfycvaftvv"
-  },
-  {
-    id: "Ñande Reko Radio",
-    name: "Ñande Reko Radio",
-    freq: "Online",
-    url: "https://devnec.com:8001/radio62"
-  },
-   {
-   id: "Polca Paraguaya",
-    name: "Polca Paraguaya",
-    freq: "Online",
-    url: "https://stream.zeno.fm/tvsx850x1f8uv"
-  },
-   {
-    id: "fmuniversochamame",
-    name: "Fm Universo Chamame",
-    freq: "online",
-    url: "https://streaming01.radiosenlinea.com.ar/9392/stream"
-  },
-  {
-    id: "Retro FM",
-    name: "Retro FM",
-    freq: "Online",
-    url: "https://argentina.shockmedia.com.ar:8018/stream"
-  }, 
-{
-    id: "Radio Mocovl AM 800",
-    name: "Radio Mocovl AM 800",
-    freq: "AM 800",
-    url: "https://live-ar1.cdnrad.com/hls/radio-1930/live.m3u8"
-  },
-   {
-    id: "radiomaria",
-    name: "Radio Maria",
-    freq: "online",
-    url: "https://dreamsiteradiocp2.com/proxy/rmargentina2?mp=/stream"
-  },
-  {
-    id: "Futuro",
-    name: "Radio Futuro",
-    freq: "FM 99.9",
-    url: "https://edge03.radiohdvivo.com/futuro989"
-  },
-  {
-    id: "Radio Con Vos",
-    name: "Radio Con Vos",
-    freq: "FM 89.9",
-    url: "https://server1.stweb.tv/rcvos/live/playlist.m3u8"
-  },
-  {
-    id: "lra26",
-    name: "Nacional Resistencia",
-    freq: "AM 620",
-    url: "https://sa.mp3.icecast.magma.edge-access.net/sc_rad26"
-  },
-  {
-    id: "fmgualamba",
-    name: "FM Gualamba",
-    freq: "FM 93.7",
-    url: "https://ssl.radiosnethosting.com/index.php?port=9072"
-  },
-  /* ===== Tus radios de siempre (sin tocar) ===== */
-  {
-    id: "nacional",
-    name: "Nacional",
-    freq: "AM 870",
-    url: "https://sa.mp3.icecast.magma.edge-access.net/sc_rad1"
-  },
-   {
-    id: "Lentos de Todos Los Tiempos",
-    name: "Lentos de Todos Los Tiempos",
-    freq: "Online",
-    url: "https://s3.conectarmedia.com:8016/stream"
-  },
-  {
-    id: "FM Milenium ",
-    name: "FM Milenium ",
-    freq: "106.7",
-    url: "https://sonicpanel.hostradios.com/8002/stream"
-  },
-  {
-    id: "Vale 97.5",
-    name: "Vale 97.5",
-    freq: "FM 95.5",
-    url: "https://vale.stweb.tv/vale/live/playlist.m3u8"
-  },
-  {
-    id: "mitre",
-    name: "Mitre",
-    freq: "AM 790",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/AM790_56AAC.aac"
-  },
-  {
-    id: "rockpop",
-    name: "Rock & Pop",
-    freq: "FM 95.9",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/ROCKANDPOPAAC.aac"
-  },
-  {
-    id: "aspen",
-    name: "Aspen",
-    freq: "FM 102.3",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/ASPEN.mp3"
-  },
-  {
-    id: "metro",
-    name: "Metro",
-    freq: "FM 95.1",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/METRO.mp3"
-  },
-  {
-    id: "lared",
-    name: "La Red",
-    freq: "AM 910",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/LA_RED_AM910AAC.aac"
-  },
-  {
-    id: "urbana",
-    name: "Urbana Play",
-    freq: "FM 104.3",
-    url: "https://cdn.instream.audio:9660/stream"
-  },
-  {
-    id: "am750",
-    name: "AM 750",
-    freq: "AM 750",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/AM750AAC.aac"
-  },
 
-  /* ===== Nuevas ===== */
-  {
-    id: "doradofm",
-    name: "Dorado FM",
-    freq: "FM 98.3",
-    url: "https://sslstream.online:7269/stream"
-  },
-   {
-    id: "Radio Chamame",
-    name: "Radio Chamame",
-    freq: "Online",
-    url: "https://stream.zenolive.com/84y7b87p4gruv"
-  },
-  {
-    id: "Pasionfm",
-    name: "Pasion Fm",
-    freq: "FM 98.7",
-    url: "https://live-ar1.cdnrad.com/hls/radio-2009/live.m3u8"
-  },
-   {
-    id: "Esto es KchaK",
-    name: "Esto es KchaK",
-    freq: "Online",
-    url: "https://stream.zeno.fm/kd0p50swchruv"
-  },
-   {
-    id: "Radio Welo el 5to Bronco",
-    name: "Radio Welo el 5to Bronco",
-    freq: "Online",
-    url: "https://server01.heplayer.com/8052/;"
-  },
-  {
-    id: "Las Lomitas",
-    name: "Nacional Las Lomitas Formosa",
-    freq: "AM 1270",
-    url: "https://sa.mp3.icecast.magma.edge-access.net/sc_rad20"
-  },
-    {
-    id: "Sentir FM",
-    name: "Sentir FM",
-    freq: "FM 98.3",
-    url: "https://stream.zeno.fm/uwqe3chde78uv"
-  },
-   {
-    id: "Cadena Heat",
-    name: "Heat FM",
-    freq: "FM 91.9",
-    url: "https://24403.live.streamtheworld.com/CADENAHEAT_SC"
-  },
-
-  /* ===== AM de Buenos Aires ===== */
-  {
-    id: "madre",
-    name: "Radio Madre",
-    freq: "AM 530",
-    url: "https://cdn.instream.audio:9288/stream"
-  },
-  {
-    id: "radioargentina",
-    name: "Radio Argentina",
-    freq: "AM 570",
-    url: "https://server.laradio.online:15224/live.mp3"
-  },
-  {
-    id: "continental",
-    name: "Continental",
-    freq: "AM 590",
-    url: "https://edge03.radiohdvivo.com/continental"
-    // alternativa si falla: https://edge01.radiohdvivo.com/continental
-  },
-  {
-    id: "rivadavia",
-    name: "Rivadavia",
-    freq: "AM 630",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/RIVADAVIAAAC.aac"
-  },
-  {
-    id: "cooperativa",
-    name: "Cooperativa",
-    freq: "AM 770",
-    url: "https://cdn.instream.audio:9582/stream"
-  },
-  {
-    id: "zonica",
-    name: "Radio Zonica",
-    freq: "AM 820",
-    url: "https://streamlky.alsolnet.com/radiozonica"
-  },
-  {
-    id: "delpueblo",
-    name: "Del Pueblo",
-    freq: "AM 830",
-    url: "https://streaming6.locucionar.com:24248/stream"
-  },
-  {
-    id: "cnnradio",
-    name: "CNN Radio",
-    freq: "AM 950",
-    url: "https://unlimited2-ar.dps.live/cnn-ar/aac/icecast.audio"
-  },
-  {
-    id: "genesis",
-    name: "Genesis",
-    freq: "AM 970",
-    url: "https://01.solumedia.com.ar:8216/"
-  },
-  {
-    id: "la990",
-    name: "La 990",
-    freq: "AM 990",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/AM990AAC.aac"
-  },
-  {
-    id: "ondalatina",
-    name: "Onda Latina",
-    freq: "AM 1010",
-    url: "https://streaming2.locucionar.com/proxy/ondalatina?mp=/stream"
-  },
-  {
-    id: "delplata",
-    name: "Del Plata",
-    freq: "AM 1030",
-    url: "https://streaming01.shockmedia.com.ar:10586/stream"
-  },
-  {
-    id: "guemes",
-    name: "Güemes",
-    freq: "AM 1050",
-    url: "https://server.radiostreaming.com.ar/8564/stream"
-  },
-  {
-    id: "delaciudad",
-    name: "De la Ciudad",
-    freq: "AM 1110",
-    url: "https://radio01.ferozo.com/proxy/ra01001160?mp=/stream"
-  },
-  {
-    id: "federal",
-    name: "Radio Federal",
-    freq: "AM 1180",
-    url: "https://sonic.host-live.com/8176/stream"
-  },
-  {
-    id: "radiosur",
-    name: "Radio Sur",
-    freq: "AM 1200",
-    url: "https://stream.xweb.ar:8008/"
-  },
-  {
-    id: "ecomedios",
-    name: "Eco Medios",
-    freq: "AM 1220",
-    url: "https://stream-159.zeno.fm/uv3vkhw2qvduv"
-  },
-
-  /* ===== FM de Buenos Aires (CABA) ===== */
-  {
-    id: "blackie",
-    name: "Blackie",
-    freq: "FM 89.1",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/BLACKIE_89_1.mp3"
-  },
-  {
-    id: "arpeggio",
-    name: "Arpeggio",
-    freq: "FM 89.5",
-    url: "https://cloudstream2032.conectarhosting.com/8074/stream"
-  },
-  {
-    id: "laboca",
-    name: "La Boca",
-    freq: "FM 90.1",
-    url: "https://s24.myradiostream.com/14984/listen.mp3"
-  },
-  {
-    id: "delta",
-    name: "Delta",
-    freq: "FM 90.3",
-    url: "https://cdn.instream.audio/:9069/stream"
-  },
-  {
-    id: "vorterix",
-    name: "Vorterix",
-    freq: "FM 92.1",
-    url: "https://ice2.edge-apps.net/radio1_high-20057.audio"
-  },
-  {
-    id: "nacionalrock",
-    name: "Nacional Rock",
-    freq: "FM 93.7",
-    url: "https://sa.mp3.icecast.magma.edge-access.net/sc_rad39"
-  },
-  {
-    id: "disney",
-    name: "Radio Disney",
-    freq: "FM 94.3",
-    url: "https://27353.live.streamtheworld.com/DISNEY_ARG_BA_ADP/HLS/playlist.m3u8?dist=web-radiodisney"
-  },
-  {
-    id: "concepto",
-    name: "Concepto",
-    freq: "FM 95.5",
-    url: "https://radios.solumedia.com:6002/stream"
-  },
-  {
-    id: "nacionalclasica",
-    name: "Nacional Clasica",
-    freq: "FM 96.7",
-    url: "https://sa.mp3.icecast.magma.edge-access.net/sc_rad37"
-  },
-  {
-    id: "infobae",
-    name: "Infobae",
-    freq: "FM 97.1",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/INFOBAEAAC.aac"
-  },
-  {
-    id: "La mega",
-    name: "La Mega",
-    freq: "FM 98.3",
-    url: "https://mega.stweb.tv/mega983/live/playlist.m3u8"
-  },
-  {
-    id: "nacionalfolklorica",
-    name: "Nacional Folklorica",
-    freq: "FM 98.7",
-    url: "https://sa.mp3.icecast.magma.edge-access.net/sc_rad38"
-  },
-  {
-    id: "la100",
-    name: "La 100",
-    freq: "FM 99.9",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/FM999_56.mp3"
-  },
-  {
-    id: "blue",
-    name: "Blue FM",
-    freq: "FM 100.7",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/BLUE_FM_100_7AAC.aac"
-  },
-  {
-    id: "dsports",
-    name: "D Sports",
-    freq: "FM 103.1",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/DSPORTSRADIOAAC_SC"
-    // en días de partido a veces la bloquean por derechos
-  },
-  {
-    id: "sonido",
-    name: "Sonido",
-    freq: "FM 103.5",
-    url: "https://streaming.radiosenlinea.com.ar/8780/stream/1/"
-  },
-  {
-    id: "lnmusica",
-    name: "LN+ Musica",
-    freq: "FM 104.9",
-    url: "https://stream.radio.co/s2ed3bec0a/listen"
-  },
-  {
-    id: "los40",
-    name: "Los 40",
-    freq: "FM 105.5",
-    url: "https://radios.solumedia.com:6158/stream?icy=http"
-  },
-  {
-    id: "pasion",
-    name: "Radio Pasion",
-    freq: "FM 102.7",
-    url: "https://live-ar1.cdnrad.com/hls/radio-1969/live.m3u8"
-  },
-  {
-    id: "berlin",
-    name: "Radio Berlin",
-    freq: "FM 107.9",
-    url: "https://unlimited5-us.dps.live/berlin/aac/icecast.audio"
-  },
-
-  /* ===== Córdoba ===== */
-  {
-    id: "cadena3am",
-    name: "Cadena 3",
-    freq: "AM 700",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/AM700.mp3"
-  },
-  {
-    id: "cadena3fm",
-    name: "Cadena 3 FM",
-    freq: "FM 100.5",
-    url: "https://liveradio.mediainbox.net/radio3.mp3"
-  },
-  {
-    id: "fmcordoba",
-    name: "FM Cordoba",
-    freq: "FM 91.9",
-    url: "https://liveradio.mediainbox.net/fmcordoba.mp3"
-  },
-  {
-    id: "suquia",
-    name: "Radio Suquía",
-    freq: "FM 96.5",
-    url: "https://streaming01.shockmedia.com.ar:10945/"
-  },
-  {
-    id: "mia",
-    name: "Radio Mía",
-    freq: "FM 104.1",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/FM1041_56AAC.aac"
-  },
-  {
-    id: "unicordoba",
-    name: "Radio Universidad Cordoba",
-    freq: "AM 580",
-    url: "https://radios.solumedia.com:10976/stream"
-  },
-
-  /* ===== Santa Fe y Rosario ===== */
-  {
-    id: "lt3",
-    name: "LT3 Rosario",
-    freq: "AM 680",
-    url: "https://playerservices.streamtheworld.com/api/livestream-redirect/LT3AAC_SC"
-  },
-  {
-    id: "lt10",
-    name: "LT10 Radio UNL",
-    freq: "FM 97.3",
-    url: "https://radio.arcast.net:1060/stream"
-  },
-
-  /* ===== Mendoza ===== */
-  {
-    id: "estaciondelsol",
-    name: "Estacion del Sol",
-    freq: "FM 96.7",
-    url: "https://estaciondelsolonline.com.ar:8000/radio.aac"
-  },
-
-  /* ===== Buenos Aires (interior) ===== */
-  {
-    id: "lu9",
-    name: "LU9 Mar del Plata",
-    freq: "AM 670",
-    url: "https://servidor1.hostradios.com:8110/stream"
-  },
-  {
-    id: "lu2",
-    name: "LU2 Bahia Blanca",
-    freq: "AM 840",
-    url: "https://streaming6.locucionar.com:24228/stream?ver=22915"
-  },
-
-  /* ===== Patagonia ===== */
-  {
-    id: "lu19",
-    name: "LU19 Cipolletti",
-    freq: "AM 690",
-    url: "https://sonic.host-live.com/8064/stream"
-  },
-  {
-    id: "fmlaredonda",
-    name: "Fm la redonda Solo Futbol",
-    freq: "FM 100.3",
-    url: "https://01.solumedia.com.ar:8290/stream"
-  },
-  {
-    id: "laredneuquen",
-    name: "La Red Neuquen",
-    freq: "FM 93.7",
-    url: "https://server.laradio.online/proxy/julian_liyo?mp=/stream"
-  },
-  {
-    id: "radio3trelew",
-    name: "Radio 3 Trelew",
-    freq: "ONLINE",
-    url: "https://radio01.ferozo.com/proxy/ra01000981?mp=/stream"
-  },
-  {
-    id: "fmdelmar",
-    name: "FM Del Mar",
-    freq: "ONLINE",
-    url: "https://icecast.gesatel.com.ar:8443/vivo"
-  },
-
-  /* ===== Misiones ===== */
-  {
-    id: "radiolight",
-    name: "Radio Light",
-    freq: "FM 88.9",
-    url: "https://streamall.alsolnet.com/radiolightfm"
-  },
-
-  /* ===== Solo online ===== */
-  {
-    id: "purorocknaciona",
-    name: "Puro rock naciona",
-    freq: "103.5",
-    url: "https://srv591.grupomultimedios.com.ar:9902/radio/8110/radio.mp3?t=1794530808506"
-  },
-  {
-    id: "FOLKLORE RADIO",
-    name: "DEL PUEBLO MIO FOLKLORE RADIO",
-    freq: "ONLINE",
-    url: "https://centova.heplayer.com/proxy/dpmfolklore/stream"
-  },
-  {
-    id: "Radio 10",
-    name: "Radio 10",
-    freq: "ONLINE",
-    url: "https://stream.zeno.fm/4r530f2a9f0uv"
-  },
-   {
-    id: "Radio Latina 101.1",
-    name: "Radio Latina 101.1",
-    freq: "ONLINE",
-    url: "https://stream-gtlc.telecentro.net.ar/hls/radiolatinahls/0/playlist.m3u8?uid=c787e307dd6c302dc3e51a7d2b5df6f4"
-  },
-   {
-    id: "FM Sentir",
-    name: "FM sentir II",
-    freq: "FM 104.3",
-    // Stream detectado en la captura. Es HTTP; requiere proxy HTTPS para GitHub Pages.
-    url: "https://fm-sentir-audio-proxy-production.up.railway.app/sentir"
-  },
-  {
-    id: "eldesta",
-    name: "El Destape Radio",
-    freq: "ONLINE",
-    url: "https://live-ar1.cdnrad.com/hls/radio-2123/live.m3u8"
-  }
-];
+// Si la página (HTML) quedó vieja en el navegador y no trajo stations.js / logos.js,
+// se recarga una sola vez para pedir el HTML nuevo.
+if (typeof STATIONS === "undefined" || typeof RadioLogos === "undefined") {
+  try {
+    if (!sessionStorage.getItem("ra-reload-once")) { sessionStorage.setItem("ra-reload-once", "1"); location.reload(); }
+  } catch (_) {}
+  throw new Error("Faltan stations.js o logos.js (HTML viejo en caché).");
+}
 
 
 /* ---- Orden de la lista: primero las de Chaco / Machagai, después por categoría ---- */
-const TOP_IDS = ["radiotop", "Pobre Johnny", "El mañanero", "FM libertad Machagai",
-                 "VIP FM", "Master FM", "Cristalfm", "laradio1047", "facundoquiroga"];
 const CAT_ORDER = ["chaco", "religiosas", "musica", "noticias", "folklore", "deportes"];
-const CAT_LABEL = {
-  chaco: "Chaco y Machagai",
-  musica: "Música",
-  noticias: "Noticias",
-  folklore: "Folklore",
-  deportes: "Deportes",
-  religiosas: "Religiosas"
-};
-const CAT_BY_ID = {
-  religiosas: ["radiomaria"],
-  noticias: ["nacional", "lra26", "Las Lomitas", "mitre", "lared", "continental", "rivadavia", "cnnradio",
-             "Radio 10", "Radio Con Vos", "infobae", "cadena3am", "madre", "eldesta", "lu9", "lu2", "lu19", "lt3",
-             "unicordoba", "cooperativa", "zonica", "delpueblo", "genesis", "la990", "delplata", "guemes",
-             "delaciudad", "federal", "radiosur", "ecomedios", "ondalatina", "Radio Mocovl AM 800"],
-  folklore:  ["Radio Chamame", "Polca Paraguaya", "Ñande Reko Radio","fmuniversochamame", "FOLKLORE RADIO", "doradofm", "nacionalfolklorica"],
-  deportes:  ["dsports", "fmlaredonda"]
-};
 (function sortStations() {
   const catOf = {};
   Object.keys(CAT_BY_ID).forEach(cat => CAT_BY_ID[cat].forEach(id => { catOf[id] = cat; }));
@@ -671,70 +32,12 @@ const CAT_BY_ID = {
 })();
 
 
+
 /* ---- Logos de las emisoras ----
-   Preferimos logos/*.webp (más livianos). Si no hay, usamos radio_logos/*_list_100.
-   La clave es el id de la emisora. Las que no tienen logo muestran iniciales. */
-const LOGOS = {
-  "mitre": "./logos/mitre.webp",
-  "lared": "./logos/lared.webp",
-  "la100": "./logos/la100.webp",
-  "rivadavia": "./logos/rivadavia.webp",
-  "aspen": "./logos/aspen.webp",
-  "Radio 10": "./logos/radio10.webp",
-  "blue": "./logos/blue.webp",
-  "rockpop": "./logos/rockpop.webp",
-  "continental": "./logos/continental.webp",
-  "facundoquiroga": "./logos/facundoquiroga.webp",
-  "delplata": "./logos/delplata.webp",
-  "Cadena Heat": "./logos/heat.webp",
-  "fmcordoba": "./logos/heat.webp",
-  "nacionalfolklorica": "./logos/nacionalfolklorica.webp",
-  "nacional": "./logos/nacional.webp",
-  "nacionalrock": "./logos/nacional.webp",
-  "nacionalclasica": "./logos/nacional.webp",
-  "estaciondelsol": "./logos/estaciondelsol.webp",
-  "lu19": "./logos/lu19.webp",
-  "disney": "./logos/disney.webp",
-  "am750": "./logos/am750.webp",
-  "Radio Latina 101.1": "./logos/latina.webp",
-  "los40": "./logos/los40.webp",
-  "mia": "./logos/mia.webp",
-  "cadena3am": "./logos/cadena3.webp",
-  "cadena3fm": "./logos/cadena3.webp",
-  "Vale 97.5": "./logos/vale.webp",
-  "La mega": "./logos/mega.webp",
-  "urbana": "./logos/urbana.webp",
-  "Radio Con Vos": "./logos/convos.webp",
-  "la990": "./logos/la990.webp",
-  "lt10": "./logos/lt10.webp",
-  "eldesta": "./logos/eldesta.webp",
-  "delta": "./logos/delta.webp",
-  "berlin": "./logos/berlin.webp",
-  "suquia": "./logos/suquia.webp",
-  // Fallbacks desde radio_logos (mobile pack)
-  "guemes": "./radio_logos/radio-guemes_list_100.jpg",
-  "radiosur": "./radio_logos/radio-del-sur_list_100.jpg",
-  "dsports": "./radio_logos/d-sports-radio_list_100.jpg",
-  "fmdelmar": "./radio_logos/radio-del-mar_list_100.jpg",
-  "lt3": "./radio_logos/lt3-am680_list_100.jpg",
-  "belgrano": "./radio_logos/belgrano-radio_list_100.jpg",
-  "metro": "./radio_logos/la-100_list_100.jpg"
-};
-// Normalización por id en minúsculas / sin espacios
-const LOGOS_NORM = {};
-Object.keys(LOGOS).forEach((k) => {
-  LOGOS_NORM[k] = LOGOS[k];
-  LOGOS_NORM[k.toLowerCase().trim()] = LOGOS[k];
-  LOGOS_NORM[k.toLowerCase().replace(/\s+/g, "")] = LOGOS[k];
-});
-STATIONS.forEach((st) => {
-  const id = st.id;
-  st.logo = LOGOS[id]
-    || LOGOS_NORM[id]
-    || LOGOS_NORM[String(id).toLowerCase().trim()]
-    || LOGOS_NORM[String(id).toLowerCase().replace(/\s+/g, "")]
-    || null;
-});
+   Los datos viven en logos.js (los comparte con la versión móvil).
+   st.logo es el primer archivo posible; si no carga, se prueba el siguiente
+   y, si no queda ninguno, se muestran las iniciales. */
+STATIONS.forEach((st) => { st.logo = RadioLogos.first(st) || null; });
 
 /* ============================================================
    Idiomas (botón "Idioma"): español, inglés y portugués
@@ -765,6 +68,7 @@ const I18N = {
     cfgShortcutText: "Abrí Radio Argentina con un clic, sin buscar la página. Se guarda en Descargas: arrastralo al escritorio.",
     dlFor: "Descargar para {os}", installApp: "Instalar como app, con ícono propio", otherOs: "Otro sistema:",
     cfgPhone: "En el celular", cfgPhoneText: "Abrí esta dirección en el celular y elegí «Instalar app» (Android) o «Agregar a inicio» (iPhone).",
+    cfgSocial: "Mis redes", cfgSocialText: "Escribime o seguime, me encanta saber de vos.", socWa: "Escribime un mensaje", socFb: "Seguime en Facebook",
     shortcutDone: "Listo: se descargó «{n}». Arrastralo al escritorio.", shortcutInstalling: "Listo, la app se está instalando.",
     insecure: "Estás abriendo la app desde un archivo local o una dirección sin https. El acceso directo funciona, pero para instalarla tiene que estar publicada en una dirección https."
   },
@@ -791,6 +95,7 @@ const I18N = {
     cfgShortcutText: "Open Radio Argentina with one click, no need to look for the page. It is saved in Downloads: drag it to the desktop.",
     dlFor: "Download for {os}", installApp: "Install as an app, with its own icon", otherOs: "Other system:",
     cfgPhone: "On your phone", cfgPhoneText: "Open this address on your phone and choose “Install app” (Android) or “Add to Home Screen” (iPhone).",
+    cfgSocial: "My social media", cfgSocialText: "Write to me or follow me, I would love to hear from you.", socWa: "Send me a message", socFb: "Follow me on Facebook",
     shortcutDone: "Done: “{n}” was downloaded. Drag it to the desktop.", shortcutInstalling: "Done, the app is installing.",
     insecure: "You are opening the app from a local file or an address without https. The shortcut works, but to install it the app has to be published at an https address."
   },
@@ -817,6 +122,7 @@ const I18N = {
     cfgShortcutText: "Abra a Radio Argentina com um clique, sem procurar a página. Fica em Downloads: arraste para a área de trabalho.",
     dlFor: "Baixar para {os}", installApp: "Instalar como app, com ícone próprio", otherOs: "Outro sistema:",
     cfgPhone: "No celular", cfgPhoneText: "Abra este endereço no celular e escolha «Instalar app» (Android) ou «Adicionar à Tela de Início» (iPhone).",
+    cfgSocial: "Minhas redes", cfgSocialText: "Escreva para mim ou me siga, vou adorar saber de você.", socWa: "Envie uma mensagem", socFb: "Siga-me no Facebook",
     shortcutDone: "Pronto: «{n}» foi baixado. Arraste para a área de trabalho.", shortcutInstalling: "Pronto, o app está sendo instalado.",
     insecure: "Você está abrindo o app a partir de um arquivo local ou de um endereço sem https. O atalho funciona, mas para instalar o app ele precisa estar publicado em um endereço https."
   }
@@ -862,6 +168,7 @@ const btnBand = $("btnBand");
 const btnConfig = $("btnConfig");
 const updateBtn = $("updateBtn");
 const knob = $("knob");
+const tuneKnob = $("tuneKnob");
 const volEl = $("vol");
 const vFill = $("vFill");
 const vThumb = $("vThumb");
@@ -928,8 +235,8 @@ function freqLcd(st) {
 
 /* Posición de cada número en la imagen del dial (en píxeles de la imagen).
    La escala de la imagen no es lineal, por eso se interpola entre estas marcas. */
-const DIAL_FM = [[88, 329], [90, 369], [92, 406], [94, 441], [96, 476], [98, 514], [100, 555], [102, 597], [104, 639], [106, 683], [108, 729], [110, 772]];
-const DIAL_AM = [[530, 329], [700, 419], [900, 514], [1200, 627], [1600, 729], [1800, 780]];
+const DIAL_FM = [[88, 250], [90, 350], [92, 450], [94, 550], [96, 650], [98, 750], [100, 850], [102, 950], [104, 1050], [106, 1150], [108, 1250], [110, 1320]];
+const DIAL_AM = [[530, 250], [700, 420], [900, 620], [1200, 850], [1600, 1150], [1800, 1320]];
 function dialX(band, v) {
   const pts = band === "fm" ? DIAL_FM : DIAL_AM;
   let a = pts[0], b = pts[1];
@@ -940,7 +247,7 @@ function dialX(band, v) {
     }
   }
   const x = a[1] + ((v - a[0]) / (b[0] - a[0])) * (b[1] - a[1]);
-  return Math.min(775, Math.max(300, x));
+  return Math.min(1320, Math.max(250, x));
 }
 function updateDial() {
   const f = currentStation && currentStation._f;
@@ -1024,11 +331,7 @@ function initials(name) {
 function logoHtml(st) {
   const ini = initials(st.name);
   if (st.logo) {
-    // src con ./ para que funcione aunque la página esté en subcarpeta o con hash
-    const src = st.logo.startsWith("./") || st.logo.startsWith("/") || st.logo.startsWith("http")
-      ? st.logo
-      : "./" + st.logo;
-    return `<span class="r-logo"><img src="${src}" alt="" width="44" height="44" loading="lazy" decoding="async" data-fallback="1"></span>`;
+    return `<span class="r-logo"><img src="${st.logo}" alt="" width="44" height="44" loading="lazy" decoding="async" ${RadioLogos.attrs(st)}></span>`;
   }
   return `<span class="r-logo ph" aria-hidden="true">${ini}</span>`;
 }
@@ -1048,15 +351,11 @@ function buildRows() {
     const img = row.querySelector("img");
     if (img) {
       img.addEventListener("error", function onLogoErr() {
-        // Si falla el webp, intentar una sola vez con radio_logos si existiera mapeo alternativo
-        if (img.dataset.fallback === "1" && st.logo && st.logo.indexOf("logos/") !== -1) {
-          img.dataset.fallback = "0";
-          const base = st.id.toLowerCase().replace(/\s+/g, "-");
-          // no inventamos archivos; pasamos a iniciales
-        }
-        // Reemplazar por iniciales (evita ícono roto)
-        const wrap = img.parentNode;
-        if (wrap) wrap.outerHTML = `<span class="r-logo ph" aria-hidden="true">${initials(st.name)}</span>`;
+        // Prueba el siguiente logo posible; si no queda ninguno, muestra las iniciales
+        RadioLogos.fail(img, function () {
+          const wrap = img.parentNode;
+          if (wrap) wrap.outerHTML = `<span class="r-logo ph" aria-hidden="true">${initials(st.name)}</span>`;
+        });
       });
     }
     row.addEventListener("click", (e) => {
@@ -1168,7 +467,9 @@ function setPlayIcon(playing) {
 
 function mediaArtwork() {
   if (currentStation && currentStation.logo) {
-    return [{ src: new URL(currentStation.logo, location.href).href, sizes: "128x128", type: "image/webp" }];
+    const ext = String(currentStation.logo).split(".").pop().toLowerCase();
+    const mime = ext === "webp" ? "image/webp" : ext === "png" ? "image/png" : "image/jpeg";
+    return [{ src: new URL(currentStation.logo, location.href).href, sizes: "128x128", type: mime }];
   }
   return [
     { src: "icon-192.png", sizes: "192x192", type: "image/png" },
@@ -1369,6 +670,22 @@ function toggleMute() {
   const end = () => { if (down && !moved) toggleMute(); down = false; };
   knob.addEventListener("pointerup", end);
   knob.addEventListener("pointercancel", () => { down = false; });
+})();
+
+// La perilla derecha funciona como sintonizador: arrastrar o usar la rueda cambia de emisora.
+(function tuningKnobControls() {
+  if (!tuneKnob) return;
+  let down = false, lastY = 0, carry = 0;
+  tuneKnob.addEventListener("pointerdown", (e) => { down = true; lastY = e.clientY; carry = 0; tuneKnob.setPointerCapture(e.pointerId); e.preventDefault(); });
+  tuneKnob.addEventListener("pointermove", (e) => {
+    if (!down) return;
+    carry += (lastY - e.clientY) / scale; lastY = e.clientY;
+    while (Math.abs(carry) >= 18) { const dir = carry > 0 ? 1 : -1; stepStation(dir); carry -= dir * 18; }
+  });
+  const stop = () => { down = false; };
+  tuneKnob.addEventListener("pointerup", stop); tuneKnob.addEventListener("pointercancel", stop);
+  tuneKnob.addEventListener("wheel", (e) => { e.preventDefault(); stepStation(e.deltaY < 0 ? 1 : -1); }, { passive: false });
+  tuneKnob.addEventListener("keydown", (e) => { if (e.key === "ArrowUp" || e.key === "ArrowRight") { e.preventDefault(); stepStation(1); } else if (e.key === "ArrowDown" || e.key === "ArrowLeft") { e.preventDefault(); stepStation(-1); } });
 })();
 
 function wheelVolume(e) {

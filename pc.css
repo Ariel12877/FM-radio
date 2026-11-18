@@ -387,8 +387,77 @@ button { cursor: pointer; border: 0; background: none; -webkit-user-select: none
 .alt-links button { padding: 2px 4px; color: var(--amber-hi); text-decoration: underline; }
 .sheet-note { margin-top: 10px; padding: 9px 11px; border: 1px solid #6a4c1c; border-radius: 10px; background: #2a1d0c; font-size: .9rem; line-height: 1.4; color: #e0b878; }
 .version { padding: 2px 4px; text-align: center; font-size: .85rem; color: var(--muted); }
+/* Mis redes (diálogo Config) */
+.social { display: grid; gap: 8px; margin-top: 10px; }
+.social a { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border: 1px solid #5a4028; border-radius: 12px; background: #1d130d; color: #f3e6cf; text-decoration: none; font: 700 1.05rem/1.2 var(--sans); }
+.social a:hover { border-color: #8a6a2a; background: #26180f; }
+.social a:focus-visible { outline: 2px solid var(--amber-hi); outline-offset: 2px; }
+.social .ico { flex: none; width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; color: #fff; }
+.social .ico svg { width: 22px; height: 22px; display: block; }
+.social .ico.wa { background: #25d366; }
+.social .ico.ig { background: linear-gradient(45deg, #f9ce34, #ee2a7b 55%, #6228d7); }
+.social .ico.fb { background: #1877f2; }
+.social .txt { display: flex; flex-direction: column; min-width: 0; }
+.social .txt small { font-weight: 400; font-size: .85rem; color: var(--muted); }
 .sheet-msg { min-height: 1.2em; padding: 6px 14px 14px; text-align: center; font-size: .95rem; color: var(--led); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* ==========================================================
+   NUEVO FRENTE VINTAGE — inspirado en la radio de referencia
+   Mantiene el escenario 1536 × 1024 y la lógica original.
+   ========================================================== */
+.stage { background-image: url("pc-skin.webp"); }
+/* Aguja sobre el dial de seis bandas */
+.needle { top: 176px; height: 220px; width: 7px; z-index: 4; background: linear-gradient(90deg,#9d1c12,#ff6449 48%,#a5140b); box-shadow:0 0 8px rgba(255,70,35,.85); }
+/* Nombre y frecuencia en el sector superior derecho del dial */
+.lcd-name { left: 1000px; top: 118px; width: 330px; height: 45px; font-size: 35px; line-height: 45px; color:#fff0d4; text-shadow:0 2px 5px #000; }
+.lcd-freq { left: 1010px; top: 365px; width: 300px; height: 34px; font-size: 27px; line-height:34px; color:#ffe2a6; text-shadow:0 2px 4px #000; }
+.lcd-status { left: 1020px; top: 400px; width: 300px; height: 28px; }
+#statusText { left:48px; top:3px; font-size:20px; line-height:24px; }
+.eq { width:38px; height:26px; gap:3px; }
+.eq i { width:5px; }
+/* Perilla izquierda: volumen */
+.hit.knob { left:105px !important; top:500px !important; width:205px !important; height:205px !important; cursor:ns-resize; z-index:5; }
+.cap-volume { left:205px; top:696px; font-size:19px; color:#f5d9a7; }
+/* Perilla derecha: sintonizador */
+.tune-knob { position:absolute; left:1225px; top:500px; width:205px; height:205px; border-radius:50%; z-index:6; cursor:ns-resize; touch-action:none; }
+.tune-knob:focus-visible { outline:3px solid #ffc45e; outline-offset:4px; }
+.tune-knob::after { content:"SINTONÍA"; position:absolute; left:50%; top:190px; transform:translateX(-50%); color:#f3d7a5; font:700 18px var(--cond); letter-spacing:1px; text-shadow:0 2px 3px #000; white-space:nowrap; }
+/* Botonera central */
+#btnPrev { left:520px !important; top:520px !important; width:115px !important; height:95px !important; }
+#btnPlay { left:645px !important; top:520px !important; width:115px !important; height:95px !important; }
+#btnNext { left:770px !important; top:520px !important; width:115px !important; height:95px !important; }
+#updateBtn { left:895px !important; top:520px !important; width:115px !important; height:95px !important; }
+#btnConfig { left:1018px !important; top:520px !important; width:115px !important; height:95px !important; }
+/* El control de volumen secundario queda como corredera horizontal */
+.vol { left:520px !important; top:635px !important; width:360px !important; height:45px !important; }
+.vslot { width:340px !important; }
+.vfill { max-width:334px; }
+.vthumb { width:38px; height:38px; }
+/* La lista se integra en el gran panel negro inferior */
+.list { left:88px !important; top:735px !important; width:1358px !important; height:135px !important; border-radius:10px; }
+.row { height:43px; margin-bottom:2px; border-color:rgba(207,164,104,.25); background:linear-gradient(180deg,rgba(34,25,18,.94),rgba(12,10,8,.96)); }
+.row .r-name { font-size:23px; }
+.row .r-freq { font-size:19px; }
+.searchbar { height:38px; }
+.searchbar input { font-size:20px; }
+.list.searching .rows { top:40px; height:calc(100% - 40px); }
+.empty { font-size:20px; }
+/* Cinco teclas inferiores: buscar, memorias, idioma, reproducir y banda */
+#btnSearch { left:360px !important; top:888px !important; width:135px !important; height:55px !important; }
+#btnMem { left:525px !important; top:888px !important; width:135px !important; height:55px !important; }
+#btnLang { left:690px !important; top:888px !important; width:135px !important; height:55px !important; }
+#btnPlaySel { left:855px !important; top:888px !important; width:135px !important; height:55px !important; }
+#btnBand { left:1020px !important; top:888px !important; width:135px !important; height:55px !important; }
+#btnSearch .lbl, #btnMem .lbl, #btnLang .lbl, #btnPlaySel .lbl, #btnBand .lbl { left:50% !important; top:20px !important; transform:translateX(-50%); font-size:18px; }
+/* Desplazamiento de lista, discreto en el borde derecho */
+.sb-track { left:1420px !important; top:744px !important; height:110px !important; width:15px !important; }
+.sb-thumb { width:15px !important; }
+#sbUp { left:1408px !important; top:710px !important; width:36px !important; height:30px !important; }
+#sbDown { left:1408px !important; top:855px !important; width:36px !important; height:25px !important; }
+/* Controles secundarios visibles en la franja central */
+#updateBtn .lbl, #btnConfig .lbl { left:50% !important; top:72px !important; transform:translateX(-50%); font-size:16px; }
+#btnConfig .lbl { color:#ffe0ac; }
