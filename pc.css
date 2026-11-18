@@ -570,3 +570,68 @@ button { cursor: pointer; border: 0; background: none; -webkit-user-select: none
   text-shadow:0 1px 2px #100904 !important;
 }
 #updateBtn.is-busy .lbl { font-size:15px !important; }
+
+
+/* ==========================================================
+   FRENTE RECONSTRUIDO — coincide con la imagen de referencia
+   El arte del receptor ocupa 1536 x 864 px, centrado verticalmente.
+   Los controles transparentes se ubican sobre las teclas dibujadas.
+   ========================================================== */
+.stage {
+  background-image: url("pc-skin.webp");
+  background-size: 1536px 864px !important;
+  background-position: center 80px !important;
+  background-repeat: no-repeat !important;
+}
+.backdrop { background-image:url("pc-skin.webp"); background-position:center; background-size:cover; }
+/* El dial, las leyendas y los botones ya forman parte de la imagen. */
+.dial-backlight, .dial-numbers, .lcd, .cap-volume, .tune-knob::after { display:none !important; }
+/* Aguja funcional encima de la escala impresa. */
+.needle {
+  top:173px !important; height:376px !important; width:5px !important;
+  z-index:7 !important; border-radius:3px;
+  background:linear-gradient(90deg,#a80f08,#ff6244 48%,#bd170d) !important;
+  box-shadow:0 0 5px rgba(255,55,28,.8),0 0 11px rgba(255,70,35,.45) !important;
+}
+/* Perillas: las zonas táctiles coinciden con los mandos dibujados. */
+.hit.knob { left:70px !important; top:603px !important; width:205px !important; height:205px !important; z-index:9 !important; cursor:ns-resize; }
+.tune-knob { left:1260px !important; top:603px !important; width:205px !important; height:205px !important; z-index:9 !important; border-radius:50%; cursor:ns-resize; touch-action:none; }
+/* Botones de transporte: anterior, reproducir, siguiente y detener. */
+#btnPrev { left:500px !important; top:590px !important; width:125px !important; height:82px !important; z-index:10 !important; }
+#btnPlay { left:630px !important; top:590px !important; width:125px !important; height:82px !important; z-index:10 !important; }
+#btnNext { left:770px !important; top:590px !important; width:125px !important; height:82px !important; z-index:10 !important; }
+#btnStop { left:910px !important; top:590px !important; width:125px !important; height:82px !important; z-index:10 !important; }
+/* Teclas Buscar, Configuración y Favoritos. */
+#btnSearch { left:435px !important; top:693px !important; width:195px !important; height:75px !important; z-index:11 !important; }
+#btnConfig { left:635px !important; top:693px !important; width:250px !important; height:75px !important; z-index:12 !important; cursor:pointer; }
+#btnMem { left:890px !important; top:693px !important; width:215px !important; height:75px !important; z-index:11 !important; }
+#btnSearch .lbl, #btnMem .lbl, #btnConfig .lbl, #updateBtn .lbl { display:none !important; }
+/* Actualizar: zona clicable exactamente sobre el botón de la imagen. */
+#updateBtn { left:565px !important; top:770px !important; width:405px !important; height:88px !important; z-index:12 !important; border-radius:22px !important; }
+#updateBtn::before { inset:0 !important; border-radius:inherit !important; background:transparent !important; border:0 !important; box-shadow:none !important; }
+#updateBtn .glow { display:block !important; }
+/* La lista se abre como panel lateral al pulsar BUSCAR, sin tapar el frente cuando está cerrada. */
+.list { display:none !important; left:1010px !important; top:155px !important; width:475px !important; height:650px !important; z-index:30 !important; border:2px solid rgba(214,166,103,.9); border-radius:14px !important; background:linear-gradient(180deg,rgba(22,13,8,.98),rgba(7,6,5,.98)); box-shadow:0 14px 40px rgba(0,0,0,.75),inset 0 0 0 1px rgba(255,210,140,.12); }
+.list.open { display:block !important; }
+.rows { padding:8px !important; }
+.row { height:48px !important; margin-bottom:4px !important; }
+.row .r-name { font-size:19px !important; }
+.row .r-freq { font-size:16px !important; }
+.searchbar { height:48px !important; padding:5px 8px !important; }
+.searchbar input { font-size:17px !important; }
+.list.searching .rows { top:48px !important; height:calc(100% - 48px) !important; }
+.list.searching .searchbar { display:flex !important; }
+.sb-track { left:1488px !important; top:210px !important; height:520px !important; width:10px !important; z-index:31 !important; }
+.sb-thumb { width:10px !important; }
+#sbUp { left:1478px !important; top:174px !important; width:28px !important; height:30px !important; z-index:31 !important; }
+#sbDown { left:1478px !important; top:735px !important; width:28px !important; height:30px !important; z-index:31 !important; }
+/* Acciones complementarias quedan en una pequeña fila debajo del panel de emisoras. */
+#btnLang, #btnPlaySel, #btnBand { display:none !important; z-index:32 !important; top:820px !important; width:135px !important; height:42px !important; border:1px solid rgba(214,166,103,.65) !important; border-radius:9px !important; background:linear-gradient(180deg,rgba(82,55,34,.96),rgba(27,18,12,.98)) !important; }
+#btnLang { left:1015px !important; }
+#btnPlaySel { left:1160px !important; }
+#btnBand { left:1305px !important; }
+#btnLang .lbl, #btnPlaySel .lbl, #btnBand .lbl { left:50% !important; top:14px !important; transform:translateX(-50%) !important; font-size:15px !important; }
+/* El deslizador secundario queda oculto: la perilla grande controla el volumen. */
+.vol { display:none !important; }
+
+.stage.list-open #btnLang, .stage.list-open #btnPlaySel, .stage.list-open #btnBand { display:block !important; }

@@ -160,6 +160,7 @@ const eqBars = Array.from(eqEl.children);
 const btnPlay = $("btnPlay");
 const btnPrev = $("btnPrev");
 const btnNext = $("btnNext");
+const btnStop = $("btnStop");
 const btnSearch = $("btnSearch");
 const btnMem = $("btnMem");
 const btnLang = $("btnLang");
@@ -235,8 +236,8 @@ function freqLcd(st) {
 
 /* Posición de cada número en la imagen del dial (en píxeles de la imagen).
    La escala de la imagen no es lineal, por eso se interpola entre estas marcas. */
-const DIAL_FM = [[88, 250], [90, 350], [92, 450], [94, 550], [96, 650], [98, 750], [100, 850], [102, 950], [104, 1050], [106, 1150], [108, 1250], [110, 1320]];
-const DIAL_AM = [[530, 250], [700, 420], [900, 620], [1200, 850], [1600, 1150], [1800, 1320]];
+const DIAL_FM = [[87, 321], [88, 436], [92, 579], [95, 707], [99, 840], [103, 974], [107, 1097], [108, 1194]];
+const DIAL_AM = [[522, 321], [594, 436], [765, 579], [980, 707], [1198, 840], [1360, 974], [1558, 1097], [1620, 1194]];
 function dialX(band, v) {
   const pts = band === "fm" ? DIAL_FM : DIAL_AM;
   let a = pts[0], b = pts[1];
@@ -247,7 +248,7 @@ function dialX(band, v) {
     }
   }
   const x = a[1] + ((v - a[0]) / (b[0] - a[0])) * (b[1] - a[1]);
-  return Math.min(1320, Math.max(250, x));
+  return Math.min(1194, Math.max(321, x));
 }
 function updateDial() {
   const f = currentStation && currentStation._f;
@@ -708,7 +709,8 @@ volEl.addEventListener("keydown", keyVolume);
    ============================================================ */
 function openSearch() {
   searchOpen = true;
-  listEl.classList.add("searching");
+  listEl.classList.add("searching", "open");
+  stage.classList.add("list-open");
   btnSearch.classList.add("on");
   stationSearch.focus();
   stationSearch.select();
@@ -716,7 +718,8 @@ function openSearch() {
 }
 function closeSearch() {
   searchOpen = false;
-  listEl.classList.remove("searching");
+  listEl.classList.remove("searching", "open");
+  stage.classList.remove("list-open");
   stationSearch.value = "";
   stationSearch.blur();
   applyFilter();
@@ -771,6 +774,7 @@ btnPlay.addEventListener("click", togglePlay);
 btnPlaySel.addEventListener("click", playSelected);
 btnPrev.addEventListener("click", () => stepStation(-1));
 btnNext.addEventListener("click", () => stepStation(1));
+if (btnStop) btnStop.addEventListener("click", pause);
 
 /* ---- Textos según el idioma ---- */
 function applyLang() {
@@ -786,6 +790,7 @@ function applyLang() {
   document.querySelectorAll("[data-i18n-ph]").forEach((el) => { el.placeholder = t(el.getAttribute("data-i18n-ph")); });
   btnPlay.title = btnPlaySel.title = "";
   btnConfig.title = t("config");
+  btnMem.title = "Favoritos / emisoras guardadas";
   btnLang.title = LANG_NAME[lang];
   searchClose.setAttribute("aria-label", t("close"));
   $("configClose").setAttribute("aria-label", t("close"));
