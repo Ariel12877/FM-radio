@@ -606,10 +606,8 @@ button { cursor: pointer; border: 0; background: none; -webkit-user-select: none
 #btnConfig { left:635px !important; top:693px !important; width:250px !important; height:75px !important; z-index:12 !important; cursor:pointer; }
 #btnMem { left:890px !important; top:693px !important; width:215px !important; height:75px !important; z-index:11 !important; }
 #btnSearch .lbl, #btnMem .lbl, #btnConfig .lbl, #updateBtn .lbl { display:none !important; }
-/* Actualizar: zona clicable exactamente sobre el botón de la imagen. */
-#updateBtn { left:565px !important; top:770px !important; width:405px !important; height:88px !important; z-index:12 !important; border-radius:22px !important; }
-#updateBtn::before { inset:0 !important; border-radius:inherit !important; background:transparent !important; border:0 !important; box-shadow:none !important; }
-#updateBtn .glow { display:block !important; }
+/* El botón grande inferior de Actualizar se elimina: solo queda el de arriba a la derecha. */
+#updateBtn.btn-update { /* placeholder — posición final más abajo */ }
 /* La lista se abre como panel lateral al pulsar BUSCAR, sin tapar el frente cuando está cerrada. */
 .list { display:none !important; left:1010px !important; top:155px !important; width:475px !important; height:650px !important; z-index:30 !important; border:2px solid rgba(214,166,103,.9); border-radius:14px !important; background:linear-gradient(180deg,rgba(22,13,8,.98),rgba(7,6,5,.98)); box-shadow:0 14px 40px rgba(0,0,0,.75),inset 0 0 0 1px rgba(255,210,140,.12); }
 .list.open { display:block !important; }
@@ -637,88 +635,189 @@ button { cursor: pointer; border: 0; background: none; -webkit-user-select: none
 .stage.list-open #btnLang, .stage.list-open #btnPlaySel, .stage.list-open #btnBand { display:block !important; }
 
 
-/* ===== Ajuste solicitado: Actualizar arriba a la derecha y display inferior ===== */
-/* El display cubre el botón ACTUALIZAR impreso en el arte y muestra la emisora activa. */
+/* ===== Display de la emisora en reproducción — igual a la imagen de referencia ===== */
+/* Más ancho y un poco más alto: ya no compite con el botón Actualizar grande inferior. */
 .lcd {
-  display:block !important;
-  left:560px !important;
-  top:477px !important;
-  width:416px !important;
-  height:54px !important;
-  z-index:13 !important;
-  overflow:hidden;
-  border:2px solid rgba(218,166,91,.95);
-  border-radius:13px;
+  display: flex !important;
+  align-items: center !important;
+  left: 380px !important;
+  top: 498px !important;
+  width: 780px !important;
+  height: 78px !important;
+  z-index: 13 !important;
+  overflow: hidden;
+  padding: 0 16px 0 12px;
+  gap: 10px;
+  border: 2.5px solid rgba(218, 166, 91, 0.95);
+  border-radius: 18px;
   background:
-    linear-gradient(180deg,rgba(9,8,6,.98),rgba(24,14,7,.98) 55%,rgba(5,5,4,.99));
+    linear-gradient(180deg, rgba(12, 10, 8, 0.99), rgba(22, 14, 8, 0.99) 45%, rgba(8, 6, 5, 0.99));
   box-shadow:
-    inset 0 1px 5px rgba(255,210,135,.20),
-    inset 0 -3px 8px rgba(0,0,0,.9),
-    0 0 10px rgba(255,170,62,.28);
+    inset 0 1px 6px rgba(255, 210, 135, 0.18),
+    inset 0 -3px 10px rgba(0, 0, 0, 0.85),
+    0 0 14px rgba(255, 170, 62, 0.22),
+    0 4px 12px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
 }
-.lcd > * { position:absolute !important; }
-.lcd-name {
-  left:62px !important; top:5px !important;
-  width:250px !important; height:24px !important;
-  display:flex !important; align-items:center !important;
-  justify-content:flex-start !important;
-  font:700 19px/23px var(--cond) !important;
-  letter-spacing:.35px !important;
-  color:#ffd17b !important;
-  text-shadow:0 0 7px rgba(255,174,62,.45),0 1px 2px #000 !important;
+.lcd > * { position: relative !important; flex-shrink: 0; }
+
+/* Icono antena a la izquierda */
+.lcd-antenna {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.95;
+  filter: drop-shadow(0 0 4px rgba(255, 240, 200, 0.35));
 }
-.lcd-name span { max-width:100%; overflow:hidden; text-overflow:ellipsis; }
-.lcd-name.marquee { justify-content:flex-start !important; }
+.lcd-antenna svg { display: block; width: 44px; height: 44px; }
+
+/* Bloque central: frecuencia arriba, nombre abajo */
+.lcd-center {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  padding-left: 4px;
+}
 .lcd-freq {
-  left:315px !important; top:11px !important;
-  width:88px !important; height:28px !important;
-  text-align:center !important;
-  font:700 21px/27px var(--cond) !important;
-  color:#fff0ce !important;
-  text-shadow:0 0 6px rgba(255,183,83,.35) !important;
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  width: auto !important;
+  height: auto !important;
+  font: 700 28px/1.15 var(--cond) !important;
+  letter-spacing: 0.4px !important;
+  color: #ffe066 !important;
+  text-shadow: 0 0 10px rgba(255, 200, 60, 0.45), 0 1px 2px #000 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left !important;
 }
-.lcd-status {
-  left:10px !important; top:12px !important;
-  width:45px !important; height:30px !important;
+.lcd-name {
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  width: auto !important;
+  height: auto !important;
+  display: block !important;
+  font: 500 18px/1.2 var(--cond) !important;
+  letter-spacing: 0.2px !important;
+  color: #f0e6d0 !important;
+  text-shadow: 0 1px 2px #000 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.eq {
-  left:0 !important; bottom:1px !important;
-  width:42px !important; height:27px !important;
-  gap:2px !important;
+.lcd-name span {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.eq i { width:5px !important; }
+.lcd-name.marquee { justify-content: flex-start !important; }
+
+/* Pastilla "Reproduciendo..." */
+.lcd-playing {
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px 5px 10px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(55, 40, 18, 0.95), rgba(28, 18, 8, 0.98));
+  border: 1.5px solid rgba(220, 170, 70, 0.75);
+  box-shadow: inset 0 1px 2px rgba(255, 220, 140, 0.15), 0 2px 6px rgba(0, 0, 0, 0.4);
+  max-width: 170px;
+}
+.lcd-play-ico {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.lcd-play-ico svg { display: block; }
 #statusText {
-  left:53px !important; top:9px !important;
-  max-width:245px !important;
-  font:600 13px/16px var(--cond) !important;
-  color:#e9c17d !important;
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  max-width: none !important;
+  font: 600 14px/1.15 var(--cond) !important;
+  letter-spacing: 0.15px !important;
+  color: #ffd24a !important;
+  text-shadow: 0 0 6px rgba(255, 190, 50, 0.35) !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-/* Actualizar pasa a una tecla pequeña, discreta, en la esquina superior derecha. */
+#statusText.ok { color: #ffd24a !important; }
+#statusText.wait { color: #f0a030 !important; }
+#statusText.err { color: #ff7a66 !important; }
+#statusText.ready { color: #e9d8a8 !important; }
+
+/* Barras de señal a la derecha (verdes) */
+.lcd-signal,
+.eq {
+  position: static !important;
+  left: auto !important;
+  bottom: auto !important;
+  width: 36px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between;
+  gap: 3px !important;
+  padding-bottom: 2px;
+}
+.lcd-signal i,
+.eq i {
+  display: block;
+  width: 6px !important;
+  border-radius: 1.5px;
+  background: linear-gradient(180deg, #7dff9a 0%, #3dcc5c 70%, #2a9e45 100%);
+  box-shadow: 0 0 5px rgba(80, 230, 120, 0.55);
+  opacity: 0.35;
+  transition: height 0.14s ease, opacity 0.2s ease;
+}
+.lcd-signal i:nth-child(1), .eq i:nth-child(1) { height: 8px; }
+.lcd-signal i:nth-child(2), .eq i:nth-child(2) { height: 14px; }
+.lcd-signal i:nth-child(3), .eq i:nth-child(3) { height: 20px; }
+.lcd-signal i:nth-child(4), .eq i:nth-child(4) { height: 26px; }
+.lcd-signal.live i,
+.eq.live i { opacity: 1; }
+
+/* Actualizar: SOLO tecla pequeña arriba a la derecha (como en la imagen).
+   Se anula cualquier posición inferior grande anterior. */
 #updateBtn {
-  left:1372px !important; top:92px !important;
-  width:132px !important; height:42px !important;
-  z-index:20 !important;
-  border-radius:9px !important;
-  display:block !important;
-  pointer-events:auto !important;
+  left: 1372px !important;
+  top: 92px !important;
+  width: 132px !important;
+  height: 42px !important;
+  z-index: 20 !important;
+  border-radius: 9px !important;
+  display: block !important;
+  pointer-events: auto !important;
 }
 #updateBtn::before {
-  inset:0 !important;
-  border-radius:9px !important;
-  background:linear-gradient(180deg,rgba(92,65,39,.98),rgba(28,18,11,.99)) !important;
-  border:1px solid rgba(224,177,112,.9) !important;
-  box-shadow:inset 0 1px 2px rgba(255,230,190,.2),0 3px 8px rgba(0,0,0,.7) !important;
+  inset: 0 !important;
+  border-radius: 9px !important;
+  background: linear-gradient(180deg, rgba(92, 65, 39, 0.98), rgba(28, 18, 11, 0.99)) !important;
+  border: 1px solid rgba(224, 177, 112, 0.9) !important;
+  box-shadow: inset 0 1px 2px rgba(255, 230, 190, 0.2), 0 3px 8px rgba(0, 0, 0, 0.7) !important;
 }
-#updateBtn .glow { display:block !important; border-radius:9px !important; }
+#updateBtn .glow { display: block !important; border-radius: 9px !important; }
 #updateBtn .lbl {
-  display:block !important;
-  left:50% !important; top:50% !important;
-  transform:translate(-50%,-50%) !important;
-  width:100% !important;
-  text-align:center !important;
-  font:700 15px/1 var(--cond) !important;
-  letter-spacing:.3px !important;
-  color:#fff0d5 !important;
-  text-shadow:0 1px 2px #100904 !important;
+  display: block !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 100% !important;
+  text-align: center !important;
+  font: 700 15px/1 var(--cond) !important;
+  letter-spacing: 0.3px !important;
+  color: #fff0d5 !important;
+  text-shadow: 0 1px 2px #100904 !important;
 }
-#updateBtn.is-busy .lbl { font-size:12px !important; }
+#updateBtn.is-busy .lbl { font-size: 12px !important; }

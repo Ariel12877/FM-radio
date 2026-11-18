@@ -48,7 +48,7 @@ const I18N = {
   es: {
     search: "Buscar", memories: "Memorias", language: "Idioma", play: "Reproducir", change: "Cambiar",
     update: "Actualizar", config: "Config", volume: "Volumen", prev: "Anterior", next: "Siguiente",
-    playing: "Reproduciendo", connecting: "Conectando…", paused: "Pausado", nosignal: "Sin señal",
+    playing: "Reproduciendo...", connecting: "Conectando…", paused: "Pausado", nosignal: "Sin señal",
     buffering: "Cargando…", ready: "Listo",
     pick: "Elegí una emisora", online: "Online",
     searchPh: "Buscar emisora o frecuencia…", count: "{n} de {t}",
@@ -231,7 +231,7 @@ function freqRow(st) {
 function freqLcd(st) {
   const f = st._f;
   if (!f) return t("online");
-  return f.band === "fm" ? f.value.toFixed(1) + " MHz" : Math.round(f.value) + " kHz";
+  return f.band === "fm" ? "FM " + f.value.toFixed(1) + " MHz" : "AM " + Math.round(f.value) + " kHz";
 }
 
 /* Posición de cada número en la imagen del dial (en píxeles de la imagen).
@@ -266,26 +266,23 @@ function fitName() {
   const box = lcdName, span = lcdNameText;
   box.classList.remove("marquee");
   span.style.fontSize = "";
-  let size = 51;
-  span.style.fontSize = size + "px";
-  const max = box.clientWidth;
-  while (span.offsetWidth > max && size > 27) { size -= 1; span.style.fontSize = size + "px"; }
+  span.style.removeProperty("--shift");
+  const max = box.clientWidth || 280;
   if (span.offsetWidth > max) {
     span.style.setProperty("--shift", (max - span.offsetWidth - 4) + "px");
     box.classList.add("marquee");
   }
 }
 
-/* El texto del display se achica si es más largo que el espacio disponible */
 function fitStatus() {
-  statusText.style.fontSize = "";
-  let size = 27.4;
-  while (statusText.offsetWidth > 246 && size > 16) { size -= 0.8; statusText.style.fontSize = size + "px"; }
+  /* El texto vive dentro de la pastilla; el CSS ya recorta con ellipsis */
 }
 function renderStatus() {
   if (toastTimer) return;
   statusText.textContent = t(statusKey);
   statusText.className = STATUS_CLS[statusKey] || "";
+  const playIco = document.querySelector(".lcd-play-ico");
+  if (playIco) playIco.style.display = statusKey === "playing" ? "" : "none";
   fitStatus();
 }
 function setStatus(key) {
@@ -301,16 +298,19 @@ function toast(msg, ms = 1800) {
   toastTimer = setTimeout(() => { toastTimer = null; renderStatus(); }, ms);
 }
 
-/* Barras verdes del display */
-const EQ_IDLE = [5, 5, 5, 5, 5];
-const EQ_WAIT = [8, 12, 8, 12, 8];
+/* Barras de señal (4 segmentos, como en la imagen de referencia) */
+const EQ_IDLE = [8, 14, 20, 26];
+const EQ_WAIT = [10, 16, 12, 22];
 function setEq(mode) {
   clearInterval(eqTimer); eqTimer = null;
   eqEl.classList.toggle("live", mode === "live");
-  const paint = (hs) => eqBars.forEach((b, i) => { b.style.height = hs[i] + "px"; });
+  const paint = (hs) => eqBars.forEach((b, i) => { b.style.height = (hs[i] || 8) + "px"; });
   if (mode === "live") {
-    const tick = () => paint(eqBars.map((_, i) => (i === 2 ? 18 : 8) + Math.random() * (i === 2 ? 15 : 22)));
-    tick(); eqTimer = setInterval(tick, 150);
+    const tick = () => paint(eqBars.map((_, i) => {
+      const base = [8, 14, 20, 26][i] || 12;
+      return Math.max(6, base * (0.55 + Math.random() * 0.55));
+    }));
+    tick(); eqTimer = setInterval(tick, 160);
   } else paint(mode === "wait" ? EQ_WAIT : EQ_IDLE);
 }
 
