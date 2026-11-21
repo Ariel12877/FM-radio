@@ -2877,3 +2877,114 @@ button.mix-val { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   .radio-big-smile, .radio-dance-emoji { animation: none !important; }
 }
+
+
+/* ===== Último retoque móvil: emisora actual con icono de radio ===== */
+@media (max-width: 899px) {
+  .now-playing-section {
+    width: 100% !important;
+    padding: 3px 10px 4px !important;
+    min-height: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .station-info {
+    width: min(100%, 440px) !important;
+    max-width: 100% !important;
+    min-height: 66px !important;
+    box-sizing: border-box !important;
+    display: grid !important;
+    grid-template-columns: 52px minmax(0, 1fr) !important;
+    grid-template-areas:
+      "radio name"
+      "radio frequency" !important;
+    align-items: center !important;
+    column-gap: 10px !important;
+    row-gap: 2px !important;
+    padding: 7px 12px !important;
+    margin: 0 auto !important;
+    text-align: left !important;
+    border: 1.5px solid rgba(25, 210, 255, .72) !important;
+    border-radius: 16px !important;
+    background: linear-gradient(110deg, rgba(5, 30, 58, .98), rgba(3, 17, 39, .98)) !important;
+    box-shadow: 0 0 13px rgba(0, 174, 255, .24), inset 0 0 12px rgba(0, 120, 220, .12) !important;
+  }
+  .station-info::before {
+    content: "📻" !important;
+    grid-area: radio !important;
+    display: block !important;
+    font-family: "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", sans-serif !important;
+    font-size: 39px !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    filter: drop-shadow(0 0 5px rgba(0, 200, 255, .28)) !important;
+  }
+  .station-name {
+    grid-area: name !important;
+    display: block !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
+    font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif !important;
+    font-size: clamp(.98rem, 4.6vw, 1.18rem) !important;
+    font-weight: 800 !important;
+    line-height: 1.15 !important;
+    letter-spacing: .1px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .station-freq {
+    grid-area: frequency !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
+    font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif !important;
+    font-size: 1.02rem !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
+    letter-spacing: .2px !important;
+  }
+
+  /* Texto Ecualizador centrado y con una tipografía más limpia. */
+  .eq-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+    padding: 4px 5px !important;
+  }
+  .eq-btn .eq-icon { display: none !important; }
+  .eq-btn .eq-label {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif !important;
+    font-size: clamp(.61rem, 2.7vw, .72rem) !important;
+    font-weight: 800 !important;
+    line-height: 1.15 !important;
+    letter-spacing: .15px !important;
+    color: #f3fbff !important;
+    text-shadow: 0 0 7px rgba(25, 220, 255, .35) !important;
+  }
+}
+@media (max-width: 380px) {
+  .station-info {
+    grid-template-columns: 45px minmax(0, 1fr) !important;
+    min-height: 60px !important;
+    column-gap: 7px !important;
+    padding: 6px 9px !important;
+  }
+  .station-info::before { font-size: 34px !important; }
+  .station-name { font-size: .94rem !important; }
+  .station-freq { font-size: .94rem !important; }
+  .eq-btn .eq-label { font-size: .59rem !important; }
+}
