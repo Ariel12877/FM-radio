@@ -36,10 +36,22 @@
       coverNode.removeAttribute("src");
       coverNode.hidden = true;
       fallbackNode.hidden = false;
+      panel.classList.remove("has-track");
+      if (danceStage) danceStage.hidden = false;
       return;
     }
-    coverNode.onload = () => { coverNode.hidden = false; fallbackNode.hidden = true; };
-    coverNode.onerror = () => { coverNode.hidden = true; fallbackNode.hidden = false; };
+    coverNode.onload = () => {
+      coverNode.hidden = false;
+      fallbackNode.hidden = true;
+      panel.classList.add("has-track");
+      if (danceStage) danceStage.hidden = true;
+    };
+    coverNode.onerror = () => {
+      coverNode.hidden = true;
+      fallbackNode.hidden = false;
+      panel.classList.remove("has-track");
+      if (danceStage) danceStage.hidden = false;
+    };
     coverNode.src = url;
   }
 
@@ -207,6 +219,34 @@
     pollId = setInterval(refresh, 30000);
     refresh();
   }
+
+  // El personaje se desplaza al compás usando el analizador que ya emplea el ecualizador.
+  let dogMotionId = 0;
+  function startDogMotion() {
+    if (!danceDog || dogMotionId) return;
+    const analyser = window.RadioArgentinaGetAnalyser?.();
+    let samples = analyser ? new Uint8Array(analyser.frequencyBinCount) : null;
+    let phase = 0;
+    const animateDog = () => {
+      dogMotionId = requestAnimationFrame(animateDog);
+      let energy = 0.32;
+      const activeAnalyser = window.RadioArgentinaGetAnalyser?.();
+      if (activeAnalyser) {
+        if (!samples || samples.length !== activeAnalyser.frequencyBinCount) samples = new Uint8Array(activeAnalyser.frequencyBinCount);
+        activeAnalyser.getByteFrequencyData(samples);
+        let sum = 0;
+        for (let i = 0; i < Math.min(24, samples.length); i++) sum += samples[i];
+        energy = Math.max(0.12, Math.min(1, (sum / Math.min(24, samples.length)) / 170));
+      }
+      phase += 0.018 + energy * 0.04;
+      const sway = Math.sin(phase) * (4 + energy * 8);
+      const bounce = Math.abs(Math.sin(phase * 2)) * (2 + energy * 5);
+      danceDog.style.setProperty("--dog-sway", sway.toFixed(2) + "px");
+      danceDog.style.setProperty("--dog-bounce", (-bounce).toFixed(2) + "px");
+    };
+    animateDog();
+  }
+  startDogMotion();
 
   function bindAudio(audio) {
     if (!audio || boundAudio.has(audio)) return;

@@ -86,6 +86,8 @@ let audioCtx = null;
 let sourceNode = null;
 let filters = [];
 let analyser = null;
+// Acceso de solo lectura para animaciones reactivas del visor musical.
+window.RadioArgentinaGetAnalyser = () => analyser;
 let eqGains = [0, 0, 0, 0, 0, 0, 0];
 let eqPreset = "flat";
 let eqAvailable = true;

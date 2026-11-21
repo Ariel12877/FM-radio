@@ -23,3 +23,12 @@ FUNCIONAMIENTO Y LIMITACIONES
 - Los navegadores suelen bloquear la lectura de metadatos de streams de otros dominios si el servidor no habilita CORS. El intento no modifica ni interrumpe el audio principal.
 
 Se conservaron las URLs de las emisoras y la lógica actual de Play/Pausa y ecualizador.
+
+
+ACTUALIZACIÓN VISUAL — PERRITO BAILARÍN
+- Se agregó assets/radio-dog-dance.gif con el perrito animado.
+- Cuando la emisora no entrega tags ni portada, se muestra el perrito con emojis musicales, bailarina y destellos.
+- El perrito se desplaza de lado a lado; cuando el ecualizador dispone de analizador de audio, el rebote/sway responde a la energía musical. En reproducción directa sin analizador conserva una animación rítmica suave.
+- Cuando aparece una portada real, la animación deja el primer plano para mostrar el arte del tema.
+- Se compactaron dial, botones anterior/siguiente y ecualizador en móvil. El ecualizador ahora muestra solo la palabra “Ecualizador”.
+- Se mantiene la distribución de escritorio.
