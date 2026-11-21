@@ -26,3 +26,12 @@ INSTALACIÓN
 
 NOTA
 No se puede garantizar literalmente cada navegador Android antiguo o modificado, pero se eligió GIF + CSS por su amplia compatibilidad. El ZIP no modifica ni publica automáticamente el repositorio.
+
+
+CORRECCIÓN SEGÚN CAPTURA DEL CELULAR
+- Causa encontrada: el archivo anterior tenía contenido PNG pero estaba guardado con extensión .gif. Android/Chrome esperaba un GIF y no pudo decodificarlo; por eso mostró el icono de imagen rota y el texto alternativo “Perrito con auriculares”.
+- Se reemplazó por un PNG RGBA auténtico con extensión .png y ruta local assets/radio-dog-dance.png.
+- Se eliminó el texto alternativo visible para evitar que un fallo de carga agrande el panel.
+- Se redujo el panel de la mascota a 62 px (56 px en móviles muy angostos), el dial y los controles.
+- La lista de emisoras recibe el espacio restante y mantiene scroll vertical.
+- Caché PWA actualizada a radio-ar-v100.

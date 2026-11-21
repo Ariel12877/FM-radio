@@ -2591,3 +2591,217 @@ button.mix-val { cursor: pointer; }
   .radio-dance-dog, .radio-dance-emoji { animation: none !important; }
   .radio-dance-dog { left: 50%; transform: translateX(-50%); }
 }
+
+
+/* ===== Corrección móvil: PNG real del perrito + más espacio para emisoras ===== */
+@media (max-width: 899px) {
+  .radio-dance-banner {
+    display: block !important;
+    height: 62px !important;
+    min-height: 62px !important;
+    max-height: 62px !important;
+    margin: 2px 10px 3px !important;
+    flex: 0 0 62px !important;
+    padding: 0 !important;
+  }
+  .radio-dance-stage {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .radio-dance-dog {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: absolute !important;
+    width: 61px !important;
+    height: 61px !important;
+    max-width: 61px !important;
+    max-height: 61px !important;
+    object-fit: contain !important;
+    left: 50% !important;
+    bottom: 0 !important;
+    z-index: 4 !important;
+    animation: radioDogTravelCompact 6s ease-in-out infinite !important;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,.6)) !important;
+  }
+  @keyframes radioDogTravelCompact {
+    0%, 100% { left: 18% !important; transform: translateX(-50%) translateY(0) rotate(-4deg); }
+    25% { left: 39% !important; transform: translateX(-50%) translateY(-3px) rotate(4deg); }
+    50% { left: 82% !important; transform: translateX(-50%) translateY(0) rotate(-4deg); }
+    75% { left: 60% !important; transform: translateX(-50%) translateY(-3px) rotate(4deg); }
+  }
+  .radio-dog-fallback {
+    display: none !important;
+  }
+  .radio-dance-emoji {
+    font-size: 15px !important;
+    z-index: 3 !important;
+  }
+  .emoji-a { left: 7% !important; top: 5px !important; }
+  .emoji-b { left: 34% !important; top: 4px !important; }
+  .emoji-c { right: 8% !important; top: 5px !important; }
+  .emoji-d { right: 28% !important; bottom: 4px !important; }
+  .emoji-e { left: 55% !important; bottom: 3px !important; }
+
+  /* Dial más bajo, manteniendo visibles las dos escalas FM y AM. */
+  .dial-section {
+    padding: 2px 8px 3px !important;
+    margin: 0 !important;
+  }
+  .dial-frame { padding: 2px !important; border-radius: 13px !important; }
+  .dial-glass { padding: 3px 7px 3px !important; border-radius: 10px !important; }
+  .dial-band {
+    height: 25px !important;
+    min-height: 25px !important;
+    margin: 0 !important;
+    gap: 3px !important;
+  }
+  .dial-tag { font-size: .54rem !important; line-height: 1 !important; }
+  .dial-tag small { font-size: .43rem !important; }
+  .dial-scale { height: 19px !important; }
+  .dial-scale::before { top: 2px !important; height: 5px !important; }
+
+  /* Controles compactos para liberar altura a la lista de emisoras. */
+  .controls-section {
+    padding: 3px 7px !important;
+    margin: 2px 9px 0 !important;
+    gap: 3px !important;
+    min-height: 56px !important;
+  }
+  .transport { gap: 5px !important; }
+  .prev-btn, .next-btn {
+    width: 37px !important;
+    height: 37px !important;
+    min-width: 37px !important;
+    min-height: 37px !important;
+  }
+  .prev-btn::before, .next-btn::before { width: 17px !important; height: 17px !important; }
+  .play-btn {
+    width: 51px !important;
+    height: 51px !important;
+    min-width: 51px !important;
+    min-height: 51px !important;
+  }
+  .play-btn svg { width: 23px !important; height: 23px !important; }
+  .fav-btn { width: 54px !important; min-width: 54px !important; padding: 2px !important; }
+  .eq-btn {
+    width: 70px !important;
+    min-width: 70px !important;
+    height: 39px !important;
+    min-height: 39px !important;
+    padding: 3px 4px !important;
+  }
+  .eq-btn .eq-icon { display: none !important; }
+  .eq-btn .eq-label { font-size: .58rem !important; white-space: nowrap !important; }
+
+  /* La lista recibe el espacio restante y conserva su propio desplazamiento. */
+  .station-list {
+    flex: 1 1 0 !important;
+    min-height: 90px !important;
+    overflow-y: auto !important;
+    margin-top: 3px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+}
+@media (max-width: 380px) {
+  .radio-dance-banner { height: 56px !important; min-height: 56px !important; flex-basis: 56px !important; }
+  .radio-dance-dog { width: 55px !important; height: 55px !important; max-width: 55px !important; max-height: 55px !important; }
+  .radio-dance-emoji { font-size: 13px !important; }
+  .controls-section { padding-left: 4px !important; padding-right: 4px !important; }
+  .prev-btn, .next-btn { width: 34px !important; height: 34px !important; min-width: 34px !important; min-height: 34px !important; }
+  .play-btn { width: 47px !important; height: 47px !important; min-width: 47px !important; min-height: 47px !important; }
+  .eq-btn { width: 65px !important; min-width: 65px !important; }
+}
+
+
+/* ===== AJUSTE DEFINITIVO DE ALTURA: Android con pantallas cortas ===== */
+@media (max-width: 899px) {
+  html, body {
+    width: 100%; height: 100%; height: 100dvh;
+    min-height: 0; overflow: hidden;
+  }
+  .app {
+    width: 100%; height: 100%; height: 100dvh;
+    min-height: 0; max-height: none;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .radio-header { flex: 0 0 auto; padding-top: 4px !important; padding-bottom: 3px !important; }
+  .radio-dance-banner {
+    flex: 0 0 48px !important; height: 48px !important;
+    min-height: 48px !important; max-height: 48px !important;
+    margin-top: 1px !important; margin-bottom: 2px !important;
+  }
+  .radio-dance-dog { width: 48px !important; height: 48px !important; max-width: 48px !important; max-height: 48px !important; }
+  .dial-section { flex: 0 0 auto !important; padding: 2px 8px !important; }
+  .dial-frame { padding: 2px !important; }
+  .dial-glass { padding: 2px 6px !important; }
+  .dial-band { min-height: 22px !important; height: 22px !important; margin: 0 !important; }
+  .dial-scale { height: 17px !important; }
+  .now-playing-section { flex: 0 0 auto !important; padding: 1px 8px !important; margin: 0 !important; }
+  .station-info { margin: 0 !important; }
+  .station-name { font-size: .92rem !important; line-height: 1.15 !important; margin: 0 !important; }
+  .station-freq { font-size: .76rem !important; line-height: 1.1 !important; }
+  .visualizer { height: 12px !important; min-height: 12px !important; margin: 0 !important; }
+  .controls-section { flex: 0 0 auto !important; min-height: 0 !important; margin: 2px 8px !important; padding: 2px 5px !important; }
+  .status-bar { flex: 0 0 auto !important; min-height: 30px !important; padding: 3px 9px !important; margin: 2px 9px !important; }
+  .search-filters { flex: 0 0 auto !important; min-height: 0 !important; margin: 2px 9px !important; gap: 4px !important; }
+  .search-wrap, .filter-btns { min-height: 34px !important; }
+  .station-list {
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 2px 9px calc(var(--nav-h, 56px) + 8px) !important;
+    padding: 0 0 8px !important;
+    overflow-x: hidden !important; overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .bottom-nav {
+    position: absolute !important;
+    left: 8px !important; right: 8px !important;
+    bottom: max(4px, env(safe-area-inset-bottom, 0px)) !important;
+    height: 50px !important; min-height: 50px !important;
+    padding: 0 3px !important; z-index: 50 !important;
+  }
+  .nav-btn { padding-top: 3px !important; padding-bottom: 2px !important; gap: 1px !important; }
+  .nav-btn .nav-icon { width: 20px !important; height: 20px !important; font-size: 19px !important; }
+  .nav-label { font-size: .58rem !important; line-height: 1 !important; }
+}
+
+/* Pantallas Android de poca altura: liberar más espacio al listado. */
+@media (max-width: 899px) and (max-height: 740px) {
+  .radio-header { padding-top: 2px !important; padding-bottom: 1px !important; }
+  .brand-logo-wrap { width: 34px !important; height: 34px !important; }
+  .brand-logo { width: 32px !important; height: 32px !important; }
+  .brand-text { font-size: 1rem !important; }
+  .radio-dance-banner { flex-basis: 40px !important; height: 40px !important; min-height: 40px !important; max-height: 40px !important; }
+  .radio-dance-dog { width: 40px !important; height: 40px !important; max-width: 40px !important; max-height: 40px !important; }
+  .dial-scale { height: 14px !important; }
+  .dial-band { height: 19px !important; min-height: 19px !important; }
+  .visualizer { display: none !important; }
+  .controls-section { margin-top: 1px !important; margin-bottom: 1px !important; }
+  .play-btn { width: 43px !important; height: 43px !important; min-width: 43px !important; min-height: 43px !important; }
+  .prev-btn, .next-btn { width: 33px !important; height: 33px !important; min-width: 33px !important; min-height: 33px !important; }
+  .eq-btn { height: 34px !important; min-height: 34px !important; }
+  .status-bar { min-height: 26px !important; }
+  .search-wrap, .filter-btns { min-height: 30px !important; }
+  .bottom-nav { height: 46px !important; min-height: 46px !important; }
+  .station-list { margin-bottom: 54px !important; }
+}
+
+@media (max-width: 899px) and (max-height: 620px) {
+  .radio-dance-banner { display: none !important; }
+  .dial-section { padding-top: 0 !important; padding-bottom: 0 !important; }
+  .dial-glass { padding-top: 1px !important; padding-bottom: 1px !important; }
+  .dial-band { height: 16px !important; min-height: 16px !important; }
+  .dial-scale { height: 12px !important; }
+  .station-name { font-size: .82rem !important; }
+  .controls-section { padding-top: 0 !important; padding-bottom: 0 !important; }
+  .play-btn { width: 38px !important; height: 38px !important; min-width: 38px !important; min-height: 38px !important; }
+  .prev-btn, .next-btn { width: 29px !important; height: 29px !important; min-width: 29px !important; min-height: 29px !important; }
+}
