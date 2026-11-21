@@ -1,37 +1,21 @@
-RADIO ARGENTINA — EDICIÓN SIN TAGS, CON PERRITO BAILARÍN
+RADIO ARGENTINA — MASCOTA CON EMOJI NATIVO
 
 CAMBIOS
-- Se eliminó por completo el visor de tags, la lectura ICY/JSON y la búsqueda externa de canciones.
-- Se quitó now-playing.js y sus conexiones desde app.js e index.html.
-- Se agregó una mascota animada con emojis musicales y bailarina.
-- El perrito se desplaza de izquierda a derecha y el propio GIF tiene poses de baile.
-- Se conservaron la lista de emisoras, las URLs de streaming y la lógica de Play/Pausa.
-- Se mantienen los ajustes compactos de dial y controles realizados en la versión anterior.
+- Se eliminaron completamente los GIF y PNG del perrito.
+- Se quitó toda referencia HTML, CSS y Service Worker a esos archivos de imagen.
+- La mascota ahora es una carita sonriente 😄 escrita directamente en HTML.
+- La sonrisa tiene una animación CSS suave de rebote.
+- Los emojis musicales, la bailarina, las notas y los destellos también se animan.
+- No requiere descargas de imágenes, formatos GIF/PNG, ni servicios externos.
+- Se mantiene la lista de emisoras, reproducción y controles existentes.
+- Caché PWA renovada: radio-ar-v102.
 
-POR QUÉ ANTES NO SE VEÍA EL PERRITO
-La imagen generada era un GIF animado de 9 fotogramas completo. La versión anterior lo trató equivocadamente como si fuera una cuadrícula de 3 x 3 y recortó cada fotograma en nueve pedazos. El resultado era una imagen recortada que no mostraba al perro entero. Esta versión usa el GIF original completo, sin trocearlo.
-
-COMPATIBILIDAD
-- Se utiliza GIF animado, formato ampliamente admitido por navegadores móviles Android, y CSS estándar para el desplazamiento.
-- No se utiliza WebP animado, canvas, Web Audio ni APIs experimentales para mostrar la mascota.
-- El archivo está guardado localmente en assets/radio-dog-dance.gif y se precarga en el Service Worker; no depende de un servidor de imágenes externo.
-- Si el navegador bloquea animaciones por una preferencia de movimiento reducido, el perro queda visible en una posición fija.
+POR QUÉ ESTA VERSIÓN DEBE VERSE
+El emoji es texto Unicode renderizado por la fuente de emojis del propio Android; no hay un archivo gráfico que pueda faltar, tener una extensión incorrecta o fallar al cargar. Si el teléfono no tiene ese glifo concreto, Android mostrará el emoji alternativo disponible en su fuente.
 
 INSTALACIÓN
-1. Descomprimir este ZIP.
-2. Abrir la carpeta FM-radio-main.
-3. Subir su contenido al repositorio GitHub, reemplazando los archivos correspondientes y conservando las carpetas.
-4. Esperar la publicación de GitHub Pages.
-5. Cerrar y volver a abrir la aplicación o pulsar “Nueva actualización” para limpiar la versión anterior de caché.
-
-NOTA
-No se puede garantizar literalmente cada navegador Android antiguo o modificado, pero se eligió GIF + CSS por su amplia compatibilidad. El ZIP no modifica ni publica automáticamente el repositorio.
-
-
-CORRECCIÓN SEGÚN CAPTURA DEL CELULAR
-- Causa encontrada: el archivo anterior tenía contenido PNG pero estaba guardado con extensión .gif. Android/Chrome esperaba un GIF y no pudo decodificarlo; por eso mostró el icono de imagen rota y el texto alternativo “Perrito con auriculares”.
-- Se reemplazó por un PNG RGBA auténtico con extensión .png y ruta local assets/radio-dog-dance.png.
-- Se eliminó el texto alternativo visible para evitar que un fallo de carga agrande el panel.
-- Se redujo el panel de la mascota a 62 px (56 px en móviles muy angostos), el dial y los controles.
-- La lista de emisoras recibe el espacio restante y mantiene scroll vertical.
-- Caché PWA actualizada a radio-ar-v100.
+1. Descomprimir el ZIP.
+2. Abrir FM-radio-main.
+3. Subir todo su contenido al repositorio y reemplazar los archivos anteriores.
+4. Esperar a GitHub Pages.
+5. Cerrar y volver a abrir la aplicación para tomar la caché nueva.

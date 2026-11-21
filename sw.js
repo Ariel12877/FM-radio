@@ -7,7 +7,6 @@ const ASSETS = [
   "./index.html",
   "./styles.css",
   "./app.js",
-  "./assets/radio-dog-dance.png",
   "./stations.js",
   "./logos.js",
   "./update.js",
