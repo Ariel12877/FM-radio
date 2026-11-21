@@ -958,7 +958,7 @@ const SHORTCUTS = {
   windows: {
     ext: "url",
     mime: "application/internet-shortcut",
-    build: (u) => "[InternetShortcut]\r\nURL=" + u + "\r\nIconIndex=0\r\n"
+    build: (u) => "[InternetShortcut]\r\nURL=" + u + "\r\nIconFile=" + new URL("favicon.ico?v=93", u).href + "\r\nIconIndex=0\r\n"
   },
   mac: {
     ext: "webloc",

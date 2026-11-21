@@ -845,7 +845,7 @@ const OS_LABEL = { windows: "Windows", mac: "Mac", linux: "Linux" };
 const isStandalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 
 const SHORTCUTS = {
-  windows: { ext: "url", mime: "application/internet-shortcut", build: (u) => "[InternetShortcut]\r\nURL=" + u + "\r\nIconIndex=0\r\n" },
+  windows: { ext: "url", mime: "application/internet-shortcut", build: (u) => "[InternetShortcut]\r\nURL=" + u + "\r\nIconFile=" + new URL("favicon.ico?v=93", u).href + "\r\nIconIndex=0\r\n" },
   mac: {
     ext: "webloc", mime: "application/xml",
     build: (u) => '<?xml version="1.0" encoding="UTF-8"?>\n' +
