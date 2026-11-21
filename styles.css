@@ -2284,3 +2284,132 @@ button.mix-val { cursor: pointer; }
       linear-gradient(180deg, #06101c 0%, #03080f 50%, #000 100%);
   }
 }
+
+
+
+/* ========== NOW PLAYING TRACK DISPLAY ========== */
+/* La tarjeta se muestra solo en móvil; la versión PC conserva su distribución. */
+.track-display {
+  display: none;
+}
+@media (max-width: 899px) {
+  .track-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 76px;
+    margin: 5px 12px 2px;
+    padding: 7px 10px;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+    border: 1.5px solid rgba(0, 220, 255, .9);
+    border-radius: 17px;
+    background:
+      linear-gradient(100deg, rgba(0, 22, 46, .98), rgba(2, 12, 29, .96)),
+      radial-gradient(circle at 20% 50%, rgba(0, 180, 255, .2), transparent 60%);
+    box-shadow: 0 0 13px rgba(0, 190, 255, .22), inset 0 0 16px rgba(0, 120, 255, .1);
+  }
+  .track-art-wrap {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 210, 110, .65);
+    background: linear-gradient(145deg, #173a5c, #071426);
+    display: grid;
+    place-items: center;
+  }
+  .track-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .track-cover[hidden] { display: none !important; }
+  .track-cover-fallback {
+    color: #19e3ff;
+    font-size: 2rem;
+    text-shadow: 0 0 12px rgba(0, 220, 255, .7);
+  }
+  .track-copy {
+    min-width: 0;
+    flex: 1 1 auto;
+    text-align: left;
+    position: relative;
+    z-index: 1;
+  }
+  .track-kicker {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #19e3ff;
+    font: 800 .61rem/1.2 "Open Sans", system-ui, sans-serif;
+    letter-spacing: .55px;
+    margin-bottom: 3px;
+  }
+  .track-note { font-size: .95rem; }
+  .track-title {
+    color: #fff;
+    font: 700 .91rem/1.18 "Open Sans", system-ui, sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 0 9px rgba(0, 160, 255, .25);
+  }
+  .track-artist {
+    color: #c5d5e8;
+    font: italic 600 .75rem/1.25 "Open Sans", system-ui, sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+  }
+  .track-bars {
+    flex: 0 0 58px;
+    height: 43px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+    opacity: .9;
+    margin-left: 1px;
+  }
+  .track-bars i {
+    width: 4px;
+    height: 8px;
+    border-radius: 1px 1px 0 0;
+    background: linear-gradient(180deg, #20f4ff, #0875e8);
+    box-shadow: 0 0 5px rgba(0, 220, 255, .5);
+    animation: trackBars .72s ease-in-out infinite alternate;
+  }
+  .track-bars i:nth-child(3n) { animation-delay: -.28s; }
+  .track-bars i:nth-child(2n) { animation-delay: -.48s; }
+  .track-bars i:nth-child(4n) { animation-delay: -.12s; }
+  @keyframes trackBars {
+    from { height: 7px; opacity: .6; }
+    to { height: 38px; opacity: 1; }
+  }
+  .track-display[data-state="idle"] .track-bars i,
+  .track-display[data-state="stale"] .track-bars i { animation-play-state: paused; opacity: .45; }
+  .track-display[data-state="searching"] .track-kicker { color: #ffd36a; }
+  .track-display[data-state="stale"] .track-kicker { color: #ffd36a; }
+  .track-display[data-state="found"] { border-color: rgba(0, 235, 255, .95); }
+  .track-display[data-state="idle"] { border-color: rgba(100, 160, 200, .45); }
+  /* Reducimos la altura del dial para hacer sitio al visor sin cambiar su aspecto. */
+  .dial-section { padding: 3px 12px 4px; }
+  .dial-glass { padding: 6px 10px 5px; }
+  .dial-band { margin-bottom: 3px; }
+  .dial-scale { height: 21px; }
+  .dial-scale::before { top: 3px; height: 7px; }
+  .dial-tag { font-size: .59rem; }
+  .dial-tag small { font-size: .45rem; }
+}
+@media (max-width: 360px) {
+  .track-display { gap: 7px; min-height: 68px; padding: 6px 7px; margin-left: 9px; margin-right: 9px; }
+  .track-art-wrap { width: 50px; height: 50px; flex-basis: 50px; }
+  .track-bars { flex-basis: 42px; gap: 1.5px; }
+  .track-bars i { width: 3px; }
+  .track-title { font-size: .82rem; }
+  .track-artist { font-size: .68rem; }
+}

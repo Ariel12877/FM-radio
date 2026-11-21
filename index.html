@@ -50,6 +50,23 @@
       </div>
     </header>
 
+
+    <!-- NOW PLAYING: visor musical superior (solo móvil) -->
+    <section class="track-display" id="trackDisplay" data-state="idle" aria-live="polite" aria-label="Información de la canción">
+      <div class="track-art-wrap">
+        <img id="trackCover" class="track-cover" alt="Portada del tema" hidden />
+        <div id="trackCoverFallback" class="track-cover-fallback" aria-hidden="true">♫</div>
+      </div>
+      <div class="track-copy">
+        <div class="track-kicker"><span class="track-note">♫</span><span id="trackState">EN VIVO</span></div>
+        <div class="track-title" id="trackTitle">Elegí una emisora</div>
+        <div class="track-artist" id="trackArtist">La información musical aparecerá aquí</div>
+      </div>
+      <div class="track-bars" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+    </section>
+
     <!-- DIAL DORADO -->
     <section class="dial-section">
       <div class="dial-frame">
@@ -252,6 +269,7 @@
   <script src="stations.js?v=1"></script>
   <script src="logos.js?v=1"></script>
   <script src="app.js?v=29"></script>
+  <script src="now-playing.js?v=1"></script>
   <script src="update.js?v=1"></script>
 
   <dialog class="sheet" id="shortcutDialog" aria-labelledby="shortcutTitle">

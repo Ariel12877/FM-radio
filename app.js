@@ -511,12 +511,14 @@ async function startOn(el, st, withEq) {
   el.src = st.url;
   el.load();
   await el.play();
+  if (window.RadioNowPlaying?.setPlayer) window.RadioNowPlaying.setPlayer(el);
 }
 
 async function playStation(st) {
   if (!st) return;
   const token = ++playToken;
   currentStation = st;
+  if (window.RadioNowPlaying?.setStation) window.RadioNowPlaying.setStation(st);
   stationNameEl.textContent = st.name;
   freqEl.innerHTML = dual(st.freq || "Online", freqMobileHtml(st.freq));
   updateDial(st);

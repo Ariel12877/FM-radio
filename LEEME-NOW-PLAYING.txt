@@ -1,0 +1,25 @@
+RADIO ARGENTINA — ACTUALIZACIÓN NOW PLAYING
+
+CONTENIDO
+- index.html: visor musical agregado debajo del encabezado y antes del dial.
+- styles.css: diseño LED móvil y reducción de altura del dial solo en pantallas móviles.
+- app.js: notifica al módulo cuando cambia la emisora; no cambia la lógica de reproducción.
+- now-playing.js: lectura de metadatos JSON configurados e intento de metadatos ICY.
+- sw.js: nueva versión de caché y precarga del módulo.
+
+INSTALACIÓN
+1. Descomprimí este ZIP.
+2. Subí el contenido de la carpeta FM-radio-main a tu repositorio, reemplazando los archivos cuando te lo solicite.
+3. Conservá las carpetas y archivos existentes. El ZIP incluye el proyecto completo que adjuntaste.
+4. Esperá unos minutos y recargá la aplicación. Si sigue mostrando la versión anterior, cerrá y volvé a abrir la PWA o usá "Nueva actualización".
+
+FUNCIONAMIENTO Y LIMITACIONES
+- El visor intenta leer metadatos ICY del streaming. Solo puede hacerlo cuando el servidor de radio permite acceso CORS desde tu web.
+- También acepta una propiedad metadataUrl en cada objeto de STATIONS si en el futuro disponés de un endpoint JSON de metadatos compatible.
+- Cuando se conoce título/artista, busca una portada posible en iTunes Search.
+- Si no hay metadatos accesibles, muestra el último tema identificado en esta sesión; si todavía no se identificó ninguno, informa que los datos no están disponibles.
+- No se inventan títulos ni artistas.
+- La identificación de audio sin tags (tipo Shazam) NO está activada: requiere integrar un servicio especializado y un backend/API con credenciales. No se envía el audio a terceros ni se simula una identificación.
+- Los navegadores suelen bloquear la lectura de metadatos de streams de otros dominios si el servidor no habilita CORS. El intento no modifica ni interrumpe el audio principal.
+
+Se conservaron las URLs de las emisoras y la lógica actual de Play/Pausa y ecualizador.
