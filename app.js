@@ -86,8 +86,6 @@ let audioCtx = null;
 let sourceNode = null;
 let filters = [];
 let analyser = null;
-// Acceso de solo lectura para animaciones reactivas del visor musical.
-window.RadioArgentinaGetAnalyser = () => analyser;
 let eqGains = [0, 0, 0, 0, 0, 0, 0];
 let eqPreset = "flat";
 let eqAvailable = true;
@@ -513,14 +511,12 @@ async function startOn(el, st, withEq) {
   el.src = st.url;
   el.load();
   await el.play();
-  if (window.RadioNowPlaying?.setPlayer) window.RadioNowPlaying.setPlayer(el);
 }
 
 async function playStation(st) {
   if (!st) return;
   const token = ++playToken;
   currentStation = st;
-  if (window.RadioNowPlaying?.setStation) window.RadioNowPlaying.setStation(st);
   stationNameEl.textContent = st.name;
   freqEl.innerHTML = dual(st.freq || "Online", freqMobileHtml(st.freq));
   updateDial(st);

@@ -51,27 +51,18 @@
     </header>
 
 
-    <!-- NOW PLAYING: visor musical superior (solo móvil) -->
-    <section class="track-display" id="trackDisplay" data-state="idle" aria-live="polite" aria-label="Información de la canción">
-      <div class="track-art-wrap">
-        <img id="trackCover" class="track-cover" alt="Portada del tema" hidden />
-        <div id="trackCoverFallback" class="track-cover-fallback" aria-hidden="true">♫</div>
-      </div>
-      <div class="dance-stage" id="danceStage" aria-hidden="true">
-        <img class="dance-dog" id="danceDog" src="assets/radio-dog-dance.gif" alt="" />
-        <span class="dance-emoji emoji-one">🎵</span>
-        <span class="dance-emoji emoji-two">💃</span>
-        <span class="dance-emoji emoji-three">🎶</span>
-        <span class="dance-emoji emoji-four">🕺</span>
-        <span class="dance-emoji emoji-five">✨</span>
-      </div>
-      <div class="track-copy">
-        <div class="track-kicker"><span class="track-note">♫</span><span id="trackState">EN VIVO</span></div>
-        <div class="track-title" id="trackTitle">Elegí una emisora</div>
-        <div class="track-artist" id="trackArtist">La información musical aparecerá aquí</div>
-      </div>
-      <div class="track-bars" aria-hidden="true">
-        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    <!-- MASCOTA ANIMADA: no depende de tags ni de servicios externos -->
+    <section class="radio-dance-banner" aria-label="Mascota musical de Radio Argentina">
+      <div class="radio-dance-stage">
+        <span class="radio-dance-emoji emoji-a" aria-hidden="true">🎵</span>
+        <span class="radio-dance-emoji emoji-b" aria-hidden="true">💃</span>
+        <span class="radio-dance-emoji emoji-c" aria-hidden="true">🎶</span>
+        <span class="radio-dance-emoji emoji-d" aria-hidden="true">✨</span>
+        <span class="radio-dance-emoji emoji-e" aria-hidden="true">🕺</span>
+        <span class="radio-dog-fallback" aria-hidden="true">🐶</span>
+        <img class="radio-dance-dog" src="assets/radio-dog-dance.gif?v=2"
+             alt="Perrito con auriculares bailando" width="220" height="190"
+             decoding="async" fetchpriority="high" />
       </div>
     </section>
 
@@ -277,7 +268,6 @@
   <script src="stations.js?v=1"></script>
   <script src="logos.js?v=1"></script>
   <script src="app.js?v=29"></script>
-  <script src="now-playing.js?v=1"></script>
   <script src="update.js?v=1"></script>
 
   <dialog class="sheet" id="shortcutDialog" aria-labelledby="shortcutTitle">

@@ -2505,3 +2505,89 @@ button.mix-val { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   .dance-dog, .dance-emoji { animation: none !important; }
 }
+
+
+/* ===== Radio Argentina: mascota animada universal, sin panel de tags ===== */
+.radio-dance-banner { display: none; }
+@media (max-width: 899px) {
+  .radio-dance-banner {
+    display: block;
+    height: clamp(76px, 17vw, 104px);
+    margin: 3px 12px 4px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 190, 255, .62);
+    border-radius: 15px;
+    background: linear-gradient(100deg, rgba(2, 18, 39, .96), rgba(0, 9, 24, .98));
+    box-shadow: inset 0 0 14px rgba(0, 155, 255, .12), 0 0 9px rgba(0, 160, 255, .14);
+    isolation: isolate;
+  }
+  .radio-dance-stage {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .radio-dance-dog {
+    position: absolute;
+    z-index: 2;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: auto;
+    height: 96%;
+    max-width: none;
+    object-fit: contain;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    animation: radioDogTravel 7s ease-in-out infinite;
+    filter: drop-shadow(0 3px 7px rgba(0, 0, 0, .65));
+    image-rendering: auto;
+  }
+  @keyframes radioDogTravel {
+    0%, 100% { left: 17%; transform: translateX(-50%) rotate(-4deg) scale(.96); }
+    25% { left: 39%; transform: translateX(-50%) rotate(4deg) scale(1.02); }
+    50% { left: 82%; transform: translateX(-50%) rotate(-3deg) scale(1); }
+    75% { left: 58%; transform: translateX(-50%) rotate(5deg) scale(1.03); }
+  }
+  .radio-dance-emoji {
+    position: absolute;
+    z-index: 3;
+    display: block;
+    font-family: "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", sans-serif;
+    font-size: clamp(16px, 4.4vw, 23px);
+    line-height: 1;
+    filter: drop-shadow(0 0 5px rgba(0, 200, 255, .75));
+    animation: radioEmojiHop 1.35s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .emoji-a { left: 8%; top: 8px; animation-delay: -.2s; }
+  .emoji-b { left: 36%; top: 4px; animation-delay: -.75s; }
+  .emoji-c { right: 9%; top: 7px; animation-delay: -.48s; }
+  .emoji-d { right: 30%; bottom: 7px; animation-delay: -.95s; }
+  .emoji-e { left: 55%; bottom: 5px; animation-delay: -.1s; }
+  @keyframes radioEmojiHop {
+    0%, 100% { transform: translateY(4px) rotate(-12deg) scale(.88); opacity: .62; }
+    50% { transform: translateY(-7px) rotate(13deg) scale(1.16); opacity: 1; }
+  }
+  .radio-dog-fallback {
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    bottom: 2px;
+    transform: translateX(-50%);
+    font-size: 48px;
+    line-height: 1;
+  }
+  /* El GIF se dibuja por encima del emoji de respaldo cuando carga correctamente. */
+  .radio-dance-dog:not([src=""]) { background: transparent; }
+}
+@media (max-width: 380px) {
+  .radio-dance-banner { margin-left: 9px; margin-right: 9px; height: 76px; }
+  .radio-dance-dog { height: 94%; }
+  .radio-dance-emoji { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .radio-dance-dog, .radio-dance-emoji { animation: none !important; }
+  .radio-dance-dog { left: 50%; transform: translateX(-50%); }
+}

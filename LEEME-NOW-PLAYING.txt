@@ -1,34 +1,28 @@
-RADIO ARGENTINA — ACTUALIZACIÓN NOW PLAYING
+RADIO ARGENTINA — EDICIÓN SIN TAGS, CON PERRITO BAILARÍN
 
-CONTENIDO
-- index.html: visor musical agregado debajo del encabezado y antes del dial.
-- styles.css: diseño LED móvil y reducción de altura del dial solo en pantallas móviles.
-- app.js: notifica al módulo cuando cambia la emisora; no cambia la lógica de reproducción.
-- now-playing.js: lectura de metadatos JSON configurados e intento de metadatos ICY.
-- sw.js: nueva versión de caché y precarga del módulo.
+CAMBIOS
+- Se eliminó por completo el visor de tags, la lectura ICY/JSON y la búsqueda externa de canciones.
+- Se quitó now-playing.js y sus conexiones desde app.js e index.html.
+- Se agregó una mascota animada con emojis musicales y bailarina.
+- El perrito se desplaza de izquierda a derecha y el propio GIF tiene poses de baile.
+- Se conservaron la lista de emisoras, las URLs de streaming y la lógica de Play/Pausa.
+- Se mantienen los ajustes compactos de dial y controles realizados en la versión anterior.
+
+POR QUÉ ANTES NO SE VEÍA EL PERRITO
+La imagen generada era un GIF animado de 9 fotogramas completo. La versión anterior lo trató equivocadamente como si fuera una cuadrícula de 3 x 3 y recortó cada fotograma en nueve pedazos. El resultado era una imagen recortada que no mostraba al perro entero. Esta versión usa el GIF original completo, sin trocearlo.
+
+COMPATIBILIDAD
+- Se utiliza GIF animado, formato ampliamente admitido por navegadores móviles Android, y CSS estándar para el desplazamiento.
+- No se utiliza WebP animado, canvas, Web Audio ni APIs experimentales para mostrar la mascota.
+- El archivo está guardado localmente en assets/radio-dog-dance.gif y se precarga en el Service Worker; no depende de un servidor de imágenes externo.
+- Si el navegador bloquea animaciones por una preferencia de movimiento reducido, el perro queda visible en una posición fija.
 
 INSTALACIÓN
-1. Descomprimí este ZIP.
-2. Subí el contenido de la carpeta FM-radio-main a tu repositorio, reemplazando los archivos cuando te lo solicite.
-3. Conservá las carpetas y archivos existentes. El ZIP incluye el proyecto completo que adjuntaste.
-4. Esperá unos minutos y recargá la aplicación. Si sigue mostrando la versión anterior, cerrá y volvé a abrir la PWA o usá "Nueva actualización".
+1. Descomprimir este ZIP.
+2. Abrir la carpeta FM-radio-main.
+3. Subir su contenido al repositorio GitHub, reemplazando los archivos correspondientes y conservando las carpetas.
+4. Esperar la publicación de GitHub Pages.
+5. Cerrar y volver a abrir la aplicación o pulsar “Nueva actualización” para limpiar la versión anterior de caché.
 
-FUNCIONAMIENTO Y LIMITACIONES
-- El visor intenta leer metadatos ICY del streaming. Solo puede hacerlo cuando el servidor de radio permite acceso CORS desde tu web.
-- También acepta una propiedad metadataUrl en cada objeto de STATIONS si en el futuro disponés de un endpoint JSON de metadatos compatible.
-- Cuando se conoce título/artista, busca una portada posible en iTunes Search.
-- Si no hay metadatos accesibles, muestra el último tema identificado en esta sesión; si todavía no se identificó ninguno, informa que los datos no están disponibles.
-- No se inventan títulos ni artistas.
-- La identificación de audio sin tags (tipo Shazam) NO está activada: requiere integrar un servicio especializado y un backend/API con credenciales. No se envía el audio a terceros ni se simula una identificación.
-- Los navegadores suelen bloquear la lectura de metadatos de streams de otros dominios si el servidor no habilita CORS. El intento no modifica ni interrumpe el audio principal.
-
-Se conservaron las URLs de las emisoras y la lógica actual de Play/Pausa y ecualizador.
-
-
-ACTUALIZACIÓN VISUAL — PERRITO BAILARÍN
-- Se agregó assets/radio-dog-dance.gif con el perrito animado.
-- Cuando la emisora no entrega tags ni portada, se muestra el perrito con emojis musicales, bailarina y destellos.
-- El perrito se desplaza de lado a lado; cuando el ecualizador dispone de analizador de audio, el rebote/sway responde a la energía musical. En reproducción directa sin analizador conserva una animación rítmica suave.
-- Cuando aparece una portada real, la animación deja el primer plano para mostrar el arte del tema.
-- Se compactaron dial, botones anterior/siguiente y ecualizador en móvil. El ecualizador ahora muestra solo la palabra “Ecualizador”.
-- Se mantiene la distribución de escritorio.
+NOTA
+No se puede garantizar literalmente cada navegador Android antiguo o modificado, pero se eligió GIF + CSS por su amplia compatibilidad. El ZIP no modifica ni publica automáticamente el repositorio.
