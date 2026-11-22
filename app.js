@@ -41,6 +41,7 @@ const freqEl = document.getElementById("freq");
 const stationList = document.getElementById("stationList");
 const stationSearch = document.getElementById("stationSearch");
 const visualizer = document.getElementById("visualizer");
+const visorBars = document.getElementById("visorBars");   // las 5 barritas dentro del visor de la emisora
 const connText = document.getElementById("connText");
 const bitrateEl = document.getElementById("bitrate");
 const liveTimerEl = document.getElementById("liveTimer");
@@ -366,6 +367,7 @@ function startVisualizer() {
   visualizer.classList.add("playing");
   const real = player === playerEQ && !!analyser;
   visualizer.classList.toggle("real", real);
+  if (visorBars) { visorBars.classList.add("playing"); visorBars.classList.toggle("real", real); }
   if (!real) return; // sin acceso al audio, queda la animación simulada
 
   const bars = visualizer.querySelectorAll(".bar");
@@ -380,9 +382,32 @@ function startVisualizer() {
     ranges.push([lo, Math.max(lo + 1, Math.ceil(b / binHz))]);
   }
 
+  // Barritas del visor: 5 bandas de graves (izquierda) a agudos (derecha)
+  const vBars = visorBars ? Array.from(visorBars.children) : [];
+  const VB = vBars.length;
+  const vRanges = [];
+  for (let k = 0; k < VB; k++) {
+    const a = fMin * Math.pow(fMax / fMin, k / VB);
+    const b = fMin * Math.pow(fMax / fMin, (k + 1) / VB);
+    const lo = Math.max(0, Math.floor(a / binHz));
+    vRanges.push([lo, Math.max(lo + 1, Math.ceil(b / binHz))]);
+  }
+  const vCur = new Array(VB).fill(0);
+  const reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
   function frame() {
     if (!isPlaying || player !== playerEQ) return;
     analyser.getByteFrequencyData(data);
+    if (VB && !reduceMotion) {
+      const VH = visorBars.clientHeight || 36;
+      vRanges.forEach(([lo, hi], k) => {
+        let m = 0;
+        for (let b = lo; b < hi; b++) if (data[b] > m) m = data[b];
+        const t = Math.min(1, Math.pow(m / 255, 1.25) * (1 + k * 0.12));
+        vCur[k] = Math.max(t, vCur[k] * 0.82);           // sube rápido y baja suave, para que no tiemble
+        vBars[k].style.height = Math.max(5, vCur[k] * VH) + "px";
+      });
+    }
     const H = visualizer.clientHeight || 48;
     const vals = ranges.map(([lo, hi], k) => {
       let m = 0;
@@ -406,6 +431,10 @@ function stopVisualizer() {
   cancelAnimationFrame(animId);
   visualizer.classList.remove("playing", "real");
   visualizer.querySelectorAll(".bar").forEach(b => { b.style.height = "8px"; });
+  if (visorBars) {
+    visorBars.classList.remove("playing", "real");
+    Array.from(visorBars.children).forEach(b => { b.style.height = ""; });   // vuelven a su altura de reposo
+  }
 }
 
 /* ---- Dial needle ---- */

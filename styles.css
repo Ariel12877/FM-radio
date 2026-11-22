@@ -3068,3 +3068,69 @@ button.mix-val { cursor: pointer; }
   .station-quote.show .qw { animation: none !important; opacity: 1; transform: none; filter: none; }
   .station-quote.show .quote-emoji { animation: none !important; }
 }
+
+
+/* ===== Barritas del visor de la emisora =====
+   Van dentro del cuadro azul, a la derecha del nombre y la frecuencia. Suben y bajan con la música.
+   El cuadro conserva su alto; el nombre solo cede el lugar que ocupan las barritas. */
+.visor-bars { display: none; }
+@media (max-width: 899px) {
+  .station-info {
+    grid-template-columns: 52px minmax(0, 1fr) auto !important;
+    grid-template-areas:
+      "radio name bars"
+      "radio frequency bars" !important;
+  }
+  .visor-bars {
+    grid-area: bars;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 4px;
+    width: 41px;
+    height: 36px;
+    align-self: center;
+    justify-self: end;
+  }
+  .visor-bars i {
+    display: block;
+    width: 5px;
+    height: 12px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #62e8ff 0%, #1fd0ff 55%, #16a9f2 100%);
+    box-shadow: 0 0 7px rgba(25, 210, 255, .5);
+    opacity: .55;
+    transition: height .09s linear, opacity .3s ease;
+  }
+  /* En reposo: alturas distintas, apagadas */
+  .visor-bars i:nth-child(1) { height: 12px; }
+  .visor-bars i:nth-child(2) { height: 20px; }
+  .visor-bars i:nth-child(3) { height: 30px; }
+  .visor-bars i:nth-child(4) { height: 22px; }
+  .visor-bars i:nth-child(5) { height: 14px; }
+  /* Sonando */
+  .visor-bars.playing i { opacity: 1; animation: visorDance .6s ease-in-out infinite alternate; }
+  .visor-bars.playing.real i { animation: none; }   /* con audio real, las mueve el JS */
+  .visor-bars.playing i:nth-child(1) { animation-duration: .52s; animation-delay: -.10s; }
+  .visor-bars.playing i:nth-child(2) { animation-duration: .68s; animation-delay: -.35s; }
+  .visor-bars.playing i:nth-child(3) { animation-duration: .46s; animation-delay: -.22s; }
+  .visor-bars.playing i:nth-child(4) { animation-duration: .74s; animation-delay: -.50s; }
+  .visor-bars.playing i:nth-child(5) { animation-duration: .58s; animation-delay: -.05s; }
+  @keyframes visorDance {
+    0%   { height: 8px; }
+    100% { height: 34px; }
+  }
+}
+@media (max-width: 380px) {
+  .station-info {
+    grid-template-columns: 45px minmax(0, 1fr) auto !important;
+    grid-template-areas:
+      "radio name bars"
+      "radio frequency bars" !important;
+  }
+  .visor-bars { width: 32px; gap: 3px; height: 32px; }
+  .visor-bars i { width: 4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .visor-bars.playing i { animation: none !important; height: 20px !important; }
+}
