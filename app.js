@@ -513,10 +513,56 @@ async function startOn(el, st, withEq) {
   await el.play();
 }
 
+/* ---- Frases luminosas: una al azar cada vez que se cambia de emisora ---- */
+const STATION_QUOTES = [
+  { e: "❤️", t: "Las mejores canciones nunca pasan de moda" },
+  { e: "📻", t: "Donde hay música, hay vida" },
+  { e: "🎶", t: "Una canción puede cambiarte el día" },
+  { e: "✨", t: "La música nos une, sin importar las distancias" },
+  { e: "🇦🇷", t: "Argentina tiene música para todos los corazones" }
+];
+const quoteBox = document.getElementById("stationQuote");
+let lastQuote = -1;
+
+if (quoteBox) {
+  // Al terminar la animación se apaga sola; no queda nada tapando la franja.
+  quoteBox.addEventListener("animationend", (e) => {
+    if (e.target === quoteBox) quoteBox.classList.remove("show");
+  });
+}
+
+function showStationQuote() {
+  if (!quoteBox) return;
+  let i;
+  do { i = Math.floor(Math.random() * STATION_QUOTES.length); }
+  while (i === lastQuote && STATION_QUOTES.length > 1);   // nunca repite la misma dos veces seguidas
+  lastQuote = i;
+  const q = STATION_QUOTES[i];
+
+  quoteBox.querySelector(".quote-emoji").textContent = q.e;
+  const txt = quoteBox.querySelector(".quote-text");
+  txt.textContent = "";
+  const words = ("«" + q.t + "»").split(" ");
+  words.forEach((w, n) => {
+    const s = document.createElement("span");
+    s.className = "qw";
+    s.textContent = w;
+    s.style.animationDelay = (0.25 + n * 0.09) + "s";      // las palabras se encienden de a una
+    txt.appendChild(s);
+    if (n < words.length - 1) txt.appendChild(document.createTextNode(" "));
+  });
+
+  quoteBox.classList.remove("show");
+  void quoteBox.offsetWidth;                                // reinicia la animación si había otra en curso
+  quoteBox.classList.add("show");
+}
+
 async function playStation(st) {
   if (!st) return;
   const token = ++playToken;
+  const changedStation = !currentStation || currentStation.id !== st.id;
   currentStation = st;
+  if (changedStation) showStationQuote();
   stationNameEl.textContent = st.name;
   freqEl.innerHTML = dual(st.freq || "Online", freqMobileHtml(st.freq));
   updateDial(st);

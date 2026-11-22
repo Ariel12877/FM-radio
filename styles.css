@@ -2988,3 +2988,83 @@ button.mix-val { cursor: pointer; }
   .station-freq { font-size: .94rem !important; }
   .eq-btn .eq-label { font-size: .59rem !important; }
 }
+
+
+/* ===== Frase luminosa al cambiar de emisora =====
+   Vive dentro de la franja de la mascota (misma altura, mismos bordes): no agrega espacio ni mueve controles.
+   Aparece un rato con una animación suave y después deja ver otra vez a la mascota. */
+.station-quote { display: none; }
+@media (max-width: 899px) {
+  .station-quote {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    border-radius: inherit;
+    background: linear-gradient(100deg, rgba(3, 21, 45, .96), rgba(6, 29, 56, .97) 50%, rgba(3, 21, 45, .96));
+    opacity: 0;
+    pointer-events: none;
+    text-align: center;
+  }
+  .station-quote.show { animation: quoteLife 5s ease-in-out both; }
+  .quote-emoji {
+    flex: 0 0 auto;
+    font-family: "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", sans-serif;
+    font-size: 22px;
+    line-height: 1;
+    filter: drop-shadow(0 0 6px rgba(0, 210, 255, .7));
+  }
+  .station-quote.show .quote-emoji { animation: quoteEmoji 2.2s ease-in-out infinite; }
+  .quote-text {
+    min-width: 0;
+    font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+    font-size: clamp(.74rem, 3.5vw, .9rem);
+    font-weight: 800;
+    line-height: 1.16;
+    letter-spacing: .15px;
+    color: #effcff;
+    text-wrap: balance;
+  }
+  .qw {
+    display: inline-block;
+    opacity: 0;
+    text-shadow:
+      0 0 5px rgba(150, 240, 255, .95),
+      0 0 12px rgba(0, 200, 255, .8),
+      0 0 24px rgba(0, 150, 255, .55);
+  }
+  .station-quote.show .qw {
+    animation: quoteWord .7s ease-out forwards, quoteGlow 2s ease-in-out infinite alternate;
+  }
+  @keyframes quoteLife {
+    0%   { opacity: 0; }
+    10%  { opacity: 1; }
+    86%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  @keyframes quoteWord {
+    0%   { opacity: 0; transform: translateY(6px); filter: blur(4px); }
+    100% { opacity: 1; transform: translateY(0);   filter: blur(0); }
+  }
+  @keyframes quoteGlow {
+    from { text-shadow: 0 0 4px rgba(150, 240, 255, .8), 0 0 9px rgba(0, 200, 255, .6), 0 0 18px rgba(0, 150, 255, .35); }
+    to   { text-shadow: 0 0 6px rgba(190, 248, 255, 1),  0 0 15px rgba(0, 210, 255, .95), 0 0 30px rgba(0, 160, 255, .7); }
+  }
+  @keyframes quoteEmoji {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.14); }
+  }
+}
+@media (max-width: 380px) {
+  .quote-emoji { font-size: 19px; }
+  .station-quote { gap: 6px; padding: 0 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .station-quote.show .qw { animation: none !important; opacity: 1; transform: none; filter: none; }
+  .station-quote.show .quote-emoji { animation: none !important; }
+}
