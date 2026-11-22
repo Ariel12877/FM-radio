@@ -513,7 +513,7 @@ async function startOn(el, st, withEq) {
   await el.play();
 }
 
-/* ---- Frases luminosas: una al azar cada vez que se cambia de emisora ---- */
+/* ---- Frases luminosas: una al azar cada vez que se cambia de emisora (queda hasta el próximo cambio) ---- */
 const STATION_QUOTES = [
   { e: "❤️", t: "Las mejores canciones nunca pasan de moda" },
   { e: "📻", t: "Donde hay música, hay vida" },
@@ -524,13 +524,6 @@ const STATION_QUOTES = [
 const quoteBox = document.getElementById("stationQuote");
 let lastQuote = -1;
 
-if (quoteBox) {
-  // Al terminar la animación se apaga sola; no queda nada tapando la franja.
-  quoteBox.addEventListener("animationend", (e) => {
-    if (e.target === quoteBox) quoteBox.classList.remove("show");
-  });
-}
-
 function showStationQuote() {
   if (!quoteBox) return;
   let i;
@@ -539,7 +532,11 @@ function showStationQuote() {
   lastQuote = i;
   const q = STATION_QUOTES[i];
 
-  quoteBox.querySelector(".quote-emoji").textContent = q.e;
+  // El emoji se renueva (nodo nuevo) para que entre con su animación cada vez
+  const emo = document.createElement("span");
+  emo.className = "quote-emoji";
+  emo.textContent = q.e;
+  quoteBox.querySelector(".quote-emoji").replaceWith(emo);
   const txt = quoteBox.querySelector(".quote-text");
   txt.textContent = "";
   const words = ("«" + q.t + "»").split(" ");
@@ -552,9 +549,10 @@ function showStationQuote() {
     if (n < words.length - 1) txt.appendChild(document.createTextNode(" "));
   });
 
-  quoteBox.classList.remove("show");
-  void quoteBox.offsetWidth;                                // reinicia la animación si había otra en curso
+  // La frase queda fija hasta el próximo cambio de emisora. Solo la primera vez se enciende el cuadro;
+  // después se renuevan las palabras y el emoji, y entran con su animación suave.
   quoteBox.classList.add("show");
+  if (quoteBox.parentElement) quoteBox.parentElement.classList.add("has-quote");
 }
 
 async function playStation(st) {

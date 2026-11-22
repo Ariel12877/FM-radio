@@ -2992,7 +2992,7 @@ button.mix-val { cursor: pointer; }
 
 /* ===== Frase luminosa al cambiar de emisora =====
    Vive dentro de la franja de la mascota (misma altura, mismos bordes): no agrega espacio ni mueve controles.
-   Aparece un rato con una animación suave y después deja ver otra vez a la mascota. */
+   Entra con una animación suave y queda fija hasta que se cambia de emisora. */
 .station-quote { display: none; }
 @media (max-width: 899px) {
   .station-quote {
@@ -3011,7 +3011,7 @@ button.mix-val { cursor: pointer; }
     pointer-events: none;
     text-align: center;
   }
-  .station-quote.show { animation: quoteLife 5s ease-in-out both; }
+  .station-quote.show { animation: quoteIn .6s ease-out both; }
   .quote-emoji {
     flex: 0 0 auto;
     font-family: "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", sans-serif;
@@ -3019,7 +3019,7 @@ button.mix-val { cursor: pointer; }
     line-height: 1;
     filter: drop-shadow(0 0 6px rgba(0, 210, 255, .7));
   }
-  .station-quote.show .quote-emoji { animation: quoteEmoji 2.2s ease-in-out infinite; }
+  .station-quote.show .quote-emoji { animation: quoteWord .6s ease-out both, quoteEmoji 2.4s ease-in-out .6s infinite; }
   .quote-text {
     min-width: 0;
     font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
@@ -3039,13 +3039,11 @@ button.mix-val { cursor: pointer; }
       0 0 24px rgba(0, 150, 255, .55);
   }
   .station-quote.show .qw {
-    animation: quoteWord .7s ease-out forwards, quoteGlow 2s ease-in-out infinite alternate;
+    animation: quoteWord .7s ease-out forwards, quoteGlow 2.6s ease-in-out infinite alternate;
   }
-  @keyframes quoteLife {
-    0%   { opacity: 0; }
-    10%  { opacity: 1; }
-    86%  { opacity: 1; }
-    100% { opacity: 0; }
+  @keyframes quoteIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
   @keyframes quoteWord {
     0%   { opacity: 0; transform: translateY(6px); filter: blur(4px); }
@@ -3060,6 +3058,8 @@ button.mix-val { cursor: pointer; }
     50%      { transform: scale(1.14); }
   }
 }
+.radio-dance-banner.has-quote .radio-big-smile,
+.radio-dance-banner.has-quote .radio-dance-emoji { animation-play-state: paused !important; }
 @media (max-width: 380px) {
   .quote-emoji { font-size: 19px; }
   .station-quote { gap: 6px; padding: 0 9px; }
