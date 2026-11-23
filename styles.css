@@ -2990,176 +2990,185 @@ button.mix-val { cursor: pointer; }
 }
 
 /* ==========================================================
-   RADIO PORTÁTIL — piel móvil inspirada en la referencia
-   Mantiene intactos los IDs y controles conectados a app.js.
+   RADIO PORTÁTIL REAL — piel móvil basada en la fotografía
+   Mantiene los IDs y eventos del reproductor original.
    ========================================================== */
 @media (max-width: 899px) {
-  :root {
-    --radio-black: #08090b;
-    --radio-metal: #b9b9b3;
-    --radio-blue: #087cff;
-  }
-  html, body { background: #06152c !important; }
-  body {
-    background: radial-gradient(ellipse at 50% 45%, #173d78 0%, #071b3a 68%, #020916 100%) !important;
-  }
+  html, body { background:#07172e !important; }
+  body { align-items:stretch !important; }
   .app {
-    max-width: 520px;
+    width:100% !important; max-width:520px !important; height:100dvh !important;
+    max-height:100dvh !important; margin:0 auto !important; overflow:hidden !important;
+    border:3px solid #777 !important; border-radius:28px !important;
     background:
-      radial-gradient(ellipse at 50% 5%, rgba(255,255,255,.10), transparent 24%),
-      repeating-linear-gradient(115deg, rgba(255,255,255,.018) 0 1px, transparent 1px 4px),
-      linear-gradient(145deg, #282a2c 0%, #08090b 20%, #151719 52%, #050607 100%) !important;
-    border: 5px solid #777873 !important;
-    border-radius: 30px !important;
-    box-shadow: 0 0 0 2px #17191c, 0 14px 35px #000, inset 0 0 18px rgba(255,255,255,.16) !important;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+      radial-gradient(ellipse at 50% 44%, rgba(255,255,255,.08), transparent 52%),
+      repeating-radial-gradient(circle at 50% 58%, #6b6b6b 0 1px, #171717 1.5px 4px, #080808 4.5px 6px),
+      linear-gradient(135deg,#777,#171717 18%,#050505 70%,#555) !important;
+    box-shadow:inset 0 0 0 2px #111, inset 0 0 22px #000, 0 14px 42px #000b !important;
+    padding: max(7px,env(safe-area-inset-top)) 7px max(4px,env(safe-area-inset-bottom)) !important;
+    display:flex !important; flex-direction:column !important; gap:0 !important;
   }
-  .radio-header {
-    min-height: 60px;
-    justify-content: center !important;
-    padding: 8px 12px 7px !important;
-    background:
-      radial-gradient(circle, rgba(255,255,255,.17) 1px, transparent 1.8px) 0 0/5px 5px,
-      linear-gradient(180deg,#242628,#090a0c) !important;
-    border-bottom: 3px solid #4b4d4e;
-  }
-  .radio-header::after { display:none; }
-  .brand { justify-content:center; gap:9px; }
-  .brand-logo-wrap { width:36px; height:36px; background:#08090b; box-shadow:0 0 0 2px #a9aaa5,0 0 12px #087cff; }
-  .brand-logo { width:32px; height:32px; }
-  .brand-text { font-size:clamp(1.2rem,5vw,1.75rem); font-style:italic; color:#f4f4f1; text-shadow:0 2px 2px #000,0 0 8px #aaa; }
-  .install-chip, .live-badge, .radio-dance-banner { display:none !important; }
+  .radio-header, .radio-dance-banner { display:none !important; }
 
-  .dial-section {
-    order: 2;
-    margin: 0 7px;
-    padding: 8px 8px 7px !important;
-    background: linear-gradient(180deg,#101113,#050607);
-    border: 2px solid #55585a;
-    border-top: 1px solid #aaa;
-    border-radius: 0 0 15px 15px;
-    box-shadow: inset 0 2px 8px #000, 0 3px 5px #000;
+  /* Dial superior: ventana de vidrio, escala y aguja roja */
+  .dial-section { order:1 !important; flex:0 0 auto !important; padding:10px 7px 7px !important; }
+  .dial-frame {
+    padding:7px !important; border:2px solid #aaa !important; border-radius:13px !important;
+    background:linear-gradient(145deg,#d4d4d4 0%,#555 12%,#111 30%,#080808 70%,#777 100%) !important;
+    box-shadow:inset 0 1px 5px #fff8, inset 0 -4px 8px #000, 0 2px 5px #000 !important;
   }
-  .dial-frame { padding:0 !important; border:0 !important; background:transparent !important; box-shadow:none !important; }
   .dial-glass {
-    padding: 7px 8px 6px !important;
-    border: 2px solid #858783 !important;
-    border-radius: 7px !important;
-    background: linear-gradient(180deg,#e0dfd6,#aaa99f 48%,#f1f0e8) !important;
-    box-shadow: inset 0 2px 5px #fff, inset 0 -3px 7px #555 !important;
+    display:flex !important; flex-direction:column !important; gap:0 !important;
+    padding:4px 7px !important; border:1px solid #ddd !important; border-radius:7px !important;
+    background:linear-gradient(180deg,#101010,#292929 52%,#090909) !important;
+    box-shadow:inset 0 0 8px #000,0 0 3px #fff5 !important;
   }
-  .dial-band { margin:0 0 4px !important; }
-  .dial-band:last-child { margin-bottom:0 !important; }
-  .dial-tag { color:#171819 !important; font-weight:900 !important; text-shadow:none !important; }
-  .dial-tag small { color:#252525 !important; }
-  .dial-scale { background:linear-gradient(180deg,#111,#292929) !important; border:1px solid #d5d3c8; border-radius:2px; }
-  .dial-scale .tick { color:#f4f4ef !important; text-shadow:0 1px #000; }
-  .dial-scale::before { background:repeating-linear-gradient(90deg,#eee 0 1px,transparent 1px 5px) !important; opacity:.9; }
-  .needle { background:#ff2525 !important; box-shadow:0 0 7px #f00 !important; width:3px !important; }
+  .dial-band { min-height:27px !important; margin:0 !important; padding:2px 0 !important; border-bottom:1px dotted #aaa8 !important; }
+  .dial-band:last-child { border:0 !important; }
+  .dial-tag { width:35px !important; color:#f5f5f5 !important; font-size:12px !important; font-weight:900 !important; }
+  .dial-tag small { display:none !important; }
+  .dial-scale { height:24px !important; margin:0 !important; padding:0 3px !important; border:0 !important; background:transparent !important; }
+  .dial-scale::before { height:4px !important; bottom:2px !important; background:repeating-linear-gradient(90deg,#eee 0 1px,transparent 1px 5px) !important; opacity:.75 !important; }
+  .dial-scale .tick { color:#f7f7f7 !important; font-size:clamp(9px,2.8vw,13px) !important; font-weight:800 !important; text-shadow:0 1px 2px #000 !important; }
+  .dial-scale .needle { bottom:-1px !important; width:4px !important; height:19px !important; background:#ff2020 !important; box-shadow:0 0 7px #f00 !important; }
+  .dial-scale .needle::after { width:7px !important; height:7px !important; background:#ff2929 !important; }
+  .sw-scale { display:flex !important; justify-content:space-around !important; }
+  .sw-scale .tick { display:block !important; }
+
+  /* Selector de bandas y botonera mecánica */
+  .band-selector {
+    order:2 !important; flex:0 0 43px !important; display:flex !important; align-items:center !important;
+    justify-content:space-around !important; position:relative !important; margin:0 7px 7px !important;
+    padding:3px 9px 9px !important; color:#f5f5f5 !important; font-weight:900 !important;
+    font-size:clamp(11px,3.5vw,16px) !important; letter-spacing:.4px !important;
+    border:1px solid #555 !important; border-radius:8px !important;
+    background:linear-gradient(180deg,#333,#090909 42%,#171717) !important;
+    text-shadow:0 1px 2px #000 !important; box-shadow:inset 0 1px 2px #fff4,0 2px 4px #000 !important;
+  }
+  .band-selector .band-active { color:#fff !important; text-shadow:0 0 7px #fff !important; }
+  .band-track { position:absolute !important; bottom:5px !important; left:12% !important; right:12% !important; height:2px !important; background:#bbb !important; display:flex !important; justify-content:space-between !important; }
+  .band-track b { width:7px !important; height:7px !important; margin-top:-3px !important; border-radius:50% !important; background:#ddd !important; box-shadow:0 0 2px #fff !important; }
 
   .controls-section {
-    order: 3;
-    margin: 0 7px;
-    padding: 8px 8px 10px !important;
-    justify-content:space-around !important;
-    gap:5px !important;
-    background:linear-gradient(180deg,#08090a,#222426 50%,#08090a);
-    border-bottom:3px solid #55585a;
-    box-shadow:inset 0 1px 4px #777;
+    order:3 !important; flex:0 0 66px !important; min-height:66px !important;
+    display:flex !important; align-items:center !important; justify-content:center !important;
+    gap:clamp(8px,4vw,22px) !important; margin:0 7px 8px !important; padding:5px 10px !important;
+    border:1px solid #555 !important; border-radius:8px !important;
+    background:linear-gradient(180deg,#333 0%,#111 38%,#050505 100%) !important;
+    box-shadow:inset 0 1px 2px #fff5,0 3px 5px #000 !important;
   }
-  .ctrl-btn { color:#fff !important; }
-  .fav-btn, .eq-btn, .transport .ctrl-btn {
-    width: clamp(43px, 13vw, 58px) !important;
-    min-height:58px;
-    padding:5px 3px !important;
-    border-radius:50% !important;
-    border:2px solid #a4a6a5 !important;
-    background:radial-gradient(circle at 35% 25%,#fff,#b9bab7 28%,#55585a 66%,#111 78%) !important;
-    box-shadow:inset 0 2px 4px #fff8,0 3px 5px #000,0 0 8px #168cff55 !important;
-    color:#111 !important;
+  .controls-section .fav-btn { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
+  .controls-section .transport { display:contents !important; }
+  .controls-section .ctrl-btn {
+    width:clamp(43px,12vw,58px) !important; height:clamp(43px,12vw,58px) !important;
+    min-width:43px !important; padding:0 !important; flex:0 0 auto !important;
+    display:grid !important; place-items:center !important; border-radius:50% !important;
+    border:2px solid #aaa !important; color:#f7f7f7 !important;
+    background:radial-gradient(circle at 34% 25%,#fff 0%,#ddd 12%,#888 35%,#333 63%,#111 78%,#777 100%) !important;
+    box-shadow:inset 0 2px 3px #fff9,inset 0 -3px 5px #000,0 2px 5px #000 !important;
   }
-  .fav-btn .star-icon, .eq-icon { color:#17191b !important; text-shadow:0 1px #fff; }
-  .fav-label,.eq-label { color:#fff !important; background:none !important; box-shadow:none !important; font-size:.55rem !important; }
-  .transport { display:contents !important; }
-  .transport .ctrl-btn svg { width:25px; height:25px; }
-  .play-btn { box-shadow:inset 0 2px 4px #fff8,0 3px 5px #000,0 0 12px #087cffaa !important; }
+  .controls-section .ctrl-btn svg { width:23px !important; height:23px !important; filter:drop-shadow(0 1px 1px #000) !important; }
+  .controls-section .eq-btn { order:0 !important; }
+  .controls-section .prev-btn { order:1 !important; }
+  .controls-section .next-btn { order:2 !important; }
+  .controls-section .play-btn { order:3 !important; background:radial-gradient(circle at 34% 25%,#fff,#ddd 13%,#888 40%,#222 75%) !important; }
+  .eq-btn .eq-icon { display:block !important; font-size:17px !important; color:#111 !important; }
+  .eq-btn .eq-label { display:none !important; }
 
+  /* Display de emisora como ventana independiente sobre la rejilla */
   .now-playing-section {
-    order:4;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    min-height:88px;
-    margin:7px 9px 6px !important;
-    padding:9px 12px !important;
-    text-align:left !important;
-    border:2px solid #168dff !important;
-    border-radius:17px !important;
-    background:linear-gradient(105deg,#06101e,#03070d 75%) !important;
-    box-shadow:0 0 12px #078bff66,inset 0 0 15px #087cff22 !important;
+    order:4 !important; flex:0 0 auto !important; position:relative !important;
+    padding:7px 8px !important; margin:0 7px 7px !important; text-align:left !important;
+    border:3px solid #777 !important; border-radius:15px !important;
+    background:linear-gradient(110deg,#050a10,#101820 48%,#03070c) !important;
+    box-shadow:inset 0 0 0 2px #111,inset 0 0 12px #000,0 0 7px #000 !important;
   }
-  .station-info { flex:1; min-width:0; margin:0 !important; }
-  .station-name { font:800 clamp(1rem,4vw,1.35rem)/1.2 var(--font) !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 0 9px #168dff66 !important; }
-  .station-freq { font-size:.75rem !important; color:#c7d9ec !important; text-align:left; }
-  .visualizer { width:88px; flex:0 0 88px; height:52px !important; margin:0 !important; gap:2px !important; mask-image:none !important; }
-  .visualizer .bar { width:4px !important; background:linear-gradient(180deg,#28eaff,#087cff) !important; box-shadow:0 0 6px #08aaff !important; }
+  .station-info {
+    display:grid !important; grid-template-columns:54px minmax(0,1fr) !important;
+    grid-template-areas:"radio name" "radio frequency" !important; align-items:center !important;
+    gap:2px 9px !important; min-height:57px !important; margin:0 !important; padding:0 5px !important;
+    border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important;
+  }
+  .station-info::before {
+    content:"📻" !important; grid-area:radio !important; display:grid !important; place-items:center !important;
+    width:50px !important; height:50px !important; border:2px solid #bbb !important; border-radius:8px !important;
+    background:linear-gradient(145deg,#eee,#555) !important; font-size:31px !important;
+    box-shadow:0 0 8px #09f8,inset 0 0 6px #000 !important;
+  }
+  .station-name { grid-area:name !important; color:#fff !important; font-size:clamp(15px,4.6vw,22px) !important; font-weight:900 !important; line-height:1.15 !important; text-align:left !important; text-shadow:0 1px 3px #000 !important; }
+  .station-freq { grid-area:frequency !important; color:#eee !important; font-size:clamp(12px,3.6vw,16px) !important; text-align:left !important; line-height:1.1 !important; }
+  .visualizer {
+    position:absolute !important; right:12px !important; bottom:11px !important; width:82px !important;
+    height:42px !important; margin:0 !important; gap:2px !important; align-items:flex-end !important;
+  }
+  .visualizer .bar { width:5px !important; background:linear-gradient(180deg,#20eaff,#0077ff) !important; box-shadow:0 0 5px #00bfff !important; }
 
-  .status-bar { order:5; margin:0 10px 4px; padding:4px 8px !important; background:#090b0e !important; border:1px solid #555 !important; border-radius:7px; }
-  .search-filters { order:6; padding:4px 9px !important; }
-  .station-search { border:1px solid #777 !important; background:#090b0e !important; color:#fff !important; }
-  .filter-btn { border:1px solid #777 !important; background:#17191b !important; color:#eee !important; }
-  .filter-btn.active { background:#075fc9 !important; border-color:#27aaff !important; }
-
+  /* Indicadores y búsqueda compactos; emisoras dentro del cuerpo-parlante */
+  .status-bar { order:5 !important; flex:0 0 22px !important; display:flex !important; padding:1px 12px !important; font-size:10px !important; color:#ddd !important; background:#111 !important; border-top:1px solid #555 !important; }
+  .search-filters { order:6 !important; flex:0 0 auto !important; display:flex !important; gap:5px !important; padding:5px 7px !important; background:#111 !important; }
+  .search-wrap { flex:1 1 auto !important; min-width:0 !important; }
+  .station-search { min-height:29px !important; padding:4px 8px !important; font-size:12px !important; background:#252525 !important; border:1px solid #777 !important; border-radius:5px !important; color:#fff !important; }
+  .filter-btns { gap:3px !important; }
+  .filter-btn { padding:4px 6px !important; font-size:10px !important; border-radius:4px !important; }
   .station-list {
-    order:7;
-    margin:0 9px 70px !important;
-    padding:6px 8px 12px !important;
-    border:2px solid #666 !important;
-    border-radius:14px !important;
+    order:7 !important; flex:1 1 0 !important; min-height:60px !important; overflow-y:auto !important;
+    padding:5px 8px 72px !important; margin:0 7px !important;
+    border:2px solid #555 !important; border-radius:8px !important;
     background:
-      radial-gradient(circle,rgba(255,255,255,.13) 1px,transparent 1.8px) 0 0/6px 6px,
-      linear-gradient(180deg,#111315,#050607) !important;
-    box-shadow:inset 0 2px 10px #000 !important;
+      radial-gradient(ellipse at 50% 50%,#1118,transparent 65%),
+      repeating-radial-gradient(circle at 50% 50%,#777 0 1px,#252525 1.5px 3px,#090909 3.5px 5px) !important;
+    box-shadow:inset 0 0 14px #000 !important;
   }
   .station-item {
-    min-height:52px;
-    margin:3px 0 !important;
-    padding:5px 7px !important;
-    border:0 !important;
-    border-bottom:1px solid #444 !important;
-    border-radius:5px !important;
-    background:rgba(0,0,0,.72) !important;
+    min-height:48px !important; margin:0 0 3px !important; padding:4px 7px !important;
+    gap:8px !important; border:1px solid #555 !important; border-radius:5px !important;
+    background:linear-gradient(90deg,#080b10ee,#1b1b1bee) !important;
   }
-  .station-item.active {
-    background:linear-gradient(90deg,#075acb,#087bff) !important;
-    box-shadow:0 0 10px #087cff88,inset 0 0 7px #fff2 !important;
-  }
-  .station-logo { width:39px !important; height:39px !important; border-radius:7px !important; }
-  .station-meta .s-name { color:#fff !important; font-size:.9rem !important; }
-  .station-meta .s-loc { color:#c3d2e2 !important; }
-  .station-freq-right { color:#d9ecff !important; }
-  .station-play { width:29px !important; height:29px !important; border-radius:5px !important; background:#086fe8 !important; }
-  .list-sep { color:#d7d7d1 !important; text-shadow:0 1px #000; }
+  .station-item.active { background:linear-gradient(90deg,#0646a9,#08285a) !important; border-color:#25bfff !important; box-shadow:0 0 8px #008cff88 !important; }
+  .station-logo { width:35px !important; height:35px !important; border-radius:5px !important; }
+  .station-meta .s-name { font-size:13px !important; }
+  .station-meta .s-loc { font-size:10px !important; }
+  .station-freq-right { font-size:11px !important; }
+  .station-play { width:29px !important; height:29px !important; }
 
   .bottom-nav {
-    order:8;
-    height:67px !important;
-    background:linear-gradient(180deg,#242628,#08090a 55%,#030405) !important;
-    border-top:2px solid #8a8c88 !important;
-    box-shadow:0 -3px 12px #000 !important;
+    order:8 !important; position:relative !important; flex:0 0 calc(60px + var(--safe-bottom)) !important;
+    height:calc(60px + var(--safe-bottom)) !important; min-height:60px !important;
+    margin:7px 0 0 !important; border:2px solid #666 !important; border-radius:10px !important;
+    background:linear-gradient(180deg,#292929,#080808 55%,#222) !important;
+    box-shadow:inset 0 1px 2px #fff5,0 -2px 5px #000 !important; backdrop-filter:none !important;
   }
-  .bottom-nav::before { display:none; }
-  .nav-btn { color:#d7d7d3 !important; border-right:1px solid #555 !important; gap:4px !important; }
-  .nav-btn:last-child { border-right:0 !important; }
-  .nav-btn.active { color:#35caff !important; text-shadow:0 0 9px #078cff !important; }
-  .nav-btn .nav-icon { font-size:1.35rem !important; }
-  .nav-btn .nav-label { font-size:.58rem !important; }
+  .bottom-nav::before { display:none !important; }
+  .nav-btn { gap:2px !important; padding:4px 1px !important; color:#ddd !important; border-right:1px solid #555 !important; }
+  .nav-btn:last-child { border:0 !important; }
+  .nav-btn .nav-icon { font-size:21px !important; color:#eee !important; }
+  .nav-label { font-size:clamp(9px,2.6vw,12px) !important; color:#eee !important; }
+  .nav-btn.active { color:#18dfff !important; background:linear-gradient(180deg,#0050a955,transparent) !important; box-shadow:inset 0 -3px #08cfff,0 0 8px #008cff55 !important; }
+  .nav-btn.active .nav-icon,.nav-btn.active .nav-label { color:#16dfff !important; text-shadow:0 0 8px #008cff !important; }
 }
-@media (max-width: 380px) {
-  .app { border-width:3px !important; border-radius:22px !important; }
-  .radio-header { min-height:52px; }
-  .controls-section { gap:2px !important; }
-  .fav-btn, .eq-btn, .transport .ctrl-btn { width:42px !important; min-height:52px; }
-  .now-playing-section { min-height:76px; }
-  .visualizer { flex-basis:68px; width:68px; }
+@media (max-width:380px) {
+  .app { border-radius:19px !important; padding-left:4px !important; padding-right:4px !important; }
+  .dial-section { padding-left:3px !important; padding-right:3px !important; }
+  .controls-section { gap:7px !important; margin-left:4px !important; margin-right:4px !important; }
+  .controls-section .ctrl-btn { width:42px !important; height:42px !important; min-width:42px !important; }
+  .station-info { grid-template-columns:45px minmax(0,1fr) !important; }
+  .station-info::before { width:43px !important; height:43px !important; font-size:27px !important; }
+  .visualizer { width:61px !important; right:8px !important; }
+  .station-name { max-width:calc(100% - 48px) !important; }
+}
+@media (max-width:899px) {
+  .controls-section .eq-btn .eq-icon { font-size:0 !important; }
+  .controls-section .eq-btn .eq-icon::after { content:"M"; font-size:18px !important; font-weight:900 !important; color:#171717 !important; }
+}
+@media (max-width:899px) {
+  .now-playing-section .fav-btn {
+    position:absolute !important; z-index:3 !important; top:5px !important; right:7px !important;
+    width:30px !important; height:30px !important; padding:0 !important; display:grid !important;
+    place-items:center !important; border:1px solid #888 !important; border-radius:50% !important;
+    background:linear-gradient(145deg,#555,#111) !important; box-shadow:inset 0 1px 2px #fff6,0 1px 3px #000 !important;
+  }
+  .now-playing-section .fav-btn .star-icon { font-size:18px !important; color:#ddd !important; }
+  .now-playing-section .fav-btn[aria-pressed="true"] .star-icon { color:#ffd700 !important; }
+  .now-playing-section .fav-btn .fav-label { display:none !important; }
+  .now-playing-section .station-name { padding-right:30px !important; }
 }

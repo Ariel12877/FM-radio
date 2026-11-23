@@ -1,0 +1,12 @@
+Diseño móvil Radio Argentina
+
+Cambios:
+- Reorganización visual móvil inspirada en la radio portátil de referencia.
+- Dial con escalas FM, AM y SW.
+- Selector visual SW / AM / FM / MP3.
+- Botonera metálica con M, anterior, siguiente y reproducir/pausar.
+- Ventana de emisora con visualizador azul.
+- Rejilla del parlante y lista de emisoras integrada.
+- Se conservaron los IDs de controles, el reproductor, emisoras, favoritos y ecualizador.
+
+No se publicó ni se modificó ningún repositorio remoto.
