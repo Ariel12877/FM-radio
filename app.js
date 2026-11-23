@@ -318,10 +318,10 @@ function setBalance(v) {
   saveMix();
 }
 
-volSlider.addEventListener("input", () => setVolume(volSlider.value));
-volMute.addEventListener("click", () => setVolume(mixVol >= 1 ? 0 : volBeforeMute));
-balSlider.addEventListener("input", () => setBalance(balSlider.value));
-balVal.addEventListener("click", () => setBalance(0));
+if (volSlider) volSlider.addEventListener("input", () => setVolume(volSlider.value));
+if (volMute) volMute.addEventListener("click", () => setVolume(mixVol >= 1 ? 0 : volBeforeMute));
+if (balSlider) balSlider.addEventListener("input", () => setBalance(balSlider.value));
+if (balVal) balVal.addEventListener("click", () => setBalance(0));
 
 function setEqPreset(name) {
   const vals = EQ_PRESETS[name] || EQ_PRESETS.flat;
@@ -426,6 +426,7 @@ function dialPct(f, band) {
 }
 
 function setNeedle(el, leftPct, mobilePct, on) {
+  if (!el) return;
   if (!el) return;
   el.style.left = leftPct + "%";                       // PC: igual que antes
   el.style.setProperty("--pm", mobilePct + "%");       // celular: posición entre marcas
@@ -854,14 +855,14 @@ btnPrev.addEventListener("click", () => stepStation(-1));
 btnNext.addEventListener("click", () => stepStation(1));
 btnFav.addEventListener("click", toggleFav);
 btnEq.addEventListener("click", openEq);
-eqClose.addEventListener("click", closeEq);
-eqReset.addEventListener("click", () => { setEqPreset("flat"); setBalance(0); });
+if (eqClose) eqClose.addEventListener("click", closeEq);
+if (eqReset) eqReset.addEventListener("click", () => { setEqPreset("flat"); setBalance(0); });
 
 document.querySelectorAll(".eq-preset").forEach(btn => {
   btn.addEventListener("click", () => setEqPreset(btn.dataset.preset));
 });
 
-stationSearch.addEventListener("input", () => renderList());
+if (stationSearch) stationSearch.addEventListener("input", () => renderList());
 
 document.querySelectorAll(".filter-btn").forEach(btn => {
   btn.addEventListener("click", () => {
@@ -891,7 +892,7 @@ document.querySelectorAll(".nav-btn").forEach(btn => {
   });
 });
 
-sideClose.addEventListener("click", closeSide);
+if (sideClose) sideClose.addEventListener("click", closeSide);
 
 [playerEQ, playerDirect].forEach(el => {
   el.addEventListener("playing", () => { if (el === player) setPlayingUI(true); });
@@ -1088,3 +1089,162 @@ window.addEventListener("appinstalled", () => {
 
 /* Also expose openShortcutDialog for Opciones panel */
 window.openShortcutDialog = openShortcutDialog;
+
+/* ============================================================
+   Adaptación para el skin fotográfico exacto
+   ============================================================ */
+(function adaptSkin() {
+  const appEl = document.getElementById("app");
+  const needleEl = document.getElementById("needle");
+  const listPanel = document.getElementById("listPanel");
+  const sidePanel = document.getElementById("sidePanel");
+  const sideTitle = document.getElementById("sideTitle");
+  const sideBody = document.getElementById("sideBody");
+  const openListBtn = document.getElementById("openListBtn");
+  const listClose = document.getElementById("listClose");
+  const sideClose = document.getElementById("sideClose");
+  const lcdSlogan = document.getElementById("lcdSlogan");
+  const tabRadios = document.getElementById("tabRadios");
+  const tabFav = document.getElementById("tabFav");
+  const tabRecent = document.getElementById("tabRecent");
+  const tabSettings = document.getElementById("tabSettings");
+  const tabAbout = document.getElementById("tabAbout");
+
+  // Reemplazar updateDial para usar la aguja única del skin
+  window.updateDial = function(station) {
+    if (!needleEl) return;
+    let pct = 0.42;
+    if (station && station.freq) {
+      const m = String(station.freq).match(/([\d.]+)/);
+      if (m) {
+        const num = parseFloat(m[1]);
+        if (num >= 87 && num <= 108) {
+          // FM 88-108 → 0 a 1
+          pct = Math.max(0, Math.min(1, (num - 88) / 20));
+        } else if (num >= 530 && num <= 1600) {
+          pct = Math.max(0, Math.min(1, (num - 530) / 1070));
+        } else {
+          pct = 0.5;
+        }
+      }
+    }
+    needleEl.style.setProperty("--needle-x", pct);
+  };
+
+  // Marcar .playing en el app para el equalizer CSS
+  const origSetPlayingUI = setPlayingUI;
+  setPlayingUI = function(playing) {
+    origSetPlayingUI(playing);
+    if (appEl) appEl.classList.toggle("playing", !!playing);
+  };
+
+  // Slogan dinámico simple
+  const slogans = {
+    default: "Siempre junto a vos",
+    "Radio Nacional": "Siempre junto a vos",
+  };
+  const origPlayStation = playStation;
+  playStation = async function(st) {
+    await origPlayStation(st);
+    if (lcdSlogan) {
+      lcdSlogan.textContent = slogans[st.name] || st.city || st.loc || "En vivo desde Argentina";
+    }
+    if (listPanel && !listPanel.hidden) {
+      // mantener lista abierta o cerrar? mejor cerrar al elegir
+      listPanel.hidden = true;
+    }
+  };
+
+  function showList() {
+    if (sidePanel) sidePanel.hidden = true;
+    if (listPanel) {
+      listPanel.hidden = false;
+      renderList();
+    }
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    if (tabRadios) tabRadios.classList.add("active");
+  }
+
+  function hidePanels() {
+    if (listPanel) listPanel.hidden = true;
+    if (sidePanel) sidePanel.hidden = true;
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    if (tabRadios) tabRadios.classList.add("active");
+  }
+
+  function showSide(title, html) {
+    if (listPanel) listPanel.hidden = true;
+    if (sidePanel) {
+      sideTitle.textContent = title;
+      sideBody.innerHTML = html;
+      sidePanel.hidden = false;
+    }
+  }
+
+  if (openListBtn) openListBtn.addEventListener("click", showList);
+  if (listClose) listClose.addEventListener("click", hidePanels);
+  if (sideClose) sideClose.addEventListener("click", hidePanels);
+  if (tabRadios) tabRadios.addEventListener("click", showList);
+
+  if (tabFav) tabFav.addEventListener("click", () => {
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    tabFav.classList.add("active");
+    // filtrar favoritas y mostrar lista
+    currentFilter = "fav";
+    showList();
+    // actualizar chips
+    document.querySelectorAll(".filter-chip").forEach(c => {
+      c.classList.toggle("active", c.dataset.filter === "fav");
+    });
+  });
+
+  if (tabRecent) tabRecent.addEventListener("click", () => {
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    tabRecent.classList.add("active");
+    showSide("Recientes", "<p>Las emisoras que escuchaste recientemente aparecerán aquí.</p><p style='opacity:.7;margin-top:12px'>Próximamente.</p>");
+  });
+
+  if (tabSettings) tabSettings.addEventListener("click", () => {
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    tabSettings.classList.add("active");
+    showSide("Ajustes", `
+      <h3>Audio</h3>
+      <p>El ecualizador y el volumen se controlan desde los botones de la radio.</p>
+      <h3>Apariencia</h3>
+      <p>Skin: Radio Retro Argentina (fotografía exacta).</p>
+      <h3>Datos</h3>
+      <p>Las emisoras se cargan desde stations.js. Sin publicidad.</p>
+    `);
+  });
+
+  if (tabAbout) tabAbout.addEventListener("click", () => {
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    tabAbout.classList.add("active");
+    showSide("Acerca de", `
+      <h3>Radio Argentina</h3>
+      <p>Aplicación de radios argentinas en vivo.</p>
+      <p>Skin basado 100% en la fotografía de referencia.</p>
+      <p style="margin-top:16px;opacity:.8">Sin publicidad · Offline ready · Hecho con ❤️</p>
+    `);
+  });
+
+  // Filtros del panel de lista
+  document.querySelectorAll(".filter-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      document.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      currentFilter = chip.dataset.filter || "all";
+      renderList();
+    });
+  });
+
+  // Asegurar que al iniciar se actualice la aguja
+  if (typeof currentStation !== "undefined" && currentStation) {
+    updateDial(currentStation);
+  }
+
+  // El botón play del skin ya está cableado por el ID btnPlay
+  // prev / next también
+
+  console.log("[Skin] Adaptación fotográfica lista");
+})();
